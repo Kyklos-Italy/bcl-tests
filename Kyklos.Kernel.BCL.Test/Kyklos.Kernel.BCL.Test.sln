@@ -27,8 +27,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kyklos.Kernel.Compression.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kyklos.Kernel.Compression.Test.NetFramework", "Kyklos.Kernel.Compression.Test.NetFramework\Kyklos.Kernel.Compression.Test.NetFramework.csproj", "{715380F6-6565-4D36-A861-E876CA498861}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kyklos.Kernel.TimeSupport", "Kyklos.Kernel.TimeSupport", "{A63F360B-EB20-4F98-8F28-55919789A6F5}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kyklos.Kernel.Http", "Kyklos.Kernel.Http", "{617BD05D-7321-4DBA-95C9-988C9249E3DC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kyklos.Kernel.Threading", "Kyklos.Kernel.Threading", "{AAFAF53F-14E2-4EE9-B053-B1803D47AEE4}"
@@ -41,8 +39,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kyklos.Kernel.Http.Test", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kyklos.Kernel.Threading.Test", "Kyklos.Kernel.Threading.Test\Kyklos.Kernel.Threading.Test.csproj", "{88D53758-84E1-4140-8F30-67A1D9BD3C96}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kyklos.Kernel.TimeSupport.Test", "Kyklos.Kernel.TimeSupport.Test\Kyklos.Kernel.TimeSupport.Test.csproj", "{A7A00C8F-A6B5-4832-93E3-707FD9BC0437}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kyklos.Kernel.Ftp.Test.NetCore", "Kyklos.Kernel.Ftp.Test.NetCore\Kyklos.Kernel.Ftp.Test.NetCore.csproj", "{4F18C04D-0B48-4946-B87E-2708358B61EE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kyklos.Kernel.Http.Test.NetCore", "Kyklos.Kernel.Http.Test.NetCore\Kyklos.Kernel.Http.Test.NetCore.csproj", "{5FCD09FE-F124-4FB3-B74C-CE5430A49C4E}"
@@ -53,11 +49,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kyklos.Kernel.Http.Test.Net
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kyklos.Kernel.Threading.Test.NetFramework", "Kyklos.Kernel.Threading.Test.NetFramework\Kyklos.Kernel.Threading.Test.NetFramework.csproj", "{33023EEA-9F71-4648-9B75-01260A26FE06}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kyklos.Kernel.TimeSupport.Test.NetFramework", "Kyklos.Kernel.TimeSupport.Test.NetFramework\Kyklos.Kernel.TimeSupport.Test.NetFramework.csproj", "{D5C64B26-41D0-4045-9E77-67557C79DA44}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kyklos.Kernel.Threading.Test.NetCore", "Kyklos.Kernel.Threading.Test.NetCore\Kyklos.Kernel.Threading.Test.NetCore.csproj", "{85F669C1-AAC8-4FC2-A8EA-962D4DD33ECB}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kyklos.Kernel.TimeSupport.Test.NetCore", "Kyklos.Kernel.TimeSupport.Test.NetCore\Kyklos.Kernel.TimeSupport.Test.NetCore.csproj", "{15220C80-3A5E-4B16-B712-032D2DB5AD8D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kyklos.Kernel.Reactive", "Kyklos.Kernel.Reactive", "{217E8F56-4BC3-4F4F-B229-25CA0956A32B}"
 EndProject
@@ -69,27 +61,27 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kyklos.Kernel.Reactive.Test
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kyklos.Kernel.Data", "Kyklos.Kernel.Data", "{10AAB035-7381-4CD5-9910-D126A244C257}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kyklos.Kernel.Data.Test", "Kyklos.Kernel.Data.Test\Kyklos.Kernel.Data.Test.csproj", "{11B6F7F8-1516-43E2-929C-F8F187350DA0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kyklos.Kernel.Data.Test", "Kyklos.Kernel.Data.Test\Kyklos.Kernel.Data.Test.csproj", "{11B6F7F8-1516-43E2-929C-F8F187350DA0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kyklos.Kernel.Data.MariaDB.Test.NetCore", "Kyklos.Kernel.Data.MariaDB.Test.NetCore\Kyklos.Kernel.Data.MariaDB.Test.NetCore.csproj", "{3987F974-0647-4FD7-B9C9-C73DC96B2F20}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kyklos.Kernel.Data.MariaDB.Test.NetCore", "Kyklos.Kernel.Data.MariaDB.Test.NetCore\Kyklos.Kernel.Data.MariaDB.Test.NetCore.csproj", "{3987F974-0647-4FD7-B9C9-C73DC96B2F20}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kyklos.Kernel.Data.MariaDB.Test.NetFramework", "Kyklos.Kernel.Data.MariaDB.Test.NetFramework\Kyklos.Kernel.Data.MariaDB.Test.NetFramework.csproj", "{BB4B9E6B-449C-4C4F-97C4-E878605AD734}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kyklos.Kernel.Data.Oracle.Test.NetCore", "Kyklos.Kernel.Data.Oracle.Test.NetCore\Kyklos.Kernel.Data.Oracle.Test.NetCore.csproj", "{E5B99EB6-888B-43F4-9EDF-C7F81E9EAA17}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kyklos.Kernel.Data.Oracle.Test.NetCore", "Kyklos.Kernel.Data.Oracle.Test.NetCore\Kyklos.Kernel.Data.Oracle.Test.NetCore.csproj", "{E5B99EB6-888B-43F4-9EDF-C7F81E9EAA17}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kyklos.Kernel.Data.Oracle.Test.NetFramework", "Kyklos.Kernel.Data.Oracle.Test.NetFramework\Kyklos.Kernel.Data.Oracle.Test.NetFramework.csproj", "{4B784F53-CEB2-4F71-B355-BB77CAA3BE41}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kyklos.Kernel.Data.PostgreSQL.Test.NetCore", "Kyklos.Kernel.Data.PostgreSQL.Test.NetCore\Kyklos.Kernel.Data.PostgreSQL.Test.NetCore.csproj", "{AB2A34EE-0116-4538-A1FA-3B66C6A38564}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kyklos.Kernel.Data.PostgreSQL.Test.NetCore", "Kyklos.Kernel.Data.PostgreSQL.Test.NetCore\Kyklos.Kernel.Data.PostgreSQL.Test.NetCore.csproj", "{AB2A34EE-0116-4538-A1FA-3B66C6A38564}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework", "Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework\Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework.csproj", "{8BDFAE43-8F53-4489-A742-7D35914D8D86}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kyklos.Kernel.Data.SQLite.Test.NetCore", "Kyklos.Kernel.Data.SQLite.Test.NetCore\Kyklos.Kernel.Data.SQLite.Test.NetCore.csproj", "{019F450B-F1BD-4AF8-9554-C61A857D91FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kyklos.Kernel.Data.SQLite.Test.NetCore", "Kyklos.Kernel.Data.SQLite.Test.NetCore\Kyklos.Kernel.Data.SQLite.Test.NetCore.csproj", "{019F450B-F1BD-4AF8-9554-C61A857D91FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kyklos.Kernel.Data.SQLite.Test.NetFramework", "Kyklos.Kernel.Data.SQLite.Test.NetFramework\Kyklos.Kernel.Data.SQLite.Test.NetFramework.csproj", "{391D1D94-A798-48DB-8105-9D254265F538}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kyklos.Kernel.Data.SQLite.Test.NetFramework", "Kyklos.Kernel.Data.SQLite.Test.NetFramework\Kyklos.Kernel.Data.SQLite.Test.NetFramework.csproj", "{391D1D94-A798-48DB-8105-9D254265F538}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kyklos.Kernel.Data.SqlServer.Test.NetCore", "Kyklos.Kernel.Data.SqlServer.Test.NetCore\Kyklos.Kernel.Data.SqlServer.Test.NetCore.csproj", "{AD9BC2CB-DD2C-4A7B-B316-62B2059E59CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kyklos.Kernel.Data.SqlServer.Test.NetCore", "Kyklos.Kernel.Data.SqlServer.Test.NetCore\Kyklos.Kernel.Data.SqlServer.Test.NetCore.csproj", "{AD9BC2CB-DD2C-4A7B-B316-62B2059E59CD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kyklos.Kernel.Data.SqlServer.Test.NetFramework", "Kyklos.Kernel.Data.SqlServer.Test.NetFramework\Kyklos.Kernel.Data.SqlServer.Test.NetFramework.csproj", "{3CF2AC61-DC54-4C7F-9D9A-BF6AA20DC2E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kyklos.Kernel.Data.SqlServer.Test.NetFramework", "Kyklos.Kernel.Data.SqlServer.Test.NetFramework\Kyklos.Kernel.Data.SqlServer.Test.NetFramework.csproj", "{3CF2AC61-DC54-4C7F-9D9A-BF6AA20DC2E3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework", "Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework\Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework.csproj", "{D064FCEA-631E-4149-9475-1C7B5D8F9278}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -145,10 +137,6 @@ Global
 		{88D53758-84E1-4140-8F30-67A1D9BD3C96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88D53758-84E1-4140-8F30-67A1D9BD3C96}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{88D53758-84E1-4140-8F30-67A1D9BD3C96}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A7A00C8F-A6B5-4832-93E3-707FD9BC0437}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A7A00C8F-A6B5-4832-93E3-707FD9BC0437}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A7A00C8F-A6B5-4832-93E3-707FD9BC0437}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A7A00C8F-A6B5-4832-93E3-707FD9BC0437}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4F18C04D-0B48-4946-B87E-2708358B61EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4F18C04D-0B48-4946-B87E-2708358B61EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F18C04D-0B48-4946-B87E-2708358B61EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -169,18 +157,10 @@ Global
 		{33023EEA-9F71-4648-9B75-01260A26FE06}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{33023EEA-9F71-4648-9B75-01260A26FE06}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{33023EEA-9F71-4648-9B75-01260A26FE06}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D5C64B26-41D0-4045-9E77-67557C79DA44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D5C64B26-41D0-4045-9E77-67557C79DA44}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D5C64B26-41D0-4045-9E77-67557C79DA44}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D5C64B26-41D0-4045-9E77-67557C79DA44}.Release|Any CPU.Build.0 = Release|Any CPU
 		{85F669C1-AAC8-4FC2-A8EA-962D4DD33ECB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{85F669C1-AAC8-4FC2-A8EA-962D4DD33ECB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{85F669C1-AAC8-4FC2-A8EA-962D4DD33ECB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{85F669C1-AAC8-4FC2-A8EA-962D4DD33ECB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{15220C80-3A5E-4B16-B712-032D2DB5AD8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{15220C80-3A5E-4B16-B712-032D2DB5AD8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{15220C80-3A5E-4B16-B712-032D2DB5AD8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{15220C80-3A5E-4B16-B712-032D2DB5AD8D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3931F335-A9DA-42AD-9C9D-F118BE15F4FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3931F335-A9DA-42AD-9C9D-F118BE15F4FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3931F335-A9DA-42AD-9C9D-F118BE15F4FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -217,10 +197,6 @@ Global
 		{AB2A34EE-0116-4538-A1FA-3B66C6A38564}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB2A34EE-0116-4538-A1FA-3B66C6A38564}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB2A34EE-0116-4538-A1FA-3B66C6A38564}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8BDFAE43-8F53-4489-A742-7D35914D8D86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8BDFAE43-8F53-4489-A742-7D35914D8D86}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8BDFAE43-8F53-4489-A742-7D35914D8D86}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8BDFAE43-8F53-4489-A742-7D35914D8D86}.Release|Any CPU.Build.0 = Release|Any CPU
 		{019F450B-F1BD-4AF8-9554-C61A857D91FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{019F450B-F1BD-4AF8-9554-C61A857D91FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{019F450B-F1BD-4AF8-9554-C61A857D91FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -237,6 +213,10 @@ Global
 		{3CF2AC61-DC54-4C7F-9D9A-BF6AA20DC2E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3CF2AC61-DC54-4C7F-9D9A-BF6AA20DC2E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3CF2AC61-DC54-4C7F-9D9A-BF6AA20DC2E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D064FCEA-631E-4149-9475-1C7B5D8F9278}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D064FCEA-631E-4149-9475-1C7B5D8F9278}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D064FCEA-631E-4149-9475-1C7B5D8F9278}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D064FCEA-631E-4149-9475-1C7B5D8F9278}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -254,15 +234,12 @@ Global
 		{BB5B7EE2-ECD3-4A86-A6AE-31D3C8254AE5} = {7D596D39-75C9-4796-8B62-4708924F1CA6}
 		{D6189294-C129-4656-9116-EC382559410F} = {617BD05D-7321-4DBA-95C9-988C9249E3DC}
 		{88D53758-84E1-4140-8F30-67A1D9BD3C96} = {AAFAF53F-14E2-4EE9-B053-B1803D47AEE4}
-		{A7A00C8F-A6B5-4832-93E3-707FD9BC0437} = {A63F360B-EB20-4F98-8F28-55919789A6F5}
 		{4F18C04D-0B48-4946-B87E-2708358B61EE} = {7D596D39-75C9-4796-8B62-4708924F1CA6}
 		{5FCD09FE-F124-4FB3-B74C-CE5430A49C4E} = {617BD05D-7321-4DBA-95C9-988C9249E3DC}
 		{17CF5451-9D96-4D71-B675-190FD396829E} = {7D596D39-75C9-4796-8B62-4708924F1CA6}
 		{29898E82-B28D-4D41-A2A8-E2921546B338} = {617BD05D-7321-4DBA-95C9-988C9249E3DC}
 		{33023EEA-9F71-4648-9B75-01260A26FE06} = {AAFAF53F-14E2-4EE9-B053-B1803D47AEE4}
-		{D5C64B26-41D0-4045-9E77-67557C79DA44} = {A63F360B-EB20-4F98-8F28-55919789A6F5}
 		{85F669C1-AAC8-4FC2-A8EA-962D4DD33ECB} = {AAFAF53F-14E2-4EE9-B053-B1803D47AEE4}
-		{15220C80-3A5E-4B16-B712-032D2DB5AD8D} = {A63F360B-EB20-4F98-8F28-55919789A6F5}
 		{3931F335-A9DA-42AD-9C9D-F118BE15F4FD} = {217E8F56-4BC3-4F4F-B229-25CA0956A32B}
 		{9E542951-A4E3-4867-8B8E-86621FE93C21} = {217E8F56-4BC3-4F4F-B229-25CA0956A32B}
 		{C8E9DD91-9190-4E44-ADEB-3A444D1D997B} = {217E8F56-4BC3-4F4F-B229-25CA0956A32B}
@@ -272,11 +249,11 @@ Global
 		{E5B99EB6-888B-43F4-9EDF-C7F81E9EAA17} = {10AAB035-7381-4CD5-9910-D126A244C257}
 		{4B784F53-CEB2-4F71-B355-BB77CAA3BE41} = {10AAB035-7381-4CD5-9910-D126A244C257}
 		{AB2A34EE-0116-4538-A1FA-3B66C6A38564} = {10AAB035-7381-4CD5-9910-D126A244C257}
-		{8BDFAE43-8F53-4489-A742-7D35914D8D86} = {10AAB035-7381-4CD5-9910-D126A244C257}
 		{019F450B-F1BD-4AF8-9554-C61A857D91FE} = {10AAB035-7381-4CD5-9910-D126A244C257}
 		{391D1D94-A798-48DB-8105-9D254265F538} = {10AAB035-7381-4CD5-9910-D126A244C257}
 		{AD9BC2CB-DD2C-4A7B-B316-62B2059E59CD} = {10AAB035-7381-4CD5-9910-D126A244C257}
 		{3CF2AC61-DC54-4C7F-9D9A-BF6AA20DC2E3} = {10AAB035-7381-4CD5-9910-D126A244C257}
+		{D064FCEA-631E-4149-9475-1C7B5D8F9278} = {10AAB035-7381-4CD5-9910-D126A244C257}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A2BC8EEA-B927-4432-AE5A-749AA34C5915}
