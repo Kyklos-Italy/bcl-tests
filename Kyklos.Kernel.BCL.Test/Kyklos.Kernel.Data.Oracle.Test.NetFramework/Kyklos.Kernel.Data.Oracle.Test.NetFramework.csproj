@@ -129,6 +129,12 @@
   <ItemGroup>
     <Analyzer Include="..\packages\xunit.analyzers.0.10.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Kyklos.Kernel.Data.Test\Kyklos.Kernel.Data.Test.csproj">
+      <Project>{11B6F7F8-1516-43E2-929C-F8F187350DA0}</Project>
+      <Name>Kyklos.Kernel.Data.Test</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
