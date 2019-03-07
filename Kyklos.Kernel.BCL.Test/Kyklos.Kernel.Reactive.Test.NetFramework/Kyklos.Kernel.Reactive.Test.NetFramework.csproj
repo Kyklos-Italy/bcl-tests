@@ -36,10 +36,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Kyklos.Kernel.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Core.1.0.0-alpha.5\lib\netstandard2.0\Kyklos.Kernel.Core.dll</HintPath>
+      <HintPath>..\packages\Kyklos.Kernel.Core.1.0.0-beta.2\lib\netstandard2.0\Kyklos.Kernel.Core.dll</HintPath>
     </Reference>
     <Reference Include="Kyklos.Kernel.Reactive, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Reactive.1.0.0-alpha.4\lib\netstandard2.0\Kyklos.Kernel.Reactive.dll</HintPath>
+      <HintPath>..\packages\Kyklos.Kernel.Reactive.1.0.0-beta.1\lib\netstandard2.0\Kyklos.Kernel.Reactive.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -52,10 +52,8 @@
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.1\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll</HintPath>
     </Reference>
-    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\net461\System.ValueTuple.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
@@ -84,6 +82,7 @@
     <Compile Include="Reactive\ReactiveTestMethods.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

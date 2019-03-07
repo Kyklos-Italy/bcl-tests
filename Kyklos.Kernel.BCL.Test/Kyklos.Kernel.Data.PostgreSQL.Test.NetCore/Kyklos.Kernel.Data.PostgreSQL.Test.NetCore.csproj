@@ -9,7 +9,8 @@
   <ItemGroup>
     <PackageReference Include="Kyklos.Kernel.Data.Async.PostgreSQL" Version="1.0.0-beta.1" />
     <PackageReference Include="Kyklos.Kernel.Data.Async.Support" Version="1.0.0-beta.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+	<PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
+	<PackageReference Include="Kyklos.Kernel.Core" Version="1.0.0-beta.2" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
       <PrivateAssets>all</PrivateAssets>
