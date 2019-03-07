@@ -81,7 +81,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kyklos.Kernel.Data.SqlServe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework", "Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework\Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework.csproj", "{D064FCEA-631E-4149-9475-1C7B5D8F9278}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kyklos.Kernel.Data.SQLite.Test.NetFramework", "Kyklos.Kernel.Data.SQLite.Test.NetFramework\Kyklos.Kernel.Data.SQLite.Test.NetFramework.csproj", "{DFBA7401-D2F7-44D6-A5EC-CD7003530DE2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kyklos.Kernel.Data.SQLite.Test.NetFramework", "Kyklos.Kernel.Data.SQLite.Test.NetFramework\Kyklos.Kernel.Data.SQLite.Test.NetFramework.csproj", "{1D7D413F-847F-473E-A389-767AF206BC56}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -213,10 +213,10 @@ Global
 		{D064FCEA-631E-4149-9475-1C7B5D8F9278}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D064FCEA-631E-4149-9475-1C7B5D8F9278}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D064FCEA-631E-4149-9475-1C7B5D8F9278}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DFBA7401-D2F7-44D6-A5EC-CD7003530DE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DFBA7401-D2F7-44D6-A5EC-CD7003530DE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DFBA7401-D2F7-44D6-A5EC-CD7003530DE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DFBA7401-D2F7-44D6-A5EC-CD7003530DE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D7D413F-847F-473E-A389-767AF206BC56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D7D413F-847F-473E-A389-767AF206BC56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D7D413F-847F-473E-A389-767AF206BC56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D7D413F-847F-473E-A389-767AF206BC56}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -253,7 +253,7 @@ Global
 		{AD9BC2CB-DD2C-4A7B-B316-62B2059E59CD} = {10AAB035-7381-4CD5-9910-D126A244C257}
 		{3CF2AC61-DC54-4C7F-9D9A-BF6AA20DC2E3} = {10AAB035-7381-4CD5-9910-D126A244C257}
 		{D064FCEA-631E-4149-9475-1C7B5D8F9278} = {10AAB035-7381-4CD5-9910-D126A244C257}
-		{DFBA7401-D2F7-44D6-A5EC-CD7003530DE2} = {10AAB035-7381-4CD5-9910-D126A244C257}
+		{1D7D413F-847F-473E-A389-767AF206BC56} = {10AAB035-7381-4CD5-9910-D126A244C257}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A2BC8EEA-B927-4432-AE5A-749AA34C5915}
