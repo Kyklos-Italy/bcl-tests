@@ -1,0 +1,11 @@
+{
+ "group": "Ftps",
+ "name": "KFtpsServer",
+ "version": "1.0.0-beta1",
+ "title": "Simple Ftp and Ftps server",
+ "description": "Command line and windows service ftps server",
+ "createdDate": "2019-03-06T16:30:00Z",
+ "createdReason": "Kyklos",
+ "createdUsing": "VS2017",
+ "createdBy": "7MF3"
+}

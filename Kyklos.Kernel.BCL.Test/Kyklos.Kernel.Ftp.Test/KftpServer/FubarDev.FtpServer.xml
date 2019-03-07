@@ -1,0 +1,709 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FubarDev.FtpServer</name>
+    </assembly>
+    <members>
+        <member name="T:FubarDev.FtpServer.Authentication.TlsAuthenticationMechanism">
+            <summary>
+            Implementation for the <c>AUTH TLS</c> command.
+            </summary>
+        </member>
+        <member name="M:FubarDev.FtpServer.Authentication.TlsAuthenticationMechanism.#ctor(FubarDev.FtpServer.IFtpConnection,Microsoft.Extensions.Options.IOptions{FubarDev.FtpServer.AuthTlsOptions})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FubarDev.FtpServer.Authentication.TlsAuthenticationMechanism"/> class.
+            </summary>
+            <param name="connection">The required FTP connection.</param>
+            <param name="options">Options for the AUTH TLS command.</param>
+        </member>
+        <member name="M:FubarDev.FtpServer.Authentication.TlsAuthenticationMechanism.Reset">
+            <inheritdoc />
+        </member>
+        <member name="M:FubarDev.FtpServer.Authentication.TlsAuthenticationMechanism.CanHandle(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:FubarDev.FtpServer.Authentication.TlsAuthenticationMechanism.HandleAuthAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FubarDev.FtpServer.Authentication.TlsAuthenticationMechanism.HandleAdatAsync(System.Byte[],System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FubarDev.FtpServer.Authentication.TlsAuthenticationMechanism.HandlePbszAsync(System.Int64,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FubarDev.FtpServer.Authentication.TlsAuthenticationMechanism.HandleProtAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FubarDev.FtpServer.Authentication.TlsAuthenticationMechanism.GetSupportedFeatures">
+            <inheritdoc />
+        </member>
+        <member name="T:FubarDev.FtpServer.Authorization.PasswordAuthorization">
+            <summary>
+            The default password authentication mechanism.
+            </summary>
+        </member>
+        <member name="M:FubarDev.FtpServer.Authorization.PasswordAuthorization.#ctor(FubarDev.FtpServer.IFtpConnection,FubarDev.FtpServer.FileSystem.IFileSystemClassFactory,System.Collections.Generic.IEnumerable{FubarDev.FtpServer.AccountManagement.IMembershipProvider})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FubarDev.FtpServer.Authorization.PasswordAuthorization"/> class.
+            </summary>
+            <param name="connection">The required FTP connection.</param>
+            <param name="fileSystemFactory">The file system factory.</param>
+            <param name="membershipProviders">The membership providers for password authorization.</param>
+        </member>
+        <member name="M:FubarDev.FtpServer.Authorization.PasswordAuthorization.HandleAcctAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FubarDev.FtpServer.Authorization.PasswordAuthorization.HandlePassAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FubarDev.FtpServer.Authorization.PasswordAuthorization.HandleUserAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FubarDev.FtpServer.Authorization.PasswordAuthorization.Reset(FubarDev.FtpServer.Authentication.IAuthenticationMechanism)">
+            <inheritdoc />
+        </member>
+        <member name="P:FubarDev.FtpServer.Authorization.PasswordAuthorization.DefaultAccountInformation.User">
+            <inheritdoc />
+        </member>
+        <member name="P:FubarDev.FtpServer.Authorization.PasswordAuthorization.DefaultAccountInformation.AuthenticatedBy">
+            <inheritdoc />
+        </member>
+        <member name="T:FubarDev.FtpServer.AuthTlsOptions">
+            <summary>
+            Options for SSL/TLS connections.
+            </summary>
+        </member>
+        <member name="P:FubarDev.FtpServer.AuthTlsOptions.ServerCertificate">
+            <summary>
+            Gets or sets the server certificate.
+            </summary>
+        </member>
+        <member name="T:FubarDev.FtpServer.BackgroundTransfer.BackgroundCommandHandler">
+            <summary>
+            Asynchronous processing of an FTP command.
+            </summary>
+            <remarks>
+            This allows the implementation of the <c>ABOR</c> command.
+            </remarks>
+        </member>
+        <member name="M:FubarDev.FtpServer.BackgroundTransfer.BackgroundCommandHandler.Execute(FubarDev.FtpServer.IFtpCommandBase,FubarDev.FtpServer.FtpCommand)">
+            <inheritdoc />
+        </member>
+        <member name="M:FubarDev.FtpServer.BackgroundTransfer.BackgroundCommandHandler.Cancel">
+            <summary>
+            Cancels the processing of the current command.
+            </summary>
+            <returns><code>true</code> when there was a command execution that could be cancelled.</returns>
+        </member>
+        <member name="M:FubarDev.FtpServer.BackgroundTransfer.BackgroundCommandHandler.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="F:FubarDev.FtpServer.BackgroundTransfer.BackgroundTransferWorker._stoppedSemaphore">
+            <summary>
+            Semaphore that gets released when the queue stopped.
+            </summary>
+        </member>
+        <member name="T:FubarDev.FtpServer.FtpCommandCollector">
+            <summary>
+            Collects FTP commands using the current <see cref="T:System.Text.Encoding"/>.
+            </summary>
+        </member>
+        <member name="M:FubarDev.FtpServer.FtpCommandCollector.#ctor(System.Func{System.Text.Encoding})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FubarDev.FtpServer.FtpCommandCollector"/> class.
+            </summary>
+            <param name="getActiveEncodingFunc">The delegate to get the current encoding for.</param>
+        </member>
+        <member name="P:FubarDev.FtpServer.FtpCommandCollector.Encoding">
+            <summary>
+            Gets the currently active <see cref="T:System.Text.Encoding"/>.
+            </summary>
+        </member>
+        <member name="P:FubarDev.FtpServer.FtpCommandCollector.IsEmpty">
+            <summary>
+            Gets a value indicating whether this collector contains unused data.
+            </summary>
+        </member>
+        <member name="M:FubarDev.FtpServer.FtpCommandCollector.Collect(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Collects the data from the <paramref name="buffer"/> and tries to build <see cref="T:FubarDev.FtpServer.FtpCommand"/> objects from it.
+            </summary>
+            <param name="buffer">The buffer to collect the data from.</param>
+            <returns>The found <see cref="T:FubarDev.FtpServer.FtpCommand"/>s.</returns>
+        </member>
+        <member name="T:FubarDev.FtpServer.FtpConnection">
+            <summary>
+            This class represents a FTP connection.
+            </summary>
+        </member>
+        <member name="M:FubarDev.FtpServer.FtpConnection.#ctor(System.Net.Sockets.TcpClient,Microsoft.Extensions.Options.IOptions{FubarDev.FtpServer.FtpConnectionOptions},FubarDev.FtpServer.IFtpConnectionAccessor,System.Collections.Generic.IEnumerable{FubarDev.FtpServer.IFtpCommandHandler},System.Collections.Generic.IEnumerable{FubarDev.FtpServer.IFtpCommandHandlerExtension},FubarDev.FtpServer.Localization.IFtpCatalogLoader,System.IServiceProvider,Microsoft.Extensions.Logging.ILogger{FubarDev.FtpServer.IFtpConnection})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FubarDev.FtpServer.FtpConnection"/> class.
+            </summary>
+            <param name="socket">The socket to use to communicate with the client.</param>
+            <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="M:FubarDev.FtpServer.CommandHandlers.FtpCommandHandler.Process(FubarDev.FtpServer.FtpCommand,System.Threading.CancellationToken)"/> method execution.</param>
+            <param name="commandHandlerExtensions">The registered command handler extensions.</param>
+            <param name="serviceProvider">The service provider for the connection.</param>
+            <param name="logger">The logger for the FTP connection.</param>
+            <param name="options">The options for the FTP connection.</param>
+            <param name="commandHandlers">The registered command handlers.</param>
+            <param name="catalogLoader">The catalog loader for the FTP server.</param>
+        </member>
+        <member name="E:FubarDev.FtpServer.FtpConnection.Closed">
+            <inheritdoc />
+        </member>
+        <member name="P:FubarDev.FtpServer.FtpConnection.ConnectionServices">
+            <inheritdoc />
+        </member>
+        <member name="P:FubarDev.FtpServer.FtpConnection.CommandHandlers">
+            <inheritdoc />
+        </member>
+        <member name="P:FubarDev.FtpServer.FtpConnection.Encoding">
+            <inheritdoc />
+        </member>
+        <member name="P:FubarDev.FtpServer.FtpConnection.PromiscuousPasv">
+            <inheritdoc />
+        </member>
+        <member name="P:FubarDev.FtpServer.FtpConnection.Data">
+            <inheritdoc />
+        </member>
+        <member name="P:FubarDev.FtpServer.FtpConnection.Log">
+            <inheritdoc />
+        </member>
+        <member name="P:FubarDev.FtpServer.FtpConnection.LocalEndPoint">
+            <inheritdoc />
+        </member>
+        <member name="P:FubarDev.FtpServer.FtpConnection.OriginalStream">
+            <inheritdoc />
+        </member>
+        <member name="P:FubarDev.FtpServer.FtpConnection.SocketStream">
+            <inheritdoc />
+        </member>
+        <member name="P:FubarDev.FtpServer.FtpConnection.IsSecure">
+            <inheritdoc />
+        </member>
+        <member name="P:FubarDev.FtpServer.FtpConnection.RemoteAddress">
+            <inheritdoc />
+        </member>
+        <member name="P:FubarDev.FtpServer.FtpConnection.FubarDev#FtpServer#IFtpConnection#CancellationToken">
+            <summary>
+            Gets the cancellation token to use to signal a task cancellation.
+            </summary>
+        </member>
+        <member name="M:FubarDev.FtpServer.FtpConnection.Start">
+            <summary>
+            Starts processing of messages for this connection.
+            </summary>
+        </member>
+        <member name="M:FubarDev.FtpServer.FtpConnection.Close">
+            <summary>
+            Closes the connection.
+            </summary>
+        </member>
+        <member name="M:FubarDev.FtpServer.FtpConnection.WriteAsync(FubarDev.FtpServer.FtpResponse,System.Threading.CancellationToken)">
+            <summary>
+            Writes a FTP response to a client.
+            </summary>
+            <param name="response">The response to write to the client.</param>
+            <param name="cancellationToken">The cancellation token.</param>
+            <returns>The task.</returns>
+        </member>
+        <member name="M:FubarDev.FtpServer.FtpConnection.WriteAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Writes response to a client.
+            </summary>
+            <param name="response">The response to write to the client.</param>
+            <param name="cancellationToken">The cancellation token.</param>
+            <returns>The task.</returns>
+        </member>
+        <member name="M:FubarDev.FtpServer.FtpConnection.CreateResponseSocket">
+            <summary>
+            Creates a response socket for e.g. LIST/NLST.
+            </summary>
+            <returns>The data connection.</returns>
+        </member>
+        <member name="M:FubarDev.FtpServer.FtpConnection.CreateEncryptedStream(System.IO.Stream)">
+            <summary>
+            Create an encrypted stream.
+            </summary>
+            <param name="unencryptedStream">The stream to encrypt.</param>
+            <returns>The encrypted stream.</returns>
+        </member>
+        <member name="M:FubarDev.FtpServer.FtpConnection.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:FubarDev.FtpServer.FtpConnection.T(System.String)">
+            <summary>
+            Translates a message using the current catalog of the active connection.
+            </summary>
+            <param name="message">The message to translate.</param>
+            <returns>The translated message.</returns>
+        </member>
+        <member name="M:FubarDev.FtpServer.FtpConnection.T(System.String,System.Object[])">
+            <summary>
+            Translates a message using the current catalog of the active connection.
+            </summary>
+            <param name="message">The message to translate.</param>
+            <param name="args">The format arguments.</param>
+            <returns>The translated message.</returns>
+        </member>
+        <member name="T:FubarDev.FtpServer.FtpConnectionAccessor">
+            <summary>
+            Accessor for the active FTP connection.
+            </summary>
+        </member>
+        <member name="P:FubarDev.FtpServer.FtpConnectionAccessor.FtpConnection">
+            <inheritdoc />
+        </member>
+        <member name="T:FubarDev.FtpServer.FtpConnectionOptions">
+            <summary>
+            Options for the FTP connection.
+            </summary>
+        </member>
+        <member name="P:FubarDev.FtpServer.FtpConnectionOptions.DefaultEncoding">
+            <summary>
+            Gets or sets the default connection encoding.
+            </summary>
+        </member>
+        <member name="P:FubarDev.FtpServer.FtpConnectionOptions.PromiscuousPasv">
+            <summary>
+            Gets or sets a value indicating whether to accept PASV connections from any source.
+            If false (default), connections to a PASV port will only be accepted from the same IP that issued
+            the respective PASV command.
+            </summary>
+        </member>
+        <member name="T:FubarDev.FtpServer.FtpLogExtensions">
+            <summary>
+            Extension methods for logging <see cref="T:FubarDev.FtpServer.FtpCommand"/> and <see cref="T:FubarDev.FtpServer.FtpResponse"/> objects.
+            </summary>
+        </member>
+        <member name="M:FubarDev.FtpServer.FtpLogExtensions.Trace(Microsoft.Extensions.Logging.ILogger,FubarDev.FtpServer.FtpCommand)">
+            <summary>
+            Logs a trace message with the data of the <see cref="T:FubarDev.FtpServer.FtpCommand"/>.
+            </summary>
+            <param name="log">The <see cref="T:Microsoft.Extensions.Logging.ILogger"/> to use.</param>
+            <param name="command">The <see cref="T:FubarDev.FtpServer.FtpCommand"/> to log.</param>
+        </member>
+        <member name="M:FubarDev.FtpServer.FtpLogExtensions.Trace(Microsoft.Extensions.Logging.ILogger,FubarDev.FtpServer.FtpResponse)">
+            <summary>
+            Logs a trace message with the data of the <see cref="T:FubarDev.FtpServer.FtpResponse"/>.
+            </summary>
+            <param name="log">The <see cref="T:Microsoft.Extensions.Logging.ILogger"/> to use.</param>
+            <param name="response">The <see cref="T:FubarDev.FtpServer.FtpResponse"/> to log.</param>
+        </member>
+        <member name="M:FubarDev.FtpServer.FtpLogExtensions.Debug(Microsoft.Extensions.Logging.ILogger,FubarDev.FtpServer.FtpResponse)">
+            <summary>
+            Logs a debug message with the data of the <see cref="T:FubarDev.FtpServer.FtpResponse"/>.
+            </summary>
+            <param name="log">The <see cref="T:Microsoft.Extensions.Logging.ILogger"/> to use.</param>
+            <param name="response">The <see cref="T:FubarDev.FtpServer.FtpResponse"/> to log.</param>
+        </member>
+        <member name="M:FubarDev.FtpServer.FtpLogExtensions.Info(Microsoft.Extensions.Logging.ILogger,FubarDev.FtpServer.FtpResponse)">
+            <summary>
+            Logs a info message with the data of the <see cref="T:FubarDev.FtpServer.FtpResponse"/>.
+            </summary>
+            <param name="log">The <see cref="T:Microsoft.Extensions.Logging.ILogger"/> to use.</param>
+            <param name="response">The <see cref="T:FubarDev.FtpServer.FtpResponse"/> to log.</param>
+        </member>
+        <member name="M:FubarDev.FtpServer.FtpLogExtensions.Warn(Microsoft.Extensions.Logging.ILogger,FubarDev.FtpServer.FtpResponse)">
+            <summary>
+            Logs a warning message with the data of the <see cref="T:FubarDev.FtpServer.FtpResponse"/>.
+            </summary>
+            <param name="log">The <see cref="T:Microsoft.Extensions.Logging.ILogger"/> to use.</param>
+            <param name="response">The <see cref="T:FubarDev.FtpServer.FtpResponse"/> to log.</param>
+        </member>
+        <member name="M:FubarDev.FtpServer.FtpLogExtensions.Error(Microsoft.Extensions.Logging.ILogger,FubarDev.FtpServer.FtpResponse)">
+            <summary>
+            Logs an error message with the data of the <see cref="T:FubarDev.FtpServer.FtpResponse"/>.
+            </summary>
+            <param name="log">The <see cref="T:Microsoft.Extensions.Logging.ILogger"/> to use.</param>
+            <param name="response">The <see cref="T:FubarDev.FtpServer.FtpResponse"/> to log.</param>
+        </member>
+        <member name="M:FubarDev.FtpServer.FtpLogExtensions.Log(Microsoft.Extensions.Logging.ILogger,FubarDev.FtpServer.FtpResponse)">
+            <summary>
+            Logs a message with the data of the <see cref="T:FubarDev.FtpServer.FtpResponse"/>.
+            </summary>
+            <param name="log">The <see cref="T:Microsoft.Extensions.Logging.ILogger"/> to use.</param>
+            <param name="response">The <see cref="T:FubarDev.FtpServer.FtpResponse"/> to log.</param>
+            <remarks>
+            It logs either a trace, debug, or warning message depending on the
+            <see cref="P:FubarDev.FtpServer.FtpResponse.Code"/>.
+            </remarks>
+        </member>
+        <member name="T:FubarDev.FtpServer.FtpServer">
+            <summary>
+            The portable FTP server.
+            </summary>
+        </member>
+        <member name="F:FubarDev.FtpServer.FtpServer._startedLock">
+            <summary>
+            Mutex for Ready field.
+            </summary>
+        </member>
+        <member name="F:FubarDev.FtpServer.FtpServer._stopLocker">
+            <summary>
+            Mutex for Stopped field.
+            </summary>
+        </member>
+        <member name="F:FubarDev.FtpServer.FtpServer._stoppedSemaphore">
+            <summary>
+            Semaphore that gets released when the listener stopped.
+            </summary>
+        </member>
+        <member name="F:FubarDev.FtpServer.FtpServer._stopped">
+            <summary>
+            Don't use this directly, use the Stopped property instead. It is protected by a mutex.
+            </summary>
+        </member>
+        <member name="M:FubarDev.FtpServer.FtpServer.#ctor(Microsoft.Extensions.Options.IOptions{FubarDev.FtpServer.FtpServerOptions},System.IServiceProvider,Microsoft.Extensions.Logging.ILogger{FubarDev.FtpServer.FtpServer})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FubarDev.FtpServer.FtpServer"/> class.
+            </summary>
+            <param name="serverOptions">The server options.</param>
+            <param name="serviceProvider">The service provider used to query services.</param>
+            <param name="logger">The FTP server logger.</param>
+        </member>
+        <member name="E:FubarDev.FtpServer.FtpServer.ConfigureConnection">
+            <inheritdoc />
+        </member>
+        <member name="P:FubarDev.FtpServer.FtpServer.Statistics">
+            <inheritdoc />
+        </member>
+        <member name="P:FubarDev.FtpServer.FtpServer.ServerAddress">
+            <inheritdoc />
+        </member>
+        <member name="P:FubarDev.FtpServer.FtpServer.Port">
+            <inheritdoc />
+        </member>
+        <member name="P:FubarDev.FtpServer.FtpServer.Ready">
+            <inheritdoc />
+        </member>
+        <member name="P:FubarDev.FtpServer.FtpServer.Stopped">
+            <summary>
+            Gets or sets a value indicating whether the server is stopped.
+            </summary>
+            <remarks>
+            Mutexed so it can be accessed concurrently by different threads.
+            </remarks>
+        </member>
+        <member name="M:FubarDev.FtpServer.FtpServer.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:FubarDev.FtpServer.FtpServer.FubarDev#FtpServer#IFtpServer#Start">
+            <inheritdoc />
+        </member>
+        <member name="M:FubarDev.FtpServer.FtpServer.FubarDev#FtpServer#IFtpServer#Stop">
+            <inheritdoc />
+        </member>
+        <member name="M:FubarDev.FtpServer.FtpServer.FubarDev#FtpServer#IFtpService#StartAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FubarDev.FtpServer.FtpServer.FubarDev#FtpServer#IFtpService#StopAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:FubarDev.FtpServer.FtpServerHost">
+            <summary>
+            Simple <see cref="T:FubarDev.FtpServer.IFtpServerHost"/> implementation.
+            </summary>
+            <remarks>
+            This services is used to start and stop all <see cref="T:FubarDev.FtpServer.IFtpService"/> instances.
+            </remarks>
+        </member>
+        <member name="M:FubarDev.FtpServer.FtpServerHost.#ctor(System.Collections.Generic.IEnumerable{FubarDev.FtpServer.IFtpService})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FubarDev.FtpServer.FtpServerHost"/> class.
+            </summary>
+            <param name="ftpServices">The FTP services to start and stop.</param>
+        </member>
+        <member name="M:FubarDev.FtpServer.FtpServerHost.StartAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FubarDev.FtpServer.FtpServerHost.StopAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:FubarDev.FtpServer.FtpServerOptions">
+            <summary>
+            The FTP server options.
+            </summary>
+        </member>
+        <member name="P:FubarDev.FtpServer.FtpServerOptions.ServerAddress">
+            <summary>
+            Gets or sets the address the server listens on.
+            Leave empty to listen on all interfaces.
+            </summary>
+        </member>
+        <member name="P:FubarDev.FtpServer.FtpServerOptions.Port">
+            <summary>
+            Gets or sets the server port.
+            </summary>
+        </member>
+        <member name="P:FubarDev.FtpServer.FtpServerOptions.PasvMinPort">
+            <summary>
+            Gets or sets minimum port number to use for passive ftp.
+            Only active if PasvMaxPort is set, too).
+            If set, needs to be larger than 1023.
+            </summary>
+        </member>
+        <member name="P:FubarDev.FtpServer.FtpServerOptions.PasvMaxPort">
+            <summary>
+            Gets or sets maximum port number to use for passive ftp.
+            If set, needs to be larger than PasvMinPort.
+            </summary>
+        </member>
+        <member name="P:FubarDev.FtpServer.FtpServerOptions.PasvAddress">
+            <summary>
+            Gets or sets the address published to clients for PASV connections.
+            This may be necessary if you are behind a forwarding firewall, for example.
+            </summary>
+        </member>
+        <member name="T:FubarDev.FtpServer.FtpServerStatistics">
+            <summary>
+            Statistics about the FTP server.
+            </summary>
+        </member>
+        <member name="P:FubarDev.FtpServer.FtpServerStatistics.TotalConnections">
+            <inheritdoc />
+        </member>
+        <member name="P:FubarDev.FtpServer.FtpServerStatistics.ActiveConnections">
+            <inheritdoc />
+        </member>
+        <member name="T:FubarDev.FtpServer.IFtpServerHost">
+            <summary>
+            Interface for a simple FTP server host.
+            </summary>
+            <remarks>
+            This services is used to start and stop all <see cref="T:FubarDev.FtpServer.IFtpService"/> instances.
+            </remarks>
+        </member>
+        <member name="M:FubarDev.FtpServer.IFtpServerHost.StartAsync(System.Threading.CancellationToken)">
+            <summary>
+            Must be called to start the FTP server host.
+            </summary>
+            <remarks>
+            Starts all FTP server services.
+            </remarks>
+            <param name="cancellationToken">Indicates that the start process has been aborted.</param>
+            <returns>The task.</returns>
+        </member>
+        <member name="M:FubarDev.FtpServer.IFtpServerHost.StopAsync(System.Threading.CancellationToken)">
+            <summary>
+            Must be called for a graceful shutdown of the FTP server host.
+            </summary>
+            <remarks>
+            Stops all FTP server services.
+            </remarks>
+            <param name="cancellationToken">Indicates that the shutdown process should no longer be graceful.</param>
+            <returns>The task.</returns>
+        </member>
+        <member name="T:FubarDev.FtpServer.Localization.DefaultFtpCatalogLoader">
+            <summary>
+            The default implementation of the <see cref="T:FubarDev.FtpServer.Localization.IFtpCatalogLoader"/>.
+            </summary>
+        </member>
+        <member name="P:FubarDev.FtpServer.Localization.DefaultFtpCatalogLoader.DefaultCatalog">
+            <inheritdoc />
+        </member>
+        <member name="P:FubarDev.FtpServer.Localization.DefaultFtpCatalogLoader.DefaultLanguage">
+            <inheritdoc />
+        </member>
+        <member name="M:FubarDev.FtpServer.Localization.DefaultFtpCatalogLoader.GetSupportedLanguages">
+            <inheritdoc />
+        </member>
+        <member name="M:FubarDev.FtpServer.Localization.DefaultFtpCatalogLoader.LoadAsync(System.Globalization.CultureInfo,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:FubarDev.FtpServer.MultiBindingTcpListener">
+            <summary>
+            Allows binding to a host name, which in turn may resolve to multiple IP addresses.
+            </summary>
+        </member>
+        <member name="M:FubarDev.FtpServer.MultiBindingTcpListener.#ctor(System.String,System.Int32,Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FubarDev.FtpServer.MultiBindingTcpListener"/> class.
+            </summary>
+            <param name="address">The address/host name to bind to.</param>
+            <param name="port">The listener port.</param>
+            <param name="logger">The logger.</param>
+        </member>
+        <member name="P:FubarDev.FtpServer.MultiBindingTcpListener.Port">
+            <summary>
+            Gets the port this listener is bound to.
+            </summary>
+        </member>
+        <member name="M:FubarDev.FtpServer.MultiBindingTcpListener.StartAsync">
+            <summary>
+            Start all listeners.
+            </summary>
+            <returns>the task.</returns>
+        </member>
+        <member name="M:FubarDev.FtpServer.MultiBindingTcpListener.Stop">
+            <summary>
+            Stops all listeners.
+            </summary>
+        </member>
+        <member name="M:FubarDev.FtpServer.MultiBindingTcpListener.TryGetPending(System.Net.Sockets.TcpListener@)">
+            <summary>
+            Tries to get a listener that has pending client connections.
+            </summary>
+            <param name="listener">The listener that has pending client connections.</param>
+            <returns><c>true</c> when a listener with pending client connections could be found.</returns>
+        </member>
+        <member name="M:FubarDev.FtpServer.MultiBindingTcpListener.WaitAnyTcpClientAsync(System.Threading.CancellationToken)">
+            <summary>
+            Wait for any client on all listeners.
+            </summary>
+            <param name="token">Cancellation token.</param>
+            <returns>The new TCP client.</returns>
+        </member>
+        <member name="M:FubarDev.FtpServer.MultiBindingTcpListener.StartAccepting">
+            <summary>
+            Start the asynchronous acception for all listeners.
+            </summary>
+        </member>
+        <member name="T:FubarDev.FtpServer.PasvListener">
+            <summary>
+            The default implementation of the <see cref="T:FubarDev.FtpServer.IPasvListener"/> interface.
+            </summary>
+        </member>
+        <member name="M:FubarDev.FtpServer.PasvListener.#ctor(System.Net.IPAddress,System.Int32,System.Net.IPAddress)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FubarDev.FtpServer.PasvListener"/> class.
+            </summary>
+            <param name="listenAddress">On which address to listen.</param>
+            <param name="port">Port to listen on, or 0 for any.</param>
+            <param name="externalAddress">which external address should be advertised to clients. Use null to use the listener's address.</param>
+            <exception cref="T:System.ArgumentNullException">listenAddress is null.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">port is out of range.</exception>
+        </member>
+        <member name="P:FubarDev.FtpServer.PasvListener.PasvEndPoint">
+            <inheritdoc />
+        </member>
+        <member name="M:FubarDev.FtpServer.PasvListener.AcceptPasvClientAsync">
+            <inheritdoc />
+        </member>
+        <member name="M:FubarDev.FtpServer.PasvListener.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:FubarDev.FtpServer.PasvListenerFactory">
+            <summary>
+            Creates TcpListeners for use with PASV commands.
+            </summary>
+        </member>
+        <member name="M:FubarDev.FtpServer.PasvListenerFactory.#ctor(Microsoft.Extensions.Options.IOptions{FubarDev.FtpServer.FtpServerOptions},Microsoft.Extensions.Logging.ILogger{FubarDev.FtpServer.PasvListenerFactory})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FubarDev.FtpServer.PasvListenerFactory"/> class.
+            </summary>
+            <param name="serverOptions">FTPServer options.</param>
+            <param name="logger">Logger instance.</param>
+        </member>
+        <member name="P:FubarDev.FtpServer.PasvListenerFactory.PasvExternalAddress">
+            <summary>
+            Gets the IP address where clients should direct PASV connection attempts. If null, the control connection
+            interface's IP is used.
+            </summary>
+        </member>
+        <member name="M:FubarDev.FtpServer.PasvListenerFactory.CreateTcpListener(FubarDev.FtpServer.IFtpConnection,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:FubarDev.FtpServer.PasvListenerFactory.CreateListenerInRange(FubarDev.FtpServer.IFtpConnection)">
+            <summary>
+            Gets a listener on a port within the assigned port range.
+            </summary>
+            <param name="connection">Connection for which to create the listener.</param>
+            <returns>Configured PasvListener.</returns>
+            <exception cref="T:System.Net.Sockets.SocketException">When no free port could be found, or other bad things happen. See <see cref="T:System.Net.Sockets.SocketError"/>.</exception>
+        </member>
+        <member name="T:FubarDev.FtpServer.SingleFtpHostSelector">
+            <summary>
+            A simple implementation of the <see cref="T:FubarDev.FtpServer.IFtpHostSelector"/> interface.
+            </summary>
+        </member>
+        <member name="M:FubarDev.FtpServer.SingleFtpHostSelector.#ctor(FubarDev.FtpServer.IFtpConnection,System.Collections.Generic.IEnumerable{FubarDev.FtpServer.Authentication.IAuthenticationMechanism},System.Collections.Generic.IEnumerable{FubarDev.FtpServer.Authorization.IAuthorizationMechanism})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FubarDev.FtpServer.SingleFtpHostSelector"/> class.
+            </summary>
+            <param name="connection">The FTP connection.</param>
+            <param name="authenticationMechanisms">The registered authentication mechanisms.</param>
+            <param name="authorizationMechanisms">The registered authorization mechanisms.</param>
+        </member>
+        <member name="P:FubarDev.FtpServer.SingleFtpHostSelector.SelectedHost">
+            <inheritdoc />
+        </member>
+        <member name="M:FubarDev.FtpServer.SingleFtpHostSelector.SelectHostAsync(FubarDev.FtpServer.HostInfo,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="P:FubarDev.FtpServer.SingleFtpHostSelector.DefaultFtpHost.Info">
+            <inheritdoc />
+        </member>
+        <member name="P:FubarDev.FtpServer.SingleFtpHostSelector.DefaultFtpHost.AuthenticationMechanisms">
+            <inheritdoc />
+        </member>
+        <member name="P:FubarDev.FtpServer.SingleFtpHostSelector.DefaultFtpHost.AuthorizationMechanisms">
+            <inheritdoc />
+        </member>
+        <member name="T:FubarDev.FtpServer.TcpSocketClientAccessor">
+            <summary>
+            Accessor to set/get the current <see cref="T:System.Net.Sockets.TcpClient"/>.
+            </summary>
+        </member>
+        <member name="P:FubarDev.FtpServer.TcpSocketClientAccessor.TcpSocketClient">
+            <summary>
+            Gets or sets the current <see cref="T:System.Net.Sockets.TcpClient"/>.
+            </summary>
+        </member>
+        <member name="T:FubarDev.FtpServer.TelnetInputParser`1">
+            <summary>
+            Filters the TELNET commands usually sent before an ABOR command.
+            </summary>
+            <typeparam name="T">The return type of a <see cref="M:FubarDev.FtpServer.TelnetInputParser`1.Collect(System.ReadOnlySpan{System.Byte})"/> operation.</typeparam>
+        </member>
+        <member name="M:FubarDev.FtpServer.TelnetInputParser`1.Collect(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Collects data and handles the <c>Synch</c> and <c>Interrupt Process</c> TELNET commands.
+            </summary>
+            <param name="data">The data buffer.</param>
+            <returns>The list of items found inside the collected data.</returns>
+        </member>
+        <member name="M:FubarDev.FtpServer.TelnetInputParser`1.DataReceived(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Collects all non-TELNET data.
+            </summary>
+            <param name="data">The data buffer.</param>
+            <returns>The collected items.</returns>
+        </member>
+        <member name="M:FubarDev.FtpServer.TelnetInputParser`1.Synch">
+            <summary>
+            Handles the <c>Synch</c> command.
+            </summary>
+            <returns>The collected items.</returns>
+        </member>
+        <member name="M:FubarDev.FtpServer.TelnetInputParser`1.InterruptProcess">
+            <summary>
+            Handles the <c>Interrupt Process</c> command.
+            </summary>
+            <returns>The collected items.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.ServiceCollectionExtensions">
+            <summary>
+            Extension methods for <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.ServiceCollectionExtensions.AddFtpServer(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{FubarDev.FtpServer.IFtpServerBuilder})">
+            <summary>
+            Adds the FTP server services to the collection.
+            </summary>
+            <param name="services">The service collection to add the FTP server services to.</param>
+            <param name="configure">Configuration of the FTP server services.</param>
+            <returns>The service collection.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.ServiceCollectionExtensions.FtpServerBuilder.#ctor(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Extensions.DependencyInjection.ServiceCollectionExtensions.FtpServerBuilder"/> class.
+            </summary>
+            <param name="services">The service collection.</param>
+        </member>
+        <member name="P:Microsoft.Extensions.DependencyInjection.ServiceCollectionExtensions.FtpServerBuilder.Services">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>
