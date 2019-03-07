@@ -9,11 +9,16 @@
   <ItemGroup>
     <PackageReference Include="Kyklos.Kernel.Core" Version="1.0.0-beta.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
+    <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.18.3" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kyklos.Kernel.Data.Test\Kyklos.Kernel.Data.Test.csproj" />
   </ItemGroup>
 
 </Project>
