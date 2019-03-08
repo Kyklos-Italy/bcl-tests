@@ -19,7 +19,7 @@ namespace Kyklos.Kernel.Core.Test.Utilities
         protected void CurrentExePathCore()
         {
             var mn = Core.Utilities.GetMachineName();
-            string currentExePath = Core.Utilities.CurrentExePath;
+            string currentExePath = Core.Utilities.GetFilePathFromAssemblyCodeBase(Assembly.GetExecutingAssembly());
             string expectedCurrentExePath = MockData.BinFolder;
             Assert.True(true);
         }
