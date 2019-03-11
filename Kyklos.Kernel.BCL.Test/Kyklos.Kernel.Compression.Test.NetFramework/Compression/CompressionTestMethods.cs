@@ -66,5 +66,11 @@ namespace Kyklos.Kernel.Compression.Test.NetFramework.Compression
         {
             await UnZipSingleFileContentToStreamCore().ConfigureAwait(false);
         }
+
+        [Fact]
+        public async Task UnzipDllsFromNupkgFile()
+        {
+            await UnzipDllsFromNupkgFileCore();
+        }
     }
 }

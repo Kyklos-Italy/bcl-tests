@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
-using Kyklos.Kernel.Core;
+﻿using System.Reflection;
 using Kyklos.Kernel.Core.Test.Support.Mock;
 using Xunit;
 using static Kyklos.Kernel.Core.Test.Support.Framework;

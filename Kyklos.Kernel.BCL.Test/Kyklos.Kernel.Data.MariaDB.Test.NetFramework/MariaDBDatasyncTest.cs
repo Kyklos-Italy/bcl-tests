@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Xunit;
-using Kyklos.Kernel.Data.Async.Support;
-using Kyklos.Kernel.Data.Async;
-using Kyklos.Kernel.Data.Test;
-using System.Threading.Tasks;
-using Kyklos.Kernel.Data.Test.Entities;
 using System.Threading;
+using System.Threading.Tasks;
 using Kyklos.Kernel.Core.Exceptions;
+using Kyklos.Kernel.Data.Async;
+using Kyklos.Kernel.Data.Async.Support;
+using Kyklos.Kernel.Data.Test;
+using Kyklos.Kernel.Data.Test.Entities;
+using Xunit;
 
 namespace Kyklos.Kernel.Data.MariaDB.Test.NetFramework
 {

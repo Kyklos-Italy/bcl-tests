@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,14 +6,10 @@ using Kyklos.Kernel.Core.Exceptions;
 using Kyklos.Kernel.Data.Async;
 using Kyklos.Kernel.Data.Async.SqlBuilders;
 using Kyklos.Kernel.Data.Async.Support;
-using Kyklos.Kernel.Data.Entities;
-using Kyklos.Kernel.Data.Query;
-using Kyklos.Kernel.Data.Support;
 using Kyklos.Kernel.Data.Test;
 using Kyklos.Kernel.Data.Test.Entities;
 using Oracle.ManagedDataAccess.Client;
 using Xunit;
-using Xunit.Sdk;
 
 namespace Kyklos.Kernel.Data.Oracle.Test.NetFramework
 {
