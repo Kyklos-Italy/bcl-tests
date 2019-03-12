@@ -20,7 +20,8 @@ namespace Kyklos.Kernel.Data.SQLite.Test.NetFramework
     public class SQLiteDatasyncTest : BaseDatasyncTest
     {
         protected override string Schema => null;
-        protected override string ConnectionStringName => "SQLiteCS";
+        protected override string ConnectionStringName => "Data Source={$ExecutionPath}..\..\SQLite\KykDB.db;Version=3;FailIfMissing=false;Foreign Keys=True";
+        protected override string ProviderName => "SQLite";
 
         private void Setup()
         {
@@ -188,11 +189,11 @@ namespace Kyklos.Kernel.Data.SQLite.Test.NetFramework
 
 
         [Fact]
-        public void FillDayDataTableShouldBe()
+        public async Task FillDayDataTableShouldBe()
         {
             string sql = "SELECT d.* FROM DAYS d";
 
-            FillDayDataTableShouldBeCore(sql);
+            await FillDayDataTableShouldBeCore(sql);
         }
 
 

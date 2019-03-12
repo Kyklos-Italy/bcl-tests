@@ -42,7 +42,7 @@ namespace NupackageDllExtractor
             }
             else
             {
-                List<string> nupkgFiles = FileSystemUtils.GetFilesInFolderByExtension(SourceFolderComponent.FolderTextBox.Text, "*.nupkg", SearchOption.AllDirectories);
+                IList<string> nupkgFiles = FileSystemUtils.GetFilesInFolderByExtension(SourceFolderComponent.FolderTextBox.Text, "*.nupkg", SearchOption.AllDirectories);
                 if (nupkgFiles.Count == 0)
                 {
                     MessageBox.Show("No nupkg files found in Source folder and its subdirectories", "Apply filters");
@@ -73,7 +73,7 @@ namespace NupackageDllExtractor
                         else
                         {
                             filterVersion = TxtVersion.Text;
-                            List<string> filteredNupkgFiles = FileSystemUtils.FilterNukpgFilesByFilter(nupkgFiles, filterVersion);
+                            IList<string> filteredNupkgFiles = FileSystemUtils.FilterNukpgFilesByFilter(nupkgFiles, filterVersion);
                             FileSystemUtils.ExtractNukpgFilesByVersion(filteredNupkgFiles, DestinationFolderComponent.FolderTextBox.Text, filterVersion);
                         }
                         MessageBox.Show("Extraction completed successfully");

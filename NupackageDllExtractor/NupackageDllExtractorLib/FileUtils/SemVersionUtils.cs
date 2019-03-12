@@ -31,7 +31,7 @@ namespace NupackageDllExtractorLib.FileUtils
             }
         }
 
-        public static string GetLastVersionOfNugetPackages(List<string> nupkgPathFiles)
+        public static string GetLastVersionOfNugetPackages(IList<string> nupkgPathFiles)
         {
             string lastVersion = "";
             SemVersion latestSemVersion = new SemVersion(0);

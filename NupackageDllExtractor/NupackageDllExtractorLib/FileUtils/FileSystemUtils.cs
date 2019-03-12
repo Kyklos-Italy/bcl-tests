@@ -11,7 +11,7 @@ namespace NupackageDllExtractorLib.FileUtils
 {
     public static class FileSystemUtils
     {
-        public static List<string> GetFilesInFolderByExtension(string folder, string fileExtension, SearchOption searchOption)
+        public static IList<string> GetFilesInFolderByExtension(string folder, string fileExtension, SearchOption searchOption)
         {
             List<string> filesFound;
             try
@@ -32,7 +32,7 @@ namespace NupackageDllExtractorLib.FileUtils
             for (var i = 0; i < extractedDllPathFiles.Length; i++)
             {
                 totalextractedDllPathFiles.Add(extractedDllPathFiles[i]);
-            }    
+            }
             return totalextractedDllPathFiles;
         }
 
@@ -45,7 +45,7 @@ namespace NupackageDllExtractorLib.FileUtils
             return newNupkgFileName;
         }
 
-        public static void RenameDllToSemVersion(List<string> dllPathFiles, string destinationFolder, string nupkgPathFile, string filterVersion)
+        public static void RenameDllToSemVersion(IList<string> dllPathFiles, string destinationFolder, string nupkgPathFile, string filterVersion)
         {
             string newPackagePathFile = Path.Combine(destinationFolder, FileSystemUtils.GetNewNupkgFileNameFromVersion(nupkgPathFile, filterVersion));
             for (var j = 0; j < dllPathFiles.Count; j++)
@@ -56,12 +56,12 @@ namespace NupackageDllExtractorLib.FileUtils
             }
         }
 
-        public static List<string> FilterNukpgFilesByFilter(List<string> nupkgFiles, string filter)
+        public static IList<string> FilterNukpgFilesByFilter(IList<string> nupkgFiles, string filter)
         {
             return nupkgFiles.Where(x => x.ToLower().Contains(filter.ToLower())).ToList();
         }
 
-        public static List<string> GetNukpgPackageNames(List<string> nupkgFiles)
+        public static IList<string> GetNukpgPackageNames(IList<string> nupkgFiles)
         {
             List<string> packageNames = new List<string>();
             for (var i = 0; i < nupkgFiles.Count; i++)
@@ -75,13 +75,13 @@ namespace NupackageDllExtractorLib.FileUtils
             return packageNames;
         }
 
-        public static List<string> ExtractNukpgFilesByLastVersionOfEachPackage(List<string> nupkgFiles, string destinationFolder)
+        public static IList<string> ExtractNukpgFilesByLastVersionOfEachPackage(IList<string> nupkgFiles, string destinationFolder)
         {
-            List<string> nupkgFilesFilteredByLastVersion = new List<string>();
-            List<string> packageNames = GetNukpgPackageNames(nupkgFiles);
-            foreach(string packageName in packageNames)
+            IList<string> nupkgFilesFilteredByLastVersion = new List<string>();
+            IList<string> packageNames = GetNukpgPackageNames(nupkgFiles);
+            foreach (string packageName in packageNames)
             {
-                List<string> nupkgFilesOfPackage = FilterNukpgFilesByFilter(nupkgFiles, packageName);
+                IList<string> nupkgFilesOfPackage = FilterNukpgFilesByFilter(nupkgFiles, packageName);
                 string lastVersionOfPackage = SemVersionUtils.GetLastVersionOfNugetPackages(nupkgFilesOfPackage);
                 string nupkgFilesOfLastVersion = FilterNukpgFilesByFilter(nupkgFilesOfPackage, lastVersionOfPackage).First();
                 nupkgFilesFilteredByLastVersion.Add(nupkgFilesOfLastVersion);
@@ -90,9 +90,9 @@ namespace NupackageDllExtractorLib.FileUtils
             return nupkgFilesFilteredByLastVersion;
         }
 
-        public static void ExtractNukpgFilesByVersion(List<string> nupkgFiles, string destinationFolder, string filterVersion)
+        public static void ExtractNukpgFilesByVersion(IList<string> nupkgFiles, string destinationFolder, string filterVersion)
         {
-            foreach(string nupkgFile in nupkgFiles)
+            foreach (string nupkgFile in nupkgFiles)
             {
                 ExtractDllToOutputFolder(nupkgFile, filterVersion, destinationFolder);
             }
@@ -108,7 +108,7 @@ namespace NupackageDllExtractorLib.FileUtils
         }
 
         private static void ExtractDllToOutputFolder(string nupkgPathFile, string filterVersion, string destinationFolder)
-        {            
+        {
             List<string> dllPathFiles = ExtractNupkgDllsToOutputDirectory(nupkgPathFile, destinationFolder).Result;
             RenameDllToSemVersion(dllPathFiles, destinationFolder, nupkgPathFile, filterVersion);
         }

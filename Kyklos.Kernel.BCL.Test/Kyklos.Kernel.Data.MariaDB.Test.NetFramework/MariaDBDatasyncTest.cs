@@ -13,7 +13,8 @@ namespace Kyklos.Kernel.Data.MariaDB.Test.NetFramework
     public class MariaDBDatasyncTest : BaseDatasyncTest
     {
         protected override string Schema => "testdb";
-        protected override string ConnectionStringName => "MariaDBCS";
+        protected override string ConnectionString => "Server=kktitan;Port=3306;Database=testdb;Uid=testuser;Pwd=vuh1uf3nqx;";
+        protected override string ProviderName => "MariaDB";
 
         public MariaDBDatasyncTest()
         {
@@ -180,11 +181,11 @@ namespace Kyklos.Kernel.Data.MariaDB.Test.NetFramework
 
 
         [Fact]
-        public void FillDayDataTableShouldBe()
+        public async Task FillDayDataTableShouldBe()
         {
             string sql = "SELECT d.* FROM DAYS d";
 
-            FillDayDataTableShouldBeCore(sql);
+            await FillDayDataTableShouldBeCore(sql);
         }
 
 
@@ -280,7 +281,7 @@ namespace Kyklos.Kernel.Data.MariaDB.Test.NetFramework
         [Fact]
         public void IgnoreDaoEscapeShouldBeBackTick()
         {
-            IAsyncDao myDao = AsyncDaoFactory.CreateAsyncDaoFromConnectionStringName(connectionStringName: ConnectionStringName, schema: Schema, ignoreEscape: true);
+            IAsyncDao myDao = AsyncDaoFactory.CreateAsyncDaoFromConnectionStringName(connectionStringName: ConnectionString, schema: Schema, ignoreEscape: true);
             bool actualBool = ContainsEscapeShouldBeCore('`', myDao, true);
             Assert.False(actualBool);
         }
@@ -288,7 +289,7 @@ namespace Kyklos.Kernel.Data.MariaDB.Test.NetFramework
         [Fact]
         public void NotIgnoreDaoEscapeShouldBeBackTick()
         {
-            IAsyncDao myDao = AsyncDaoFactory.CreateAsyncDaoFromConnectionStringName(connectionStringName: ConnectionStringName, schema: Schema, ignoreEscape: true);
+            IAsyncDao myDao = AsyncDaoFactory.CreateAsyncDaoFromConnectionStringName(connectionStringName: ConnectionString, schema: Schema, ignoreEscape: true);
             bool actualBool = ContainsEscapeShouldBeCore('`', myDao, false);
             Assert.True(actualBool);
         }

@@ -112,14 +112,25 @@ namespace Kyklos.Kernel.Data.Test
 
         protected BaseDatasyncTest()
         {
-            Dao = CreateAsyncDao(ConnectionStringName, Schema);
+            Dao = CreateAsyncDao(ConnectionString, ProviderName, Schema);
         }
 
-        protected abstract string ConnectionStringName { get; }
+        protected abstract string ConnectionString { get; }
+        protected abstract string ProviderName { get; }
 
-        protected virtual IAsyncDao CreateAsyncDao(string connectionStringName, string schema, bool ignoreEscape = false)
+        protected virtual IAsyncDao CreateAsyncDao(string connectionString, string providerName, string schema, bool ignoreEscape = false)
         {
-            return AsyncDaoFactory.CreateAsyncDaoFromConnectionStringName(connectionStringName, schema, ignoreEscape: ignoreEscape);
+            //return AsyncDaoFactory.CreateAsyncDaoFromConnectionStringName(connectionString, schema, ignoreEscape: ignoreEscape);
+
+            return 
+                AsyncDaoFactory
+                .CreateAsyncDao
+                (
+                    connectionString: connectionString,  
+                    providerName: providerName,
+                    schema: schema, 
+                    ignoreEscape: ignoreEscape
+                );
         }
 
         protected virtual async Task AddTeams()
@@ -426,11 +437,11 @@ namespace Kyklos.Kernel.Data.Test
             Assert.Equal(2, metadataRows.Count());
         }
 
-        protected void FillDayDataTableShouldBeCore(string sql)
+        protected async Task FillDayDataTableShouldBeCore(string sql)
         {
             DataTable dayTable = new DataTable();
 
-            Dao.FillDataTable(dayTable, sql);
+            await Dao.FillDataTableAsync(dayTable, sql);
 
             var dataRows = dayTable.Select("DAY_ID = 'idDay1' OR DAY_ID = 'idDay2' OR DAY_ID = 'idDay3'");
 

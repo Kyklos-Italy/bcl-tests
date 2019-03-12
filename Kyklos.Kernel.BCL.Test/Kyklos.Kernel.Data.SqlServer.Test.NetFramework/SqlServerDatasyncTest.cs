@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Kyklos.Kernel.Core.Exceptions;
 using Kyklos.Kernel.Data.Async;
-using Kyklos.Kernel.Data.Async.SqlBuilders;
 using Kyklos.Kernel.Data.Async.Support;
-using Kyklos.Kernel.Data.Entities;
-using Kyklos.Kernel.Data.Query;
-using Kyklos.Kernel.Data.Support;
 using Kyklos.Kernel.Data.Test;
 using Kyklos.Kernel.Data.Test.Entities;
 using Xunit;
@@ -20,7 +14,8 @@ namespace Kyklos.Kernel.Data.SqlServer.Test.NetFramework
     public class SqlServerDatsyncTest : BaseDatasyncTest
     {
         protected override string Schema => "dbo";
-        protected override string ConnectionStringName => "SQLServerCS";
+        protected override string ConnectionString => @"Data Source=192.168.100.42,9433\DEV2016;Initial Catalog=DeXdemo;Persist Security Info=True;User Id=sa;Password=Sql2016$;";
+        protected override string ProviderName => "SqlServer";
 
         private void Setup()
         {

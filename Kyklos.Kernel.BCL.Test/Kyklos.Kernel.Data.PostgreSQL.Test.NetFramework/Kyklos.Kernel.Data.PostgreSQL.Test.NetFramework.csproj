@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Kyklos.Kernel.Data.Async.PostgreSQL" Version="1.0.0-beta.1" />
+    <PackageReference Include="Kyklos.Kernel.Data.Async.PostgreSQL" Version="1.0.0-beta.5" />
     <PackageReference Include="Kyklos.Kernel.Data.Async.Support" Version="1.0.0-beta.1" />
 	<PackageReference Include="Kyklos.Kernel.Core" Version="1.0.0-beta.2" />
     <PackageReference Include="xunit" Version="2.4.1" />

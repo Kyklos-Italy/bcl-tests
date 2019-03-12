@@ -20,7 +20,8 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetCore
     public class PostgreSQLDatasyncTest : BaseDatasyncTest
     {
         protected override string Schema => "public";
-        protected override string ConnectionStringName => "PostgreSQLCS";
+        protected override string ConnectionString => "Server=kktitan;Database=devdb;User Id=devuser;Password=Password01;Port=5432";
+        protected override string ProviderName => "PostgreSQL";
 
         private void Setup()
         {
@@ -192,11 +193,11 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetCore
 
 
         [Fact]
-        public void FillDayDataTableShouldBe()
+        public async Task FillDayDataTableShouldBe()
         {
             string sql = @"SELECT d.* FROM ""DAYS"" d";
 
-            FillDayDataTableShouldBeCore(sql);
+            await FillDayDataTableShouldBeCore(sql);
         }
 
 

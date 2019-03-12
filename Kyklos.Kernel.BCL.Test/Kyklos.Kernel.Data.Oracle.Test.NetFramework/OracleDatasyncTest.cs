@@ -16,7 +16,9 @@ namespace Kyklos.Kernel.Data.Oracle.Test.NetFramework
     public class OracleDatasyncTest : BaseDatasyncTest
     {
         protected override string Schema => "SCMX_INDUSTRIES_DEV";
-        protected override string ConnectionStringName => "OracleCS";
+
+        protected override string ConnectionString => "Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.0.20)(PORT=1521)))(CONNECT_DATA=(SERVER=DEDICATED)(SID=KYKORA)));User Id=SCMX_INDUSTRIES_DEV;Password=SCMX_INDUSTRIES_DEV;";
+        protected override string ProviderName => "Oracle";
 
 
         public OracleDatasyncTest()
@@ -184,11 +186,11 @@ namespace Kyklos.Kernel.Data.Oracle.Test.NetFramework
 
 
         [Fact]
-        public void FillDayDataTableShouldBe()
+        public async Task FillDayDataTableShouldBe()
         {
             string sql = "SELECT d.* FROM DAYS d";
 
-            FillDayDataTableShouldBeCore(sql);
+            await FillDayDataTableShouldBeCore(sql);
         }
 
 
@@ -261,7 +263,7 @@ namespace Kyklos.Kernel.Data.Oracle.Test.NetFramework
         public async Task CancellationOfGetCompleteResultShouldBe()
         {
             await Assert
-               .ThrowsAsync<TaskCanceledException>
+               .ThrowsAsync<OracleException>
                (
                async () =>
                {
