@@ -25,7 +25,7 @@ namespace Kyklos.Kernel.Ftp.Test.Ftp
         {
             MockData = new MockData(frameworkType);
             Process = new Process();
-            Process.StartInfo.FileName = MockData.KftpServerFolder + "\\KFtpsServer.exe";
+            Process.StartInfo.FileName = Path.Combine(MockData.KftpServerFolder, "KFtpsServer.exe");
             Process.Start();
             FtpClient = new FtpClient(MockData.HostName, MockData.Username, MockData.Password);
         }

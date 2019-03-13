@@ -26,7 +26,7 @@ namespace Kyklos.Kernel.Ftp.Test.Support
             {
                 CleanDirectory(directoryPath);
             }
-            string actualFilePath = directoryPath + "\\" + fileName;
+            string actualFilePath = Path.Combine(directoryPath, fileName);
             File.WriteAllText(actualFilePath, "contenuto demo");
             actualFilePath = (File.Exists(actualFilePath)) ? actualFilePath : "";
             return actualFilePath;
@@ -36,9 +36,27 @@ namespace Kyklos.Kernel.Ftp.Test.Support
         {
             if (cleanFolder)
             {
-                CleanDirectory(directoryPath);
+                if (Directory.Exists(Path.Combine(directoryPath, directoryName)))
+                {
+                    CleanDirectory(Path.Combine(directoryPath, directoryName));
+                }
             }
-            string actualFolderPath = directoryPath + "\\" + directoryName;
+            string actualFolderPath = Path.Combine(directoryPath, directoryName);
+            Directory.CreateDirectory(actualFolderPath);
+            actualFolderPath = (Directory.Exists(actualFolderPath)) ? actualFolderPath : "";
+            return actualFolderPath;
+        }
+
+        public static string CreateDummyDirectory(string directoryPath, bool cleanFolder)
+        {
+            if (cleanFolder)
+            {
+                if (Directory.Exists(directoryPath))
+                {
+                    CleanDirectory(directoryPath);
+                }
+            }
+            string actualFolderPath = directoryPath;
             Directory.CreateDirectory(actualFolderPath);
             actualFolderPath = (Directory.Exists(actualFolderPath)) ? actualFolderPath : "";
             return actualFolderPath;

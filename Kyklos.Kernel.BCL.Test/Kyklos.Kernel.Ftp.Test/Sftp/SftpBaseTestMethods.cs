@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
@@ -19,11 +20,16 @@ namespace Kyklos.Kernel.Ftp.Test.Sftp
         private SftpClient SftpClient;
         private Process Process { get; }
 
+        public static string GetCurrentMethod([CallerMemberName] string method = "")
+        {
+            return method;
+        }
+
         public SftpBaseTestMethods(FrameworkType frameworkType)
         {
             MockData = new MockData(frameworkType);
             Process = new Process();
-            Process.StartInfo.FileName = MockData.RebexFolder + "\\RebexTinySftpServer.exe";
+            Process.StartInfo.FileName = Path.Combine(MockData.RebexFolder, "RebexTinySftpServer.exe");
             Process.Start();
             SftpClient = new SftpClient();
             SftpClient.Connect(MockData.HostName, MockData.Username, MockData.Password);
@@ -38,47 +44,64 @@ namespace Kyklos.Kernel.Ftp.Test.Sftp
 
         protected void MustMakeDirCore()
         {
-            string dummyFolderName = "dummy";
-            Utils.CleanDirectory(MockData.SftpDataFolder);
-            SftpClient.MakeDir(dummyFolderName);
-            Assert.True(Directory.Exists(MockData.SftpDataFolder + "\\" + dummyFolderName));
+            string methodName = GetCurrentMethod();
+            string remoteFolder = Path.Combine(MockData.SftpDataFolder, methodName);
+            if (Directory.Exists(remoteFolder))
+            {
+                Directory.Delete(remoteFolder);
+            }
+            SftpClient.MakeDir(methodName);
+            Assert.True(Directory.Exists(remoteFolder));
         }
 
         protected void MustDeleteFileCore()
         {
-            string dummyFileName = "dummy.txt";
-            string actualFilePath = Utils.CreateDummyFile(MockData.SftpDataFolder, dummyFileName, cleanFolder: true);
+            string methodName = GetCurrentMethod();
+            string dummyFileName = methodName + "_dummy.txt";
+            Utils.CreateDummyFile(MockData.SftpDataFolder, dummyFileName, cleanFolder: false);
             SftpClient.DeleteFile(dummyFileName);
-            Assert.False(File.Exists(actualFilePath));
+            Assert.False(File.Exists(Path.Combine(MockData.SftpDataFolder, dummyFileName)));
         }
 
         protected void DirectoryMustExistsCore()
         {
-            string dummyFolderName = "dummy";
-            string actualFolderPath = Utils.CreateDummyDirectory(MockData.SftpDataFolder, dummyFolderName, cleanFolder: true);
-            Assert.True(SftpClient.DirectoryExists(dummyFolderName));
+            string methodName = GetCurrentMethod();
+            string remoteFolder = Path.Combine(MockData.SftpDataFolder, methodName);
+            if (Directory.Exists(remoteFolder))
+            {
+                Directory.Delete(remoteFolder);
+            }
+            string actualFolderPath = Utils.CreateDummyDirectory(remoteFolder, cleanFolder: false);
+            Assert.True(SftpClient.DirectoryExists(methodName));
         }
 
         protected void MustGetDirectoryListCore()
         {
+            string methodName = GetCurrentMethod();
             List<string> actualDirectories = new List<string>()
             {
-                "dir1",
-                "dir2",
-                "dir3",
+                methodName + "_dir1",
+                methodName + "_dir2",
+                methodName + "_dir3",
             };
-            Utils.CleanDirectory(MockData.SftpDataFolder);
-            actualDirectories.ForEach(directoryName => Utils.CreateDummyDirectory(MockData.SftpDataFolder, directoryName, cleanFolder: false));
+            actualDirectories.ForEach(directoryName => Utils.CreateDummyDirectory(MockData.SftpDataFolder, directoryName, cleanFolder: true));
             List<SftpFile> files = (List<SftpFile>)SftpClient.GetDirectoryList("/");
             bool allDirectoryArePresent = true;
-            foreach (SftpFile file in files)
+            foreach(string actualDirectory in actualDirectories)
             {
-                if (file.Name != "." && file.Name != "..")
+                bool actualDirectoryIsPresent = false;
+                foreach (SftpFile file in files)
                 {
-                    if (!actualDirectories.Contains(file.Name))
+                    if (file.Name.Contains(actualDirectory))
                     {
-                        allDirectoryArePresent = false;
+                        actualDirectoryIsPresent = true;
+                        break;
                     }
+                }
+                if (!actualDirectoryIsPresent)
+                {
+                    allDirectoryArePresent = false;
+                    break;
                 }
             }
             Assert.True(allDirectoryArePresent);
@@ -86,24 +109,31 @@ namespace Kyklos.Kernel.Ftp.Test.Sftp
 
         protected async Task MustGetDirectoryListAsyncCore()
         {
+            string methodName = GetCurrentMethod();
             List<string> actualDirectories = new List<string>()
             {
-                "dir1",
-                "dir2",
-                "dir3",
+                methodName + "_dir1",
+                methodName + "_dir2",
+                methodName + "_dir3",
             };
-            Utils.CleanDirectory(MockData.SftpDataFolder);
-            actualDirectories.ForEach(directoryName => Utils.CreateDummyDirectory(MockData.SftpDataFolder, directoryName, cleanFolder: false));
+            actualDirectories.ForEach(directoryName => Utils.CreateDummyDirectory(MockData.SftpDataFolder, directoryName, cleanFolder: true));
             List<SftpFile> files = (List<SftpFile>) await SftpClient.GetDirectoryListAsync("/").ConfigureAwait(false);
             bool allDirectoryArePresent = true;
-            foreach (SftpFile file in files)
+            foreach (string actualDirectory in actualDirectories)
             {
-                if (file.Name != "." && file.Name != "..")
+                bool actualDirectoryIsPresent = false;
+                foreach (SftpFile file in files)
                 {
-                    if (!actualDirectories.Contains(file.Name))
+                    if (file.Name.Contains(actualDirectory))
                     {
-                        allDirectoryArePresent = false;
+                        actualDirectoryIsPresent = true;
+                        break;
                     }
+                }
+                if (!actualDirectoryIsPresent)
+                {
+                    allDirectoryArePresent = false;
+                    break;
                 }
             }
             Assert.True(allDirectoryArePresent);
@@ -111,8 +141,9 @@ namespace Kyklos.Kernel.Ftp.Test.Sftp
 
         protected void MustGetFileModificationTimeCore()
         {
-            string dummyFileName = "dummy.txt";
-            string actualFilePath = Utils.CreateDummyDirectory(MockData.SftpDataFolder, dummyFileName, cleanFolder: true);
+            string methodName = GetCurrentMethod();
+            string dummyFileName = methodName + "_dummy.txt";
+            string actualFilePath = Utils.CreateDummyFile(MockData.SftpDataFolder, dummyFileName, cleanFolder: false);
             DateTime expectedModificationTime = File.GetLastWriteTime(actualFilePath);
             DateTime? actualModificationTime = SftpClient.GetFileModificationTime(Path.GetFileName(actualFilePath));
             Assert.Equal(expectedModificationTime.ToString(), ((DateTime)actualModificationTime).ToString());
@@ -120,8 +151,9 @@ namespace Kyklos.Kernel.Ftp.Test.Sftp
 
         protected void MustGetFileTransferSizeCore()
         {
-            string dummyFileName = "dummy.txt";
-            string actualFilePath = Utils.CreateDummyFile(MockData.SftpDataFolder, dummyFileName, cleanFolder: true);
+            string methodName = GetCurrentMethod();
+            string dummyFileName = methodName + "_dummy.txt";
+            string actualFilePath = Utils.CreateDummyFile(MockData.SftpDataFolder, dummyFileName, cleanFolder: false);
             FileInfo fileInfo = new FileInfo(actualFilePath);
             ulong actualSize = (ulong)fileInfo.Length;
             ulong? expectedSize = SftpClient.GetFileTransferSize(Path.GetFileName(actualFilePath));
@@ -130,24 +162,31 @@ namespace Kyklos.Kernel.Ftp.Test.Sftp
 
         protected void MustGetShortDirectoryListCore()
         {
+            string methodName = GetCurrentMethod();
             List<string> actualDirectories = new List<string>()
             {
-                "dir1",
-                "dir2",
-                "dir3",
+                methodName + "_dir1",
+                methodName + "_dir2",
+                methodName + "_dir3",
             };
-            Utils.CleanDirectory(MockData.SftpDataFolder);
-            actualDirectories.ForEach(directoryName => Utils.CreateDummyDirectory(MockData.SftpDataFolder, directoryName, cleanFolder: false));
+            actualDirectories.ForEach(directoryName => Utils.CreateDummyDirectory(MockData.SftpDataFolder, directoryName, cleanFolder: true));
             IList<string> files = SftpClient.GetShortDirectoryList("/");
             bool allDirectoryArePresent = true;
-            foreach (string file in files)
+            foreach (string actualDirectory in actualDirectories)
             {
-                if (file != "." && file != "..")
+                bool actualDirectoryIsPresent = false;
+                foreach (string file in files)
                 {
-                    if (!actualDirectories.Contains(file))
+                    if (file.Contains(actualDirectory))
                     {
-                        allDirectoryArePresent = false;
+                        actualDirectoryIsPresent = true;
+                        break;
                     }
+                }
+                if (!actualDirectoryIsPresent)
+                {
+                    allDirectoryArePresent = false;
+                    break;
                 }
             }
             Assert.True(allDirectoryArePresent);
@@ -155,24 +194,31 @@ namespace Kyklos.Kernel.Ftp.Test.Sftp
 
         protected async Task MustGetShortDirectoryListAsyncCore()
         {
+            string methodName = GetCurrentMethod();
             List<string> actualDirectories = new List<string>()
             {
-                "dir1",
-                "dir2",
-                "dir3",
+                methodName + "_dir1",
+                methodName + "_dir2",
+                methodName + "_dir3",
             };
-            Utils.CleanDirectory(MockData.SftpDataFolder);
-            actualDirectories.ForEach(directoryName => Utils.CreateDummyDirectory(MockData.SftpDataFolder, directoryName, cleanFolder: false));
+            actualDirectories.ForEach(directoryName => Utils.CreateDummyDirectory(MockData.SftpDataFolder, directoryName, cleanFolder: true));
             IList<string> files = await SftpClient.GetShortDirectoryListAsync("/").ConfigureAwait(false);
             bool allDirectoryArePresent = true;
-            foreach (string file in files)
+            foreach (string actualDirectory in actualDirectories)
             {
-                if (file != "." && file != "..")
+                bool actualDirectoryIsPresent = false;
+                foreach (string file in files)
                 {
-                    if (!actualDirectories.Contains(file))
+                    if (file.Contains(actualDirectory))
                     {
-                        allDirectoryArePresent = false;
+                        actualDirectoryIsPresent = true;
+                        break;
                     }
+                }
+                if (!actualDirectoryIsPresent)
+                {
+                    allDirectoryArePresent = false;
+                    break;
                 }
             }
             Assert.True(allDirectoryArePresent);
@@ -180,109 +226,126 @@ namespace Kyklos.Kernel.Ftp.Test.Sftp
 
         protected void MustRemoveDirCore()
         {
-            string dummyFolderName = "dummy";
-            Utils.CreateDummyDirectory(MockData.SftpDataFolder, dummyFolderName, cleanFolder: true);
-            SftpClient.RemoveDir(dummyFolderName);
-            Assert.False(Directory.Exists(MockData.SftpDataFolder + "\\" + dummyFolderName));
+            string methodName = GetCurrentMethod();
+            Utils.CreateDummyDirectory(MockData.SftpDataFolder, methodName, cleanFolder: true);
+            SftpClient.RemoveDir(methodName);
+            Assert.False(Directory.Exists(Path.Combine(MockData.SftpDataFolder, methodName)));
         }
 
         protected void MustRenameFileCore()
         {
-            string dummyFileName = "dummy.txt";
-            string actualFilePath = Utils.CreateDummyFile(MockData.SftpDataFolder, dummyFileName, cleanFolder: true);
-            string expectedFileName = "renamed.txt";
+            string methodName = GetCurrentMethod();
+            string dummyFileName = methodName + "_dummy.txt";
+            string actualFilePath = Utils.CreateDummyFile(MockData.SftpDataFolder, dummyFileName, cleanFolder: false);
+            string expectedFileName = methodName + "_renamed.txt";
             SftpClient.RenameFile(dummyFileName, expectedFileName);
-            Assert.True(File.Exists(MockData.SftpDataFolder + "\\" + expectedFileName));
+            Assert.True(File.Exists(Path.Combine(MockData.SftpDataFolder, expectedFileName)));
         }
        
         protected void MustSetCurrentDirectoryCore()
         {
-            string dummyFolderName = "dummy";
-            string subDummyFolderName = "subDummy";
+            string methodName = GetCurrentMethod();
+            string dummyFolderName = methodName + "_dummy";
+            string subDummyFolderName = methodName + "_subDummy";
             Utils.CreateDummyDirectory(MockData.SftpDataFolder, dummyFolderName, cleanFolder: true);
             SftpClient.SetCurrentDirectory(dummyFolderName);
             SftpClient.MakeDir(subDummyFolderName);
-            Assert.True(Directory.Exists(MockData.SftpDataFolder + "\\" + dummyFolderName + "\\" + subDummyFolderName));
-            Assert.True(true);
+            Assert.True(Directory.Exists(Path.Combine(MockData.SftpDataFolder, dummyFolderName, subDummyFolderName)));
         }
 
         protected void MustGetFileCore()
         {
-            string dummyFileName = "dummy.txt";
-            string actualFilePath = Utils.CreateDummyFile(MockData.SftpDataFolder, dummyFileName, cleanFolder: true);
-            string localFilePath = MockData.RebexDataFolder + "\\" + dummyFileName;
-            Utils.CleanDirectory(MockData.RebexDataFolder);
+            string methodName = GetCurrentMethod();
+            string dummyFileName = methodName + "_dummy.txt";
+            string actualFilePath = Utils.CreateDummyFile(MockData.SftpDataFolder, dummyFileName, cleanFolder: false);
+            string localFilePath = Path.Combine(MockData.RebexDataFolder, dummyFileName);
             SftpClient.GetFile(dummyFileName, localFilePath);
             Assert.True(true);
         }
 
         protected async Task MustGetFileAsyncCore()
         {
-            string dummyFileName = "dummy.txt";
-            string actualFilePath = Utils.CreateDummyFile(MockData.SftpDataFolder, dummyFileName, cleanFolder: true);
+            string methodName = GetCurrentMethod();
+            string dummyFileName = methodName + "_dummy.txt";
+            string actualFilePath = Utils.CreateDummyFile(MockData.SftpDataFolder, dummyFileName, cleanFolder: false);
             string localFilePath = MockData.RebexDataFolder + "\\" + dummyFileName;
-            Utils.CleanDirectory(MockData.RebexDataFolder);
             await SftpClient.GetFileAsync(dummyFileName, localFilePath, null, null).ConfigureAwait(false);
             Assert.True(true);
         }
 
         protected void MustGetFilesCore()
         {
+            string methodName = GetCurrentMethod();
             List<string> dummyFileNames = new List<string>()
             {
-                "dummy1.txt",
-                "dummy2.txt",
-                "dummy3.txt"
+                methodName + "_dummy1.txt",
+                methodName + "_dummy2.txt",
+                methodName + "_dummy3.txt"
             };
-            Utils.CleanDirectory(MockData.SftpDataFolder);
             dummyFileNames.ForEach(x => Utils.CreateDummyFile(MockData.SftpDataFolder, x, cleanFolder: false));
-            Utils.CleanDirectory(MockData.RebexDataFolder);
-            SftpClient.GetFiles(MockData.RebexDataFolder);
+            string localFolder = Path.Combine(MockData.RebexDataFolder, methodName);
+            SftpClient.GetFiles(localFolder);
             bool allFilesArePresentInLocalFolder = true;
-            foreach (string filePath in Directory.GetFiles(MockData.RebexDataFolder))
+            IList<string> filePaths = Directory.GetFiles(localFolder);
+            foreach (string dummyFileName in dummyFileNames)
             {
-                if (!dummyFileNames.Contains(Path.GetFileName(filePath)))
+                bool dummyFileNameIsPresent = false;
+                foreach (string filePath in filePaths)
+                {
+                    if (filePath.Contains(dummyFileName))
+                    {
+                        dummyFileNameIsPresent = true;
+                        break;
+                    }
+                }
+                if (!dummyFileNameIsPresent)
                 {
                     allFilesArePresentInLocalFolder = false;
-                }   
+                    break;
+                }
             }
             Assert.True(allFilesArePresentInLocalFolder);
         }
 
         protected void MustPutFileCore()
         {
-            string dummyFileName = "dummy.txt";
-            string localFilePath = Utils.CreateDummyFile(MockData.RebexDataFolder, dummyFileName, cleanFolder: true);
-            string remoteFilePath = MockData.SftpDataFolder + "\\" + dummyFileName;
-            Utils.CleanDirectory(MockData.SftpDataFolder);
+            string methodName = GetCurrentMethod();
+            string dummyFileName = methodName + "_dummy.txt";
+            string localFolder = Path.Combine(MockData.RebexDataFolder, methodName);
+            Utils.CreateDummyDirectory(MockData.RebexDataFolder, methodName, cleanFolder: true);
+            string localFilePath = Utils.CreateDummyFile(localFolder, dummyFileName, cleanFolder: false);
+            string remoteFilePath = Path.Combine(MockData.SftpDataFolder, dummyFileName);
             SftpClient.PutFile(localFilePath, dummyFileName, null, "", "");
             Assert.True(File.Exists(remoteFilePath));
         }
 
         protected async Task MustPutFileAsyncCore()
         {
-            string dummyFileName = "dummy.txt";
-            string localFilePath = Utils.CreateDummyFile(MockData.RebexDataFolder, dummyFileName, cleanFolder: true);
-            string remoteFilePath = MockData.SftpDataFolder + "\\" + dummyFileName;
-            Utils.CleanDirectory(MockData.SftpDataFolder);
+            string methodName = GetCurrentMethod();
+            string dummyFileName = methodName + "_dummy.txt";
+            string localFolder = Path.Combine(MockData.RebexDataFolder, methodName);
+            Utils.CreateDummyDirectory(MockData.RebexDataFolder, methodName, cleanFolder: true);
+            string localFilePath = Utils.CreateDummyFile(localFolder, dummyFileName, cleanFolder: false);
+            string remoteFilePath = Path.Combine(MockData.SftpDataFolder, dummyFileName);
             await SftpClient.PutFileAsync(localFilePath, dummyFileName, null, "", "").ConfigureAwait(false);
             Assert.True(File.Exists(remoteFilePath));
         }
 
         protected void MustPutFilesCore()
         {
+            string methodName = GetCurrentMethod();
             List<string> dummyFileNames = new List<string>()
             {
-                "dummy1.txt",
-                "dummy2.txt",
-                "dummy3.txt"
+                methodName + "_dummy1.txt",
+                methodName + "_dummy2.txt",
+                methodName + "_dummy3.txt"
             };
-            Utils.CleanDirectory(MockData.RebexDataFolder);
-            dummyFileNames.ForEach(x => Utils.CreateDummyFile(MockData.RebexDataFolder, x, cleanFolder: false));
-            Utils.CleanDirectory(MockData.SftpDataFolder);
-            SftpClient.PutFiles(MockData.RebexDataFolder);
+            string localFolder = Path.Combine(MockData.RebexDataFolder, methodName);
+            Utils.CreateDummyDirectory(MockData.RebexDataFolder, methodName, cleanFolder: true);
+            dummyFileNames.ForEach(x => Utils.CreateDummyFile(localFolder, x, cleanFolder: false));
+            SftpClient.PutFiles(localFolder);
             bool allFilesArePresentInRemoteFolder = true;
-            foreach (string filePath in Directory.GetFiles(MockData.SftpDataFolder))
+            foreach (string filePath in Directory.GetFiles(localFolder))
             {
                 if (!dummyFileNames.Contains(Path.GetFileName(filePath)))
                 {
@@ -294,59 +357,64 @@ namespace Kyklos.Kernel.Ftp.Test.Sftp
 
         protected async Task MustPutFilesAsyncCore()
         {
+            string methodName = GetCurrentMethod();
             List<string> dummyFileNames = new List<string>()
             {
-                "dummy1.txt",
-                "dummy2.txt",
-                "dummy3.txt"
+                methodName + "_dummy1.txt",
+                methodName + "_dummy2.txt",
+                methodName + "_dummy3.txt"
             };
-            Utils.CleanDirectory(MockData.RebexDataFolder);
-            dummyFileNames.ForEach(x => Utils.CreateDummyFile(MockData.RebexDataFolder, x, cleanFolder: false));
-            Utils.CleanDirectory(MockData.SftpDataFolder);
+            string localFolder = Path.Combine(MockData.RebexDataFolder, methodName);
+            Utils.CreateDummyDirectory(MockData.RebexDataFolder, methodName, cleanFolder: true);
+            dummyFileNames.ForEach(x => Utils.CreateDummyFile(localFolder, x, cleanFolder: false));
             await SftpClient.PutFilesAsync(MockData.RebexDataFolder, "/", "*.txt", Enums.EPatternStyle.Wildcard, false, null).ConfigureAwait(false);
-            bool allFilesArePresentInRemoteFolder = false;
-            if (Directory.GetFiles(MockData.SftpDataFolder).Length > 0)
+            bool allFilesArePresentInRemoteFolder = true;
+            foreach (string filePath in Directory.GetFiles(localFolder))
             {
-                allFilesArePresentInRemoteFolder = true;
-                foreach (string filePath in Directory.GetFiles(MockData.SftpDataFolder))
+                if (!dummyFileNames.Contains(Path.GetFileName(filePath)))
                 {
-                    if (!dummyFileNames.Contains(Path.GetFileName(filePath)))
-                    {
-                        allFilesArePresentInRemoteFolder = false;
-                    }
+                    allFilesArePresentInRemoteFolder = false;
                 }
             }
             Assert.True(allFilesArePresentInRemoteFolder);
         }
 
-        protected void FilesTransferredFromServerMustBeEqualTo3Core()
+        protected void FilesTransferredFromServerMustBeEqualToFilesInRemoteCore()
         {
+            string methodName = GetCurrentMethod();
+            string remoteFolder = Path.Combine(MockData.SftpDataFolder, methodName);
             List<string> dummyFileNames = new List<string>()
             {
-                "dummy1.txt",
-                "dummy2.txt",
-                "dummy3.txt"
+                methodName + "_dummy1.txt",
+                methodName + "_dummy2.txt",
+                methodName + "_dummy3.txt"
             };
-            Utils.CleanDirectory(MockData.SftpDataFolder);
-            dummyFileNames.ForEach(x => Utils.CreateDummyFile(MockData.SftpDataFolder, x, cleanFolder: false));
-            Utils.CleanDirectory(MockData.RebexDataFolder);
-            SftpClient.GetFiles(MockData.RebexDataFolder);
-            Assert.True(SftpClient.FilesTransferredFromServer.Count == 3);
+            string localFolder = Path.Combine(MockData.RebexDataFolder, methodName);
+            Utils.CreateDummyDirectory(localFolder, cleanFolder: true);
+            Utils.CreateDummyDirectory(remoteFolder, cleanFolder: true);
+            dummyFileNames.ForEach(x => Utils.CreateDummyFile(remoteFolder, x, cleanFolder: false));
+            SftpClient.GetFiles(localFolder);
+            int remoteFileCount = Directory.GetFiles(MockData.SftpDataFolder).Length;
+            Assert.True(SftpClient.FilesTransferredFromServer.Count == remoteFileCount);
         }
 
-        protected void FilesTransferredToServerMustBeEqualTo3Core()
+        protected void FilesTransferredToServerMustBeEqualToLocalCore()
         {
+            string methodName = GetCurrentMethod();
+            string remoteFolder = Path.Combine(MockData.SftpDataFolder, methodName);
             List<string> dummyFileNames = new List<string>()
             {
-                "dummy1.txt",
-                "dummy2.txt",
-                "dummy3.txt"
+                methodName + "_dummy1.txt",
+                methodName + "_dummy2.txt",
+                methodName + "_dummy3.txt"
             };
-            Utils.CleanDirectory(MockData.RebexDataFolder);
-            dummyFileNames.ForEach(x => Utils.CreateDummyFile(MockData.RebexDataFolder, x, cleanFolder: false));
-            Utils.CleanDirectory(MockData.SftpDataFolder);
-            SftpClient.PutFiles(MockData.RebexDataFolder);
-            Assert.True(SftpClient.FilesTransferredToServer.Count == 3);
+            string localFolder = Path.Combine(MockData.RebexDataFolder, methodName);
+            Utils.CreateDummyDirectory(localFolder, cleanFolder: true);
+            Utils.CreateDummyDirectory(remoteFolder, cleanFolder: true);
+            dummyFileNames.ForEach(x => Utils.CreateDummyFile(localFolder, x, cleanFolder: false));
+            SftpClient.PutFiles(remoteFolder);
+            int localFileCount = Directory.GetFiles(remoteFolder).Length;
+            Assert.True(SftpClient.FilesTransferredToServer.Count == localFileCount);
         }
 
         protected void FilesTransferredMustBeEqualTo2Core()
