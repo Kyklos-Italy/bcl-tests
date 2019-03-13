@@ -78,7 +78,10 @@ namespace Kyklos.Kernel.Compression.Test.Support
         {
             if (cleanFolder)
             {
-                CleanDirectory(directoryPath);
+                if (Directory.Exists(Path.Combine(directoryPath, directoryName)))
+                {
+                    CleanDirectory(Path.Combine(directoryPath, directoryName));
+                }
             }
             string actualFolderPath = directoryPath + "\\" + directoryName;
             Directory.CreateDirectory(actualFolderPath);
