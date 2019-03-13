@@ -16,11 +16,21 @@ namespace NupackageDllExtractor
 {
     public partial class MainForm : Form
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger("DEBUG");
+
+        private DuplicatesForm DuplicatesForm;
+
         public MainForm()
         {
             InitializeComponent();
             ConfigureForm();
+            InitializeConnectedForms();
             AssingConnectedControls();
+        }
+
+        private void InitializeConnectedForms()
+        {
+            DuplicatesForm = new DuplicatesForm();
         }
 
         private void ConfigureForm()
@@ -42,7 +52,7 @@ namespace NupackageDllExtractor
             }
             else
             {
-                IList<string> nupkgFiles = FileSystemUtils.GetFilesInFolderByExtension(SourceFolderComponent.FolderTextBox.Text, "*.nupkg", SearchOption.AllDirectories);
+                IList<string> nupkgFiles = GetAllNupkgFilesInSourceFolder();
                 if (nupkgFiles.Count == 0)
                 {
                     MessageBox.Show("No nupkg files found in Source folder and its subdirectories", "Apply filters");
@@ -50,33 +60,27 @@ namespace NupackageDllExtractor
                 else
                 {
                     string filterFolder = GetFilterFolder();
-                    nupkgFiles = FileSystemUtils.FilterNukpgFilesByFilter(nupkgFiles, filterFolder);
+                    nupkgFiles = ApplyFiltersToNupkgFiles(nupkgFiles, filterFolder);
                     if (nupkgFiles.Count == 0)
                     {
                         MessageBox.Show("No nupkg files found in Source folder and its subdirectories for folder filter: " + filterFolder, "Apply filters");
                     }
                     else
                     {
-                        if (!Directory.Exists(DestinationFolderComponent.FolderTextBox.Text))
+                        HandleDestinationDirectory();
+                        IList<string> duplicatedNupkgFiles = GetDuplicatesInNupkgFiles(nupkgFiles);
+                        if (duplicatedNupkgFiles.Count > 0)
                         {
-                            Directory.CreateDirectory(DestinationFolderComponent.FolderTextBox.Text);
-                        }
-                        if (ChkClearDestinationFolder.Checked)
-                        {
-                            FileSystemUtils.CleanDirectory(DestinationFolderComponent.FolderTextBox.Text);
-                        }
-                        string filterVersion = "";
-                        if (ChkLastVersion.Checked)
-                        {
-                            nupkgFiles = FileSystemUtils.ExtractNukpgFilesByLastVersionOfEachPackage(nupkgFiles, DestinationFolderComponent.FolderTextBox.Text);
+                            foreach(string duplicatedNupkgFile in duplicatedNupkgFiles)
+                            {
+                                log.Debug("found duplicate NupkgFile: " + duplicatedNupkgFile);
+                            }
+                            MessageBox.Show($"Some nuget packages files are duplicated, please see log", "Apply filters");
                         }
                         else
                         {
-                            filterVersion = TxtVersion.Text;
-                            IList<string> filteredNupkgFiles = FileSystemUtils.FilterNukpgFilesByFilter(nupkgFiles, filterVersion);
-                            FileSystemUtils.ExtractNukpgFilesByVersion(filteredNupkgFiles, DestinationFolderComponent.FolderTextBox.Text, filterVersion);
+                            ExtractNupkgFiles(nupkgFiles);
                         }
-                        MessageBox.Show("Extraction completed successfully");
                     }
                 }
             }
@@ -149,7 +153,7 @@ namespace NupackageDllExtractor
             }
             if (RadioRelease.Checked)
             {
-                filterFolder = "debug";
+                filterFolder = "release";
             }
             if (RadioCustom.Checked)
             {
@@ -178,6 +182,70 @@ namespace NupackageDllExtractor
             if (!RadioCustom.Checked)
             {
                 TxtCustom.Text = "";
+            }
+        }
+
+        private void ExtractNupkgFiles(IList<string> nupkgFiles)
+        {
+            string filterVersion = "";
+            if (ChkLastVersion.Checked)
+            {
+                nupkgFiles = FileSystemUtils.ExtractNukpgFilesByLastVersionOfEachPackage(nupkgFiles, DestinationFolderComponent.FolderTextBox.Text);
+            }
+            else
+            {
+                filterVersion = TxtVersion.Text;
+                IList<string> filteredNupkgFiles = FileSystemUtils.FilterNukpgFilesByFilter(nupkgFiles, filterVersion);
+                FileSystemUtils.ExtractNukpgFilesByVersion(filteredNupkgFiles, DestinationFolderComponent.FolderTextBox.Text, filterVersion);
+            }
+            MessageBox.Show("Extraction completed successfully");
+        }
+
+        private IList<string> GetAllNupkgFilesInSourceFolder()
+        {
+            IList<string> nupkgFiles = FileSystemUtils.GetFilesInFolderByExtension(SourceFolderComponent.FolderTextBox.Text, "*.nupkg", SearchOption.AllDirectories);
+            return nupkgFiles;
+        }
+
+        private IList<string> ApplyFiltersToNupkgFiles(IList<string> nupkgFiles, string filterFolder)
+        {
+            nupkgFiles = FileSystemUtils.FilterNukpgFilesByFilter(nupkgFiles, filterFolder);
+            return nupkgFiles;
+        }
+
+        private IList<string> GetDuplicatesInNupkgFiles(IList<string> nupkgFiles)
+        {
+            IList<string> duplicatenupkgFiles = new List<string>();
+            List<string> duplicateNupkgFileNames = new List<string>();
+            List<IGrouping<string, string>> duplicatedNupkgFiles = nupkgFiles.GroupBy(x => Path.GetFileName(x))
+                .Where(x => x.Count() > 1).ToList();
+            foreach(IGrouping<string, string> duplicateNupkgFile in duplicatedNupkgFiles)
+            {
+                duplicateNupkgFileNames.AddRange(duplicatedNupkgFiles.Select(x => x.Key).ToList());   
+            }
+            foreach(string nupkgFile in nupkgFiles)
+            {
+                foreach(string duplicateNupkgFileName in duplicateNupkgFileNames)
+                {
+                    if (nupkgFile.Contains(duplicateNupkgFileName))
+                    {
+                        duplicatenupkgFiles.Add(nupkgFile);
+                        break;
+                    }
+                }
+            }
+            return duplicatenupkgFiles;
+        }
+
+        private void HandleDestinationDirectory()
+        {
+            if (!Directory.Exists(DestinationFolderComponent.FolderTextBox.Text))
+            {
+                Directory.CreateDirectory(DestinationFolderComponent.FolderTextBox.Text);
+            }
+            if (ChkClearDestinationFolder.Checked)
+            {
+                FileSystemUtils.CleanDirectory(DestinationFolderComponent.FolderTextBox.Text);
             }
         }
     }

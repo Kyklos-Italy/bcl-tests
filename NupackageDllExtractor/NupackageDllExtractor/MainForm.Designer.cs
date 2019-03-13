@@ -34,7 +34,6 @@
             this.RadioCustom = new System.Windows.Forms.RadioButton();
             this.label7 = new System.Windows.Forms.Label();
             this.TxtCustom = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
             this.RadioRelease = new System.Windows.Forms.RadioButton();
             this.radioDebug = new System.Windows.Forms.RadioButton();
             this.ChkLastVersion = new System.Windows.Forms.CheckBox();
@@ -73,7 +72,6 @@
             this.groupBox1.Controls.Add(this.RadioCustom);
             this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Controls.Add(this.TxtCustom);
-            this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.RadioRelease);
             this.groupBox1.Controls.Add(this.radioDebug);
             this.groupBox1.Controls.Add(this.ChkLastVersion);
@@ -85,7 +83,7 @@
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.groupBox1.Location = new System.Drawing.Point(12, 176);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(908, 245);
+            this.groupBox1.Size = new System.Drawing.Size(908, 212);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Filters";
@@ -113,19 +111,10 @@
             // TxtCustom
             // 
             this.TxtCustom.Enabled = false;
-            this.TxtCustom.Location = new System.Drawing.Point(134, 121);
+            this.TxtCustom.Location = new System.Drawing.Point(167, 86);
             this.TxtCustom.Name = "TxtCustom";
             this.TxtCustom.Size = new System.Drawing.Size(202, 26);
             this.TxtCustom.TabIndex = 11;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(53, 124);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(67, 20);
-            this.label6.TabIndex = 10;
-            this.label6.Text = "Custom";
             // 
             // RadioRelease
             // 
@@ -153,7 +142,7 @@
             this.ChkLastVersion.AutoSize = true;
             this.ChkLastVersion.Checked = true;
             this.ChkLastVersion.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ChkLastVersion.Location = new System.Drawing.Point(137, 167);
+            this.ChkLastVersion.Location = new System.Drawing.Point(137, 131);
             this.ChkLastVersion.Name = "ChkLastVersion";
             this.ChkLastVersion.Size = new System.Drawing.Size(18, 17);
             this.ChkLastVersion.TabIndex = 7;
@@ -163,7 +152,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(15, 164);
+            this.label5.Location = new System.Drawing.Point(15, 128);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(104, 20);
             this.label5.TabIndex = 6;
@@ -172,7 +161,7 @@
             // TxtVersion
             // 
             this.TxtVersion.Enabled = false;
-            this.TxtVersion.Location = new System.Drawing.Point(135, 196);
+            this.TxtVersion.Location = new System.Drawing.Point(137, 160);
             this.TxtVersion.Name = "TxtVersion";
             this.TxtVersion.Size = new System.Drawing.Size(201, 26);
             this.TxtVersion.TabIndex = 5;
@@ -180,7 +169,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(54, 199);
+            this.label4.Location = new System.Drawing.Point(54, 163);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(66, 20);
             this.label4.TabIndex = 4;
@@ -207,7 +196,7 @@
             // BtnClose
             // 
             this.BtnClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BtnClose.Location = new System.Drawing.Point(260, 440);
+            this.BtnClose.Location = new System.Drawing.Point(260, 414);
             this.BtnClose.Name = "BtnClose";
             this.BtnClose.Size = new System.Drawing.Size(190, 44);
             this.BtnClose.TabIndex = 6;
@@ -218,7 +207,7 @@
             // BtnSave
             // 
             this.BtnSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BtnSave.Location = new System.Drawing.Point(456, 440);
+            this.BtnSave.Location = new System.Drawing.Point(456, 414);
             this.BtnSave.Name = "BtnSave";
             this.BtnSave.Size = new System.Drawing.Size(190, 44);
             this.BtnSave.TabIndex = 8;
@@ -241,7 +230,7 @@
             this.DestinationFolderComponent.ColumnCount = 3;
             this.DestinationFolderComponent.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.88144F));
             this.DestinationFolderComponent.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 83.11855F));
-            this.DestinationFolderComponent.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 132F));
+            this.DestinationFolderComponent.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 134F));
             this.DestinationFolderComponent.Location = new System.Drawing.Point(12, 71);
             this.DestinationFolderComponent.Name = "DestinationFolderComponent";
             this.DestinationFolderComponent.RowCount = 1;
@@ -256,7 +245,7 @@
             this.SourceFolderComponent.ColumnCount = 3;
             this.SourceFolderComponent.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.88144F));
             this.SourceFolderComponent.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 83.11855F));
-            this.SourceFolderComponent.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 132F));
+            this.SourceFolderComponent.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 134F));
             this.SourceFolderComponent.DestinationFolderExplorerControl = null;
             this.SourceFolderComponent.Location = new System.Drawing.Point(12, 14);
             this.SourceFolderComponent.Name = "SourceFolderComponent";
@@ -270,7 +259,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(932, 507);
+            this.ClientSize = new System.Drawing.Size(932, 483);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.DestinationFolderComponent);
             this.Controls.Add(this.BtnSave);
@@ -307,7 +296,6 @@
         private NupackageDllExtractorLib.FormControls.DestinationFolderExplorerControl DestinationFolderComponent;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox TxtCustom;
-        private System.Windows.Forms.Label label6;
         private System.Windows.Forms.RadioButton RadioCustom;
         private System.Windows.Forms.Label label7;
     }

@@ -58,7 +58,8 @@ namespace NupackageDllExtractorLib.FileUtils
 
         public static IList<string> FilterNukpgFilesByFilter(IList<string> nupkgFiles, string filter)
         {
-            return nupkgFiles.Where(x => x.ToLower().Contains(filter.ToLower())).ToList();
+            IList<string> FilteredNupkgFiles = nupkgFiles.Where(x => x.ToLower().Contains(filter.ToLower())).ToList();
+            return FilteredNupkgFiles;            
         }
 
         public static IList<string> GetNukpgPackageNames(IList<string> nupkgFiles)

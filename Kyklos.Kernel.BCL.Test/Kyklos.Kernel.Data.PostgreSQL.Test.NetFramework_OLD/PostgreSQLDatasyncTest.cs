@@ -22,8 +22,6 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework
         protected override string Schema => "public";
         protected override string ConnectionString => "PostgreSQLCS";
 
-        protected override string ProviderName => throw new NotImplementedException();
-
         private void Setup()
         {
             SetupCore().Wait();

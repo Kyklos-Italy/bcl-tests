@@ -1,35 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Kyklos.Kernel.Core.Exceptions;
 using Kyklos.Kernel.Data.Async;
-using Kyklos.Kernel.Data.Async.SqlBuilders;
 using Kyklos.Kernel.Data.Async.Support;
-using Kyklos.Kernel.Data.Entities;
-using Kyklos.Kernel.Data.Query;
-using Kyklos.Kernel.Data.Support;
 using Kyklos.Kernel.Data.Test;
 using Kyklos.Kernel.Data.Test.Entities;
 using Xunit;
 using Xunit.Sdk;
 
-namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework
+namespace Kyklos.Kernel.Data.SqlServer.Test.NetFramework
 {
-    public class PostgreSQLDatasyncTest : BaseDatasyncTest
+    public class SqlServerDatsyncTest : BaseDatasyncTest
     {
-        protected override string Schema => "public";
-        protected override string ConnectionString => "PostgreSQLCS";
-
-        protected override string ProviderName => throw new NotImplementedException();
+        protected override string Schema => "dbo";
+        protected override string ConnectionString => @"Data Source=192.168.100.42,9433\DEV2016;Initial Catalog=DeXdemo;Persist Security Info=True;User Id=sa;Password=Sql2016$;";
+        protected override string ProviderName => "SqlServer";
 
         private void Setup()
         {
             SetupCore().Wait();
         }
 
-        public PostgreSQLDatasyncTest()
+        public SqlServerDatsyncTest()
         {
             Setup();
         }
@@ -49,15 +42,14 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework
             await tDao.InsertEntityAsync(newDay).ConfigureAwait(false);
         }
 
-
         private async Task GenerateScriptsForCreateAndDropSequence()
         {
-            string createSequenceScript = @"CREATE SEQUENCE ""my_sequence""
+            string createSequenceScript = @"CREATE SEQUENCE [dbo].[my_sequence]
                                            INCREMENT BY 1
                                            MINVALUE 1 MAXVALUE 1000
                                            START WITH 1";
 
-            string dropSequenceScript = @"DROP SEQUENCE ""my_sequence""";
+            string dropSequenceScript = "DROP SEQUENCE [dbo].[my_sequence]";
 
             await PrepareSequence(createSequenceScript, dropSequenceScript).ConfigureAwait(false);
         }
@@ -73,16 +65,16 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework
         [Fact]
         public void CheckDbProviderNameShouldBe()
         {
-            CheckDbProviderNameShouldBeCore("PostgreSQL");
+            CheckDbProviderNameShouldBeCore("SqlServer");
         }
 
 
         [Fact]
         public void SqlInnerJoinShouldBe()
         {
-            string sqlJoin = "public.RESULTS r inner join public.DAYS d on (r.DAY_ID = d.DAY_ID)" +
-                              " inner join public.TEAMS ht on (r.HOME_TEAM_ID = ht.TEAM_ID)" +
-                              " inner join public.TEAMS vt on (r.VISITOR_TEAM_ID = vt.TEAM_ID)";
+            string sqlJoin = "dbo.RESULTS r inner join dbo.DAYS d on (r.DAY_ID = d.DAY_ID)" +
+                              " inner join dbo.TEAMS ht on (r.HOME_TEAM_ID = ht.TEAM_ID)" +
+                              " inner join dbo.TEAMS vt on (r.VISITOR_TEAM_ID = vt.TEAM_ID)";
 
             SqlInnerJoinShouldBeCore(sqlJoin);
         }
@@ -91,9 +83,9 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework
         [Fact]
         public void SqlLeftJoinShouldBe()
         {
-            string sqlJoin = "public.RESULTS r left join public.DAYS d on (r.DAY_ID = d.DAY_ID)" +
-                              " left join public.TEAMS ht on (r.HOME_TEAM_ID = ht.TEAM_ID)" +
-                              " left join public.TEAMS vt on (r.VISITOR_TEAM_ID = vt.TEAM_ID)";
+            string sqlJoin = "dbo.RESULTS r left join dbo.DAYS d on (r.DAY_ID = d.DAY_ID)" +
+                              " left join dbo.TEAMS ht on (r.HOME_TEAM_ID = ht.TEAM_ID)" +
+                              " left join dbo.TEAMS vt on (r.VISITOR_TEAM_ID = vt.TEAM_ID)";
 
             SqlLeftJoinShouldBeCore(sqlJoin);
         }
@@ -102,9 +94,9 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework
         [Fact]
         public void SqlRightJoinShouldBe()
         {
-            string sqlJoin = "public.RESULTS r right join public.DAYS d on (r.DAY_ID = d.DAY_ID)" +
-                              " right join public.TEAMS ht on (r.HOME_TEAM_ID = ht.TEAM_ID)" +
-                              " right join public.TEAMS vt on (r.VISITOR_TEAM_ID = vt.TEAM_ID)";
+            string sqlJoin = "dbo.RESULTS r right join dbo.DAYS d on (r.DAY_ID = d.DAY_ID)" +
+                              " right join dbo.TEAMS ht on (r.HOME_TEAM_ID = ht.TEAM_ID)" +
+                              " right join dbo.TEAMS vt on (r.VISITOR_TEAM_ID = vt.TEAM_ID)";
 
             SqlRightJoinShouldBeCore(sqlJoin);
         }
@@ -113,9 +105,9 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework
         [Fact]
         public void SqlFullOuterJoinShouldBe()
         {
-            string sqlJoin = "public.RESULTS r full outer join public.DAYS d on (r.DAY_ID = d.DAY_ID)" +
-                              " full outer join public.TEAMS ht on (r.HOME_TEAM_ID = ht.TEAM_ID)" +
-                              " full outer join public.TEAMS vt on (r.VISITOR_TEAM_ID = vt.TEAM_ID)";
+            string sqlJoin = "dbo.RESULTS r full outer join dbo.DAYS d on (r.DAY_ID = d.DAY_ID)" +
+                              " full outer join dbo.TEAMS ht on (r.HOME_TEAM_ID = ht.TEAM_ID)" +
+                              " full outer join dbo.TEAMS vt on (r.VISITOR_TEAM_ID = vt.TEAM_ID)";
 
             SqlFullOuterJoinShouldBeCore(sqlJoin);
         }
@@ -124,9 +116,9 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework
         [Fact]
         public void SqlInnerJoinWithEscapeShouldBeCore()
         {
-            string sqlJoin = @"""public"".""RESULTS"" r inner join ""public"".""DAYS"" d on (r.""DAY_ID"" = d.""DAY_ID"")" +
-                              @" inner join ""public"".""TEAMS"" ht on (r.""HOME_TEAM_ID"" = ht.""TEAM_ID"")" +
-                              @" inner join ""public"".""TEAMS"" vt on (r.""VISITOR_TEAM_ID"" = vt.""TEAM_ID"")";
+            string sqlJoin = "[dbo].[RESULTS] r inner join [dbo].[DAYS] d on (r.[DAY_ID] = d.[DAY_ID])" +
+                              " inner join [dbo].[TEAMS] ht on (r.[HOME_TEAM_ID] = ht.[TEAM_ID])" +
+                              " inner join [dbo].[TEAMS] vt on (r.[VISITOR_TEAM_ID] = vt.[TEAM_ID])";
 
             SqlInnerJoinShouldBeCore(sqlJoin, false);
         }
@@ -135,9 +127,9 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework
         [Fact]
         public void SqlLeftJoinWithEscapeShouldBeCore()
         {
-            string sqlJoin = @"""public"".""RESULTS"" r left join ""public"".""DAYS"" d on (r.""DAY_ID"" = d.""DAY_ID"")" +
-                              @" left join ""public"".""TEAMS"" ht on (r.""HOME_TEAM_ID"" = ht.""TEAM_ID"")" +
-                              @" left join ""public"".""TEAMS"" vt on (r.""VISITOR_TEAM_ID"" = vt.""TEAM_ID"")";
+            string sqlJoin = "[dbo].[RESULTS] r left join [dbo].[DAYS] d on (r.[DAY_ID] = d.[DAY_ID])" +
+                              " left join [dbo].[TEAMS] ht on (r.[HOME_TEAM_ID] = ht.[TEAM_ID])" +
+                              " left join [dbo].[TEAMS] vt on (r.[VISITOR_TEAM_ID] = vt.[TEAM_ID])";
 
             SqlLeftJoinShouldBeCore(sqlJoin, false);
         }
@@ -146,9 +138,9 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework
         [Fact]
         public void SqlRightJoinWithEscapeShouldBeCore()
         {
-            string sqlJoin = @"""public"".""RESULTS"" r right join ""public"".""DAYS"" d on (r.""DAY_ID"" = d.""DAY_ID"")" +
-                              @" right join ""public"".""TEAMS"" ht on (r.""HOME_TEAM_ID"" = ht.""TEAM_ID"")" +
-                              @" right join ""public"".""TEAMS"" vt on (r.""VISITOR_TEAM_ID"" = vt.""TEAM_ID"")";
+            string sqlJoin = "[dbo].[RESULTS] r right join [dbo].[DAYS] d on (r.[DAY_ID] = d.[DAY_ID])" +
+                              " right join [dbo].[TEAMS] ht on (r.[HOME_TEAM_ID] = ht.[TEAM_ID])" +
+                              " right join [dbo].[TEAMS] vt on (r.[VISITOR_TEAM_ID] = vt.[TEAM_ID])";
 
             SqlRightJoinShouldBeCore(sqlJoin, false);
         }
@@ -157,9 +149,9 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework
         [Fact]
         public void SqlFullOuterJoinWithEscapeShouldBeCore()
         {
-            string sqlJoin = @"""public"".""RESULTS"" r full outer join ""public"".""DAYS"" d on (r.""DAY_ID"" = d.""DAY_ID"")" +
-                              @" full outer join ""public"".""TEAMS"" ht on (r.""HOME_TEAM_ID"" = ht.""TEAM_ID"")" +
-                              @" full outer join ""public"".""TEAMS"" vt on (r.""VISITOR_TEAM_ID"" = vt.""TEAM_ID"")";
+            string sqlJoin = "[dbo].[RESULTS] r full outer join [dbo].[DAYS] d on (r.[DAY_ID] = d.[DAY_ID])" +
+                              " full outer join [dbo].[TEAMS] ht on (r.[HOME_TEAM_ID] = ht.[TEAM_ID])" +
+                              " full outer join [dbo].[TEAMS] vt on (r.[VISITOR_TEAM_ID] = vt.[TEAM_ID])";
 
             SqlFullOuterJoinShouldBeCore(sqlJoin, false);
         }
@@ -168,7 +160,7 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework
         [Fact]
         public void GetNextValueForSequenceShouldBe()
         {
-            GetNextValueForSequenceShouldBeCore(1L, @"""my_sequence""").Wait();
+            GetNextValueForSequenceShouldBeCore(1L, "[dbo].[my_sequence]").Wait();
         }
 
 
@@ -180,32 +172,32 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework
                 1L, 2L, 3L, 4L, 5L
             };
 
-            GetRangeValuesForSequenceShouldBeCore(range, @"""my_sequence""").Wait();
+            GetRangeValuesForSequenceShouldBeCore(range, "[dbo].[my_sequence]").Wait();
         }
 
 
         [Fact]
         public void GetResultTableMetadataFromQueryShouldBe()
         {
-            string sql = @"SELECT r.""GOALS_HOME_TEAM"", r.""GOALS_VISITOR_TEAM"" FROM ""RESULTS"" r";
+            string sql = "SELECT r.GOALS_HOME_TEAM, r.GOALS_VISITOR_TEAM FROM RESULTS r";
 
             GetResultTableMetadataFromQueryShouldBeCore(sql).Wait();
         }
 
 
         [Fact]
-        public async Task FillDayDataTableShouldBe()
+        public void FillDayDataTableShouldBe()
         {
-            string sql = @"SELECT d.* FROM ""DAYS"" d";
+            string sql = "SELECT d.* FROM DAYS d";
 
-            await FillDayDataTableShouldBeCore(sql);
+            FillDayDataTableShouldBeCore(sql);
         }
 
 
         [Fact]
         public void GetScriptForCreateTableShouldBe()
         {
-            string sql = @"create table ""public"".""TEAMS"" (""TEAM_ID"" varchar(50) not null, ""NAME"" varchar(200) not null, ""CITY"" varchar(150) not null, ""PRESIDENT"" varchar(120) not null, constraint TEAMS_pk primary key (""TEAM_ID""))";
+            string sql = "create table [dbo].[TEAMS] ([TEAM_ID] nvarchar(50) not null, [NAME] nvarchar(200) not null, [CITY] nvarchar(150) not null, [PRESIDENT] nvarchar(120) not null, constraint TEAMS_pk primary key ([TEAM_ID]))";
 
             GetScriptForCreateTableShouldBeCore(sql, false, typeof(Team));
         }
@@ -214,7 +206,7 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework
         [Fact]
         public void GetScriptForDropTableShouldBe()
         {
-            string sql = @"drop table ""public"".""RESULTS""";
+            string sql = "drop table [dbo].[RESULTS]";
 
             GetScriptForDropTableShouldBeCore(sql, "RESULTS");
         }
@@ -225,9 +217,9 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework
         {
             string[] sql = new string[]
             {
-                @"alter table ""public"".""RESULTS"" add constraint ""HOME_TEAM_REF"" foreign key (""HOME_TEAM_ID"") references ""public"".""TEAMS""(""TEAM_ID"")",
-                @"alter table ""public"".""RESULTS"" add constraint ""VIS_TEAM_REF"" foreign key (""VISITOR_TEAM_ID"") references ""public"".""TEAMS""(""TEAM_ID"")",
-                @"alter table ""public"".""RESULTS"" add constraint ""DAY_REF"" foreign key (""DAY_ID"") references ""public"".""DAYS""(""DAY_ID"")"
+                "alter table [dbo].[RESULTS] add constraint [HOME_TEAM_REF] foreign key ([HOME_TEAM_ID]) references [dbo].[TEAMS]([TEAM_ID])",
+                "alter table [dbo].[RESULTS] add constraint [VIS_TEAM_REF] foreign key ([VISITOR_TEAM_ID]) references [dbo].[TEAMS]([TEAM_ID])",
+                "alter table [dbo].[RESULTS] add constraint [DAY_REF] foreign key ([DAY_ID]) references [dbo].[DAYS]([DAY_ID])"
             };
 
             GetScriptsForForeignKeyShouldBeCore(sql, typeof(Result));
@@ -239,7 +231,7 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework
         {
             string[] sql = new string[]
             {
-                @"create unique index UNIQUE_DAY on ""public"".""DAYS"" (""DAY_NUMBER"")"
+                "create unique index UNIQUE_DAY on [dbo].[DAYS] ([DAY_NUMBER])"
             };
 
             GetScriptForUniqueConstraintShouldBeCore(sql, typeof(Day));
@@ -251,7 +243,7 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework
         {
             string[] sql = new string[]
             {
-                @"create index TEAM_INDEX on ""public"".""TEAMS"" (""NAME"", ""CITY"")"
+                "create index TEAM_INDEX on [dbo].[TEAMS] ([NAME], [CITY])"
             };
 
             GetScriptForCreateNonUniqueIndexShouldBeCore(sql, typeof(Team));
@@ -295,7 +287,7 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework
         [Fact]
         public async Task SelectDayDatesAsStringsShouldBeyyyy_MM_dd_HH_mm_ss()
         {
-            await SelectDayDatesAsStringsShouldBeCore("yyyy-MM-dd HH:mm:ss");
+            await SelectDayDatesAsStringsShouldBeCore("yyyy-MM-dd hh:mm:ss");
         }
 
 
@@ -320,13 +312,11 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework
            .ConfigureAwait(false);
         }
 
-
-
         [Fact]
         public void IgnoreDaoEscapeShouldBe()
         {
-            IAsyncDao myDao = AsyncDaoFactory.CreateAsyncDaoFromConnectionStringName(connectionStringName: "PostgreSQLCS", schema: Schema, ignoreEscape: true);
-            bool actualBool = ContainsEscapeShouldBeCore('"', myDao, true);
+            IAsyncDao myDao = AsyncDaoFactory.CreateAsyncDaoFromConnectionStringName(connectionStringName: "SQLServerCS", schema: Schema, ignoreEscape: true);
+            bool actualBool = ContainsEscapeShouldBeCore('[', myDao, true);
             Assert.False(actualBool);
         }
 
@@ -334,8 +324,8 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework
         [Fact]
         public void NotIgnoreDaoEscapeShouldBe()
         {
-            IAsyncDao myDao = AsyncDaoFactory.CreateAsyncDaoFromConnectionStringName(connectionStringName: "PostgreSQLCS", schema: Schema, ignoreEscape: true);
-            bool actualBool = ContainsEscapeShouldBeCore('"', myDao, false);
+            IAsyncDao myDao = AsyncDaoFactory.CreateAsyncDaoFromConnectionStringName(connectionStringName: "SQLServerCS", schema: Schema, ignoreEscape: true);
+            bool actualBool = ContainsEscapeShouldBeCore('[', myDao, false);
             Assert.True(actualBool);
         }
 
@@ -644,7 +634,5 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework
         {
             await SelectDoubleFirstDayShouldBeDay1Core().ConfigureAwait(false);
         }
-
-
     }
 }
