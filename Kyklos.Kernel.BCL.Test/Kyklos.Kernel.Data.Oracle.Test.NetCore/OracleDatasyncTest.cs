@@ -28,7 +28,7 @@ namespace Kyklos.Kernel.Data.Oracle.Test.NetCore
                 () => 
                     new JsonSerializerSettings
                     {
-                        Formatting = Newtonsoft.Json.Formatting.Indented,
+                        Formatting = Newtonsoft.Json.Formatting.None,
                         ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
                     };
 

@@ -12,6 +12,7 @@ using Kyklos.Kernel.Data.Query;
 using Kyklos.Kernel.Data.Support;
 using Kyklos.Kernel.Data.Test;
 using Kyklos.Kernel.Data.Test.Entities;
+using Newtonsoft.Json;
 using Xunit;
 using Xunit.Sdk;
 
@@ -30,7 +31,17 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetCore
 
         public PostgreSQLDatasyncTest()
         {
-            Setup();
+            JsonConvert.DefaultSettings =
+                () =>
+                    new JsonSerializerSettings
+                    {
+                        Formatting = Newtonsoft.Json.Formatting.None,
+                        ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                    };
+
+            SetupCore().Wait();
+
+            //Setup();
         }
 
         private async Task SetupCore()
