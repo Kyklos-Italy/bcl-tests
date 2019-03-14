@@ -23,6 +23,7 @@ namespace NupackageDllExtractorLib.FormControls
         )
         {
             FolderBrowserButton.Click += new EventHandler(FolderBrowserButtonClickEvent);
+            SeDefaultValues();
         }
 
         public SourceFolderExplorerControl(int columnCount, string labelText, string buttonText) : base(columnCount)
@@ -38,6 +39,11 @@ namespace NupackageDllExtractorLib.FormControls
             LabelOfTextBox = new Label();
             FolderTextBox = new TextBox();
             FolderBrowserButton = new Button();
+        }
+
+        private void SeDefaultValues()
+        {
+            FolderTextBox.Text = @"C:\development\Git\Kyklos-Essentials\src\libs\BCL\Kyklos.Kernel.BCL";
         }
 
         private void ConfigureLabel(string labelText)

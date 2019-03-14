@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Kyklos.Kernel.Compression;
 using Kyklos.Kernel.Compression.Zip;
 
 namespace NupackageDllExtractorLib.FileUtils
@@ -16,9 +14,13 @@ namespace NupackageDllExtractorLib.FileUtils
             List<string> filesFound;
             try
             {
-                filesFound = Directory.GetFiles(folder, fileExtension, searchOption).ToList();
+                filesFound = 
+                    Directory
+                    .GetFiles(folder, fileExtension, searchOption)
+                    .Where(x => !x.ToLower().Contains("symbols"))
+                    .ToList();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }

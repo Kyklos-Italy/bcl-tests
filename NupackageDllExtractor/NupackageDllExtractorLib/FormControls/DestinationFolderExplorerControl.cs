@@ -19,6 +19,7 @@ namespace NupackageDllExtractorLib.FormControls
         )
         {
             FolderBrowserButton.Click += new EventHandler(FolderBrowserButtonClickEvent);
+            SeDefaultValues();
         }
 
         public DestinationFolderExplorerControl(int columnCount, string labelText, string buttonText) : base(columnCount)
@@ -34,6 +35,11 @@ namespace NupackageDllExtractorLib.FormControls
             LabelOfTextBox = new Label();
             FolderTextBox = new TextBox();
             FolderBrowserButton = new Button();
+        }
+
+        private void SeDefaultValues()
+        {
+            FolderTextBox.Text = @"C:\tmp\nugetdlls";
         }
 
         private void ConfigureLabel(string labelText)

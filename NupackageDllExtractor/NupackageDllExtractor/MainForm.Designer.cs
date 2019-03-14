@@ -61,9 +61,10 @@
             this.ChkClearDestinationFolder.AutoSize = true;
             this.ChkClearDestinationFolder.Checked = true;
             this.ChkClearDestinationFolder.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ChkClearDestinationFolder.Location = new System.Drawing.Point(145, 143);
+            this.ChkClearDestinationFolder.Location = new System.Drawing.Point(109, 116);
+            this.ChkClearDestinationFolder.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.ChkClearDestinationFolder.Name = "ChkClearDestinationFolder";
-            this.ChkClearDestinationFolder.Size = new System.Drawing.Size(18, 17);
+            this.ChkClearDestinationFolder.Size = new System.Drawing.Size(15, 14);
             this.ChkClearDestinationFolder.TabIndex = 3;
             this.ChkClearDestinationFolder.UseVisualStyleBackColor = true;
             // 
@@ -81,9 +82,11 @@
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.groupBox1.Location = new System.Drawing.Point(12, 176);
+            this.groupBox1.Location = new System.Drawing.Point(9, 143);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(908, 212);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Size = new System.Drawing.Size(681, 172);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Filters";
@@ -91,9 +94,10 @@
             // RadioCustom
             // 
             this.RadioCustom.AutoSize = true;
-            this.RadioCustom.Location = new System.Drawing.Point(134, 91);
+            this.RadioCustom.Location = new System.Drawing.Point(100, 74);
+            this.RadioCustom.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.RadioCustom.Name = "RadioCustom";
-            this.RadioCustom.Size = new System.Drawing.Size(17, 16);
+            this.RadioCustom.Size = new System.Drawing.Size(14, 13);
             this.RadioCustom.TabIndex = 13;
             this.RadioCustom.TabStop = true;
             this.RadioCustom.UseVisualStyleBackColor = true;
@@ -102,26 +106,29 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(52, 87);
+            this.label7.Location = new System.Drawing.Point(39, 71);
+            this.label7.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(67, 20);
+            this.label7.Size = new System.Drawing.Size(55, 17);
             this.label7.TabIndex = 12;
             this.label7.Text = "Custom";
             // 
             // TxtCustom
             // 
             this.TxtCustom.Enabled = false;
-            this.TxtCustom.Location = new System.Drawing.Point(167, 86);
+            this.TxtCustom.Location = new System.Drawing.Point(125, 70);
+            this.TxtCustom.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.TxtCustom.Name = "TxtCustom";
-            this.TxtCustom.Size = new System.Drawing.Size(202, 26);
+            this.TxtCustom.Size = new System.Drawing.Size(152, 23);
             this.TxtCustom.TabIndex = 11;
             // 
             // RadioRelease
             // 
             this.RadioRelease.AutoSize = true;
-            this.RadioRelease.Location = new System.Drawing.Point(134, 62);
+            this.RadioRelease.Location = new System.Drawing.Point(100, 50);
+            this.RadioRelease.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.RadioRelease.Name = "RadioRelease";
-            this.RadioRelease.Size = new System.Drawing.Size(17, 16);
+            this.RadioRelease.Size = new System.Drawing.Size(14, 13);
             this.RadioRelease.TabIndex = 9;
             this.RadioRelease.TabStop = true;
             this.RadioRelease.UseVisualStyleBackColor = true;
@@ -130,9 +137,10 @@
             // 
             this.radioDebug.AutoSize = true;
             this.radioDebug.Checked = true;
-            this.radioDebug.Location = new System.Drawing.Point(134, 33);
+            this.radioDebug.Location = new System.Drawing.Point(100, 27);
+            this.radioDebug.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.radioDebug.Name = "radioDebug";
-            this.radioDebug.Size = new System.Drawing.Size(17, 16);
+            this.radioDebug.Size = new System.Drawing.Size(14, 13);
             this.radioDebug.TabIndex = 8;
             this.radioDebug.TabStop = true;
             this.radioDebug.UseVisualStyleBackColor = true;
@@ -142,9 +150,10 @@
             this.ChkLastVersion.AutoSize = true;
             this.ChkLastVersion.Checked = true;
             this.ChkLastVersion.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ChkLastVersion.Location = new System.Drawing.Point(137, 131);
+            this.ChkLastVersion.Location = new System.Drawing.Point(103, 106);
+            this.ChkLastVersion.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.ChkLastVersion.Name = "ChkLastVersion";
-            this.ChkLastVersion.Size = new System.Drawing.Size(18, 17);
+            this.ChkLastVersion.Size = new System.Drawing.Size(15, 14);
             this.ChkLastVersion.TabIndex = 7;
             this.ChkLastVersion.UseVisualStyleBackColor = true;
             this.ChkLastVersion.CheckedChanged += new System.EventHandler(this.ChkLastVersion_CheckedChanged);
@@ -152,53 +161,59 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(15, 128);
+            this.label5.Location = new System.Drawing.Point(11, 104);
+            this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(104, 20);
+            this.label5.Size = new System.Drawing.Size(87, 17);
             this.label5.TabIndex = 6;
             this.label5.Text = "Last Version";
             // 
             // TxtVersion
             // 
             this.TxtVersion.Enabled = false;
-            this.TxtVersion.Location = new System.Drawing.Point(137, 160);
+            this.TxtVersion.Location = new System.Drawing.Point(103, 130);
+            this.TxtVersion.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.TxtVersion.Name = "TxtVersion";
-            this.TxtVersion.Size = new System.Drawing.Size(201, 26);
+            this.TxtVersion.Size = new System.Drawing.Size(152, 23);
             this.TxtVersion.TabIndex = 5;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(54, 163);
+            this.label4.Location = new System.Drawing.Point(40, 132);
+            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(66, 20);
+            this.label4.Size = new System.Drawing.Size(56, 17);
             this.label4.TabIndex = 4;
             this.label4.Text = "Version";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(45, 58);
+            this.label3.Location = new System.Drawing.Point(34, 47);
+            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(70, 20);
+            this.label3.Size = new System.Drawing.Size(60, 17);
             this.label3.TabIndex = 2;
             this.label3.Text = "Release";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(57, 29);
+            this.label2.Location = new System.Drawing.Point(43, 24);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(58, 20);
+            this.label2.Size = new System.Drawing.Size(50, 17);
             this.label2.TabIndex = 0;
             this.label2.Text = "Debug";
             // 
             // BtnClose
             // 
             this.BtnClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BtnClose.Location = new System.Drawing.Point(260, 414);
+            this.BtnClose.Location = new System.Drawing.Point(548, 336);
+            this.BtnClose.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.BtnClose.Name = "BtnClose";
-            this.BtnClose.Size = new System.Drawing.Size(190, 44);
+            this.BtnClose.Size = new System.Drawing.Size(142, 36);
             this.BtnClose.TabIndex = 6;
             this.BtnClose.Text = "Quit";
             this.BtnClose.UseVisualStyleBackColor = true;
@@ -207,9 +222,10 @@
             // BtnSave
             // 
             this.BtnSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BtnSave.Location = new System.Drawing.Point(456, 414);
+            this.BtnSave.Location = new System.Drawing.Point(9, 336);
+            this.BtnSave.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.BtnSave.Name = "BtnSave";
-            this.BtnSave.Size = new System.Drawing.Size(190, 44);
+            this.BtnSave.Size = new System.Drawing.Size(142, 36);
             this.BtnSave.TabIndex = 8;
             this.BtnSave.Text = "Apply";
             this.BtnSave.UseVisualStyleBackColor = true;
@@ -219,9 +235,10 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.label1.Location = new System.Drawing.Point(12, 143);
+            this.label1.Location = new System.Drawing.Point(9, 116);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(119, 17);
+            this.label1.Size = new System.Drawing.Size(90, 13);
             this.label1.TabIndex = 12;
             this.label1.Text = "Clean Destination";
             // 
@@ -230,13 +247,14 @@
             this.DestinationFolderComponent.ColumnCount = 3;
             this.DestinationFolderComponent.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.88144F));
             this.DestinationFolderComponent.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 83.11855F));
-            this.DestinationFolderComponent.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 134F));
-            this.DestinationFolderComponent.Location = new System.Drawing.Point(12, 71);
+            this.DestinationFolderComponent.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 102F));
+            this.DestinationFolderComponent.Location = new System.Drawing.Point(9, 58);
+            this.DestinationFolderComponent.Margin = new System.Windows.Forms.Padding(2);
             this.DestinationFolderComponent.Name = "DestinationFolderComponent";
             this.DestinationFolderComponent.RowCount = 1;
             this.DestinationFolderComponent.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.DestinationFolderComponent.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.DestinationFolderComponent.Size = new System.Drawing.Size(908, 51);
+            this.DestinationFolderComponent.Size = new System.Drawing.Size(681, 41);
             this.DestinationFolderComponent.TabIndex = 9;
             // 
             // SourceFolderComponent
@@ -245,21 +263,22 @@
             this.SourceFolderComponent.ColumnCount = 3;
             this.SourceFolderComponent.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.88144F));
             this.SourceFolderComponent.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 83.11855F));
-            this.SourceFolderComponent.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 134F));
+            this.SourceFolderComponent.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 102F));
             this.SourceFolderComponent.DestinationFolderExplorerControl = null;
-            this.SourceFolderComponent.Location = new System.Drawing.Point(12, 14);
+            this.SourceFolderComponent.Location = new System.Drawing.Point(9, 11);
+            this.SourceFolderComponent.Margin = new System.Windows.Forms.Padding(2);
             this.SourceFolderComponent.Name = "SourceFolderComponent";
             this.SourceFolderComponent.RowCount = 1;
             this.SourceFolderComponent.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 60.78431F));
             this.SourceFolderComponent.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 39.21569F));
-            this.SourceFolderComponent.Size = new System.Drawing.Size(908, 51);
+            this.SourceFolderComponent.Size = new System.Drawing.Size(681, 41);
             this.SourceFolderComponent.TabIndex = 0;
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(932, 483);
+            this.ClientSize = new System.Drawing.Size(699, 392);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.DestinationFolderComponent);
             this.Controls.Add(this.BtnSave);
@@ -267,6 +286,7 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.ChkClearDestinationFolder);
             this.Controls.Add(this.SourceFolderComponent);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "MainForm";
             this.Text = "Nupkg Dll Extractor";
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).EndInit();
