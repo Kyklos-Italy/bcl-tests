@@ -18,19 +18,11 @@ namespace NupackageDllExtractor
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger("DEBUG");
 
-        private DuplicatesForm DuplicatesForm;
-
         public MainForm()
         {
             InitializeComponent();
             ConfigureForm();
-            InitializeConnectedForms();
             AssingConnectedControls();
-        }
-
-        private void InitializeConnectedForms()
-        {
-            DuplicatesForm = new DuplicatesForm();
         }
 
         private void ConfigureForm()

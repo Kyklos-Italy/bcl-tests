@@ -12,6 +12,7 @@ using Kyklos.Kernel.Data.Query;
 using Kyklos.Kernel.Data.Support;
 using Kyklos.Kernel.Data.Test;
 using Kyklos.Kernel.Data.Test.Entities;
+using Newtonsoft.Json;
 using Xunit;
 using Xunit.Sdk;
 
@@ -21,11 +22,19 @@ namespace Kyklos.Kernel.Data.SQLite.Test.NetCore
     {
         protected override string Schema => null;
         
-        protected override string ConnectionString => "Data Source={$ExecutionPath}..\..\SQLite\KykDB.db;Version=3;FailIfMissing=false;Foreign Keys=True";
+        protected override string ConnectionString => "Data Source={$ExecutionPath}..\\..\\SQLite\\KykDB.db;Version=3;FailIfMissing=false;Foreign Keys=True";
         protected override string ProviderName => "SQLite";
 
         private void Setup()
         {
+            JsonConvert.DefaultSettings =
+                () =>
+                    new JsonSerializerSettings
+                    {
+                        Formatting = Newtonsoft.Json.Formatting.None,
+                        ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                    };
+
             SetupCore().Wait();
         }
 

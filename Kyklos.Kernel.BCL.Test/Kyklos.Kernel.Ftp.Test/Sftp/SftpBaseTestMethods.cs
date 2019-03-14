@@ -30,6 +30,7 @@ namespace Kyklos.Kernel.Ftp.Test.Sftp
             MockData = new MockData(frameworkType);
             Process = new Process();
             Process.StartInfo.FileName = Path.Combine(MockData.RebexFolder, "RebexTinySftpServer.exe");
+            Process.StartInfo.WorkingDirectory = MockData.RebexFolder;
             Process.Start();
             SftpClient = new SftpClient();
             SftpClient.Connect(MockData.HostName, MockData.Username, MockData.Password);

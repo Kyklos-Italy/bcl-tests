@@ -20,7 +20,7 @@ namespace Kyklos.Kernel.Data.SQLite.Test.NetFramework
     public class SQLiteDatasyncTest : BaseDatasyncTest
     {
         protected override string Schema => null;
-        protected override string ConnectionStringName => "Data Source={$ExecutionPath}..\..\SQLite\KykDB.db;Version=3;FailIfMissing=false;Foreign Keys=True";
+        protected override string ConnectionString => "Data Source={$ExecutionPath}..\\..\\SQLite\\KykDB.db;Version=3;FailIfMissing=false;Foreign Keys=True";
         protected override string ProviderName => "SQLite";
 
         private void Setup()
@@ -47,7 +47,6 @@ namespace Kyklos.Kernel.Data.SQLite.Test.NetFramework
             newDay.DayId = newKey;
             await tDao.InsertEntityAsync(newDay).ConfigureAwait(false);
         }
-
 
         private async Task GenerateScriptsForDropAndUpdateSequence()
         {
