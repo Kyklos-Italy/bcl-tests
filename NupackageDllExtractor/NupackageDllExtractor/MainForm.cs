@@ -52,7 +52,7 @@ namespace NupackageDllExtractor
                 else
                 {
                     string filterFolder = GetFilterFolder();
-                    nupkgFiles = ApplyFiltersToNupkgFiles(nupkgFiles, filterFolder);
+                    nupkgFiles = ApplyFiltersToNupkgFiles2(nupkgFiles, filterFolder);
                     if (nupkgFiles.Count == 0)
                     {
                         MessageBox.Show("No nupkg files found in Source folder and its subdirectories for folder filter: " + filterFolder, "Apply filters");
@@ -210,6 +210,12 @@ namespace NupackageDllExtractor
         private IList<string> ApplyFiltersToNupkgFiles(IList<string> nupkgFiles, string filterFolder)
         {
             nupkgFiles = FileSystemUtils.FilterNukpgFilesByFolder(nupkgFiles, SourceFolderComponent.FolderTextBox.Text, filterFolder);
+            return nupkgFiles;
+        }
+
+        private IList<string> ApplyFiltersToNupkgFiles2(IList<string> nupkgFiles, string filterFolder)
+        {
+            nupkgFiles = FileSystemUtils.FilterNukpgFilesByFilter(nupkgFiles, filterFolder);
             return nupkgFiles;
         }
 
