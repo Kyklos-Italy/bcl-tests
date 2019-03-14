@@ -183,14 +183,22 @@ namespace NupackageDllExtractor
             if (ChkLastVersion.Checked)
             {
                 nupkgFiles = FileSystemUtils.ExtractNukpgFilesByLastVersionOfEachPackage(nupkgFiles, DestinationFolderComponent.FolderTextBox.Text);
+                MessageBox.Show("Extraction completed successfully");
             }
             else
             {
                 filterVersion = TxtVersion.Text;
                 IList<string> filteredNupkgFiles = FileSystemUtils.FilterNukpgFilesByFilter(nupkgFiles, filterVersion);
-                FileSystemUtils.ExtractNukpgFilesByVersion(filteredNupkgFiles, DestinationFolderComponent.FolderTextBox.Text, filterVersion);
+                if (filteredNupkgFiles.Count() == 0)
+                {
+                    MessageBox.Show("No packages found");
+                }
+                else
+                {
+                    FileSystemUtils.ExtractNukpgFilesByVersion(filteredNupkgFiles, DestinationFolderComponent.FolderTextBox.Text, filterVersion);
+                    MessageBox.Show("Extraction completed successfully");
+                }
             }
-            MessageBox.Show("Extraction completed successfully");
         }
 
         private IList<string> GetAllNupkgFilesInSourceFolder()
@@ -201,7 +209,7 @@ namespace NupackageDllExtractor
 
         private IList<string> ApplyFiltersToNupkgFiles(IList<string> nupkgFiles, string filterFolder)
         {
-            nupkgFiles = FileSystemUtils.FilterNukpgFilesByFilter(nupkgFiles, filterFolder);
+            nupkgFiles = FileSystemUtils.FilterNukpgFilesByFolder(nupkgFiles, SourceFolderComponent.FolderTextBox.Text, filterFolder);
             return nupkgFiles;
         }
 
