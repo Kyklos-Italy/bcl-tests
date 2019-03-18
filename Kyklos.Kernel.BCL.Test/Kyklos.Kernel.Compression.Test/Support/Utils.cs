@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.IO.Compression;
-using System.Text;
 
 namespace Kyklos.Kernel.Compression.Test.Support
 {
@@ -87,6 +84,16 @@ namespace Kyklos.Kernel.Compression.Test.Support
             Directory.CreateDirectory(actualFolderPath);
             actualFolderPath = (Directory.Exists(actualFolderPath)) ? actualFolderPath : "";
             return actualFolderPath;
+        }
+
+        public static void RemoveDir(string folderPath)
+        {
+            DirectoryInfo directoryInfo = new DirectoryInfo(folderPath);
+            if (directoryInfo.Exists)
+            {
+
+            }
+            directoryInfo.Delete(true);
         }
     }
 }
