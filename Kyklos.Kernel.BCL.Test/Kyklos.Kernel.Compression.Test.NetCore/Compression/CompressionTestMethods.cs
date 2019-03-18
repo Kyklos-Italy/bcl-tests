@@ -37,11 +37,11 @@ namespace Kyklos.Kernel.Compression.Test.NetCore.Compression
             await ZipByteArrayCore().ConfigureAwait(false);
         }
 
-        [Fact(Skip = "da capire come fare", DisplayName = "ZipSingleFileContent")]
-        public async Task ZipSingleFileContent()
-        {
-            await ZipSingleFileContentCore().ConfigureAwait(false);
-        }
+        //[Fact(Skip = "da capire come fare", DisplayName = "ZipSingleFileContent")]
+        //public async Task ZipSingleFileContent()
+        //{
+        //    await ZipSingleFileContentCore().ConfigureAwait(false);
+        //}
 
         [Fact(DisplayName = "UnZipString")]
         public void UnZipString()
@@ -49,11 +49,11 @@ namespace Kyklos.Kernel.Compression.Test.NetCore.Compression
             UnZipStringCore();
         }
 
-        [Fact(Skip = "da capire come fare", DisplayName = "WriteAllBytesAsync")]
-        public void WriteAllBytesAsync()
-        {
-            WriteAllBytesAsyncCore();
-        }
+        //[Fact(Skip = "da capire come fare", DisplayName = "WriteAllBytesAsync")]
+        //public void WriteAllBytesAsync()
+        //{
+        //    WriteAllBytesAsyncCore();
+        //}
 
         [Fact(DisplayName = "CreateZipFromFileContentList")]
         public async Task CreateZipFromFileContentList()
@@ -61,11 +61,11 @@ namespace Kyklos.Kernel.Compression.Test.NetCore.Compression
             await CreateZipFromFileContentListCore().ConfigureAwait(false);
         }
 
-        [Fact(Skip = "da capire come fare", DisplayName = "UnZipSingleFileContentToStream")]
-        public async Task UnZipSingleFileContentToStream()
-        {
-            await UnZipSingleFileContentToStreamCore().ConfigureAwait(false);
-        }
+        //[Fact(Skip = "da capire come fare", DisplayName = "UnZipSingleFileContentToStream")]
+        //public async Task UnZipSingleFileContentToStream()
+        //{
+        //    await UnZipSingleFileContentToStreamCore().ConfigureAwait(false);
+        //}
 
         [Fact]
         public async Task UnzipDllsFromNupkgFile()

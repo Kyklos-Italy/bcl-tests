@@ -1037,12 +1037,7 @@ namespace Kyklos.Kernel.Data.Test
                 .Select()
                 .Field<Result>("r", x => x.ResultId)
                 .Comma()
-                .CustomSql("SUM")
-                .OpenPar()
-                .Field<Result>("r", x => x.GoalsHomeTeam)
-                .OperPlus()
-                .Field<Result>("r", x => x.GoalsVisitorTeam)
-                .ClosePar()
+                .Sum<Result>("r", x => x.GoalsHomeTeam + x.GoalsVisitorTeam)
                 .From()
                 .Table<Result>("r")
                 .GroupBy()
@@ -1051,8 +1046,7 @@ namespace Kyklos.Kernel.Data.Test
             var actualTuples = (await
                 Dao
                 .GetItemsAsync<Tuple<string, int>>(queryBuilder)
-                .ConfigureAwait(false)
-                )
+                .ConfigureAwait(false))
                 .OrderBy(x => x.Item1)
                 .ToArray();
 
@@ -1114,17 +1108,12 @@ namespace Kyklos.Kernel.Data.Test
         {
             int expectedValue = 7;
             var queryBuilder =
-                    Dao.
-                        NewQueryBuilder()
-                            .Select()
-                                .CustomSql("MAX")
-                                .OpenPar()
-                                    .Field<Result>("r", x => x.GoalsHomeTeam)
-                                    .OperPlus()
-                                    .Field<Result>("r", x => x.GoalsVisitorTeam)
-                                .ClosePar()
-                            .From()
-                                .Table<Result>("r");
+                Dao
+                .NewQueryBuilder()
+                .Select()
+                .Max<Result>("r", x => x.GoalsHomeTeam + x.GoalsVisitorTeam)
+                .From()
+                .Table<Result>("r");
 
             var actualValue = (await Dao.GetItemsAsync<int>(queryBuilder).ConfigureAwait(false)).FirstOrDefault();
             Assert.Equal(expectedValue, actualValue);
@@ -1135,12 +1124,12 @@ namespace Kyklos.Kernel.Data.Test
         {
             int expectedValue = 0;
             var queryBuilder =
-                    Dao
-                        .NewQueryBuilder()
-                            .Select()
-                                .Min<Result>("r", x => x.GoalsHomeTeam)
-                            .From()
-                                .Table<Result>("r");
+                Dao
+                .NewQueryBuilder()
+                .Select()
+                .Min<Result>("r", x => x.GoalsHomeTeam)
+                .From()
+                .Table<Result>("r");
 
             var actualValue = (await Dao.GetItemsAsync<int>(queryBuilder).ConfigureAwait(false)).ToArray().FirstOrDefault();
             Assert.Equal(expectedValue, actualValue);
@@ -1167,17 +1156,19 @@ namespace Kyklos.Kernel.Data.Test
         {
             int expectedValue = 1;
             var queryBuilder =
-                    Dao.
-                        NewQueryBuilder()
-                            .Select()
-                                .CustomSql("MIN")
-                                .OpenPar()
-                                    .Field<Result>("r", x => x.GoalsHomeTeam)
-                                    .OperPlus()
-                                    .Field<Result>("r", x => x.GoalsVisitorTeam)
-                                .ClosePar()
-                            .From()
-                                .Table<Result>("r");
+                Dao
+                .NewQueryBuilder()
+                .Select()
+                .Min
+                (
+                    nqb =>
+                        nqb
+                        .Field<Result>("r", x => x.GoalsHomeTeam)
+                        .OperPlus()
+                        .Field<Result>("r", x => x.GoalsVisitorTeam)
+                )
+                .From()
+                .Table<Result>("r");
 
             var actualValue = (await Dao.GetItemsAsync<int>(queryBuilder).ConfigureAwait(false)).FirstOrDefault();
             Assert.Equal(expectedValue, actualValue);
@@ -1188,16 +1179,19 @@ namespace Kyklos.Kernel.Data.Test
         {
             double expectedValue = 1.83;
             var queryBuilder =
-                    Dao
-                        .NewQueryBuilder()
-                            .Select()
-                                .CustomSql("CAST")
-                                .OpenPar()
-                                    .Avg<Result>("r", x => x.GoalsHomeTeam)
-                                    .CustomSql("as int")
-                                .ClosePar()
-                            .From()
-                                .Table<Result>("r");
+                Dao
+                .NewQueryBuilder()
+                .Select()
+                .Function
+                (
+                    "cast", 
+                    nqb => 
+                        nqb
+                        .Avg<Result>("r", x => x.GoalsHomeTeam)
+                        .CustomSql("as int")
+                )
+                .From()
+                .Table<Result>("r");
 
             var actualValue = (await Dao.GetItemsAsync<int>(queryBuilder).ConfigureAwait(false)).ToArray().FirstOrDefault();
             Assert.True(expectedValue - actualValue < 1);
@@ -1208,16 +1202,19 @@ namespace Kyklos.Kernel.Data.Test
         {
             double expectedValue = 2;
             var queryBuilder =
-                    Dao
-                        .NewQueryBuilder()
-                            .Select()
-                                .CustomSql("CAST")
-                                .OpenPar()
-                                    .Avg<Result>("r", x => x.GoalsVisitorTeam)
-                                    .CustomSql("as int")
-                                .ClosePar()
-                            .From()
-                                .Table<Result>("r");
+                Dao
+                .NewQueryBuilder()
+                .Select()
+                .Function
+                (
+                    "CAST",
+                    nqb =>
+                       nqb
+                       .Avg<Result>("r", x => x.GoalsVisitorTeam)
+                       .CustomSql("as int")
+                )
+                .From()
+                .Table<Result>("r");
 
             var actualValue = (await Dao.GetItemsAsync<int>(queryBuilder).ConfigureAwait(false)).ToArray().FirstOrDefault();
             Assert.True(expectedValue - actualValue < 1);
@@ -1229,21 +1226,23 @@ namespace Kyklos.Kernel.Data.Test
             double expectedValue = 3.83;
 
             var queryBuilder =
-                    Dao.
-                        NewQueryBuilder()
-                            .Select()
-                                .CustomSql("CAST")
-                                .OpenPar()
-                                    .CustomSql("AVG")
-                                    .OpenPar()
-                                        .Field<Result>("r", x => x.GoalsHomeTeam)
-                                        .OperPlus()
-                                        .Field<Result>("r", x => x.GoalsVisitorTeam)
-                                    .ClosePar()
-                                    .CustomSql("as int")
-                                .ClosePar()
-                            .From()
-                                .Table<Result>("r");
+                Dao
+                .NewQueryBuilder()
+                .Select()
+                .Function
+                (
+                    "CAST",
+                    nqb => 
+                        nqb
+                        .Avg<Result>
+                        (
+                            "r",
+                            x => x.GoalsHomeTeam + x.GoalsVisitorTeam
+                        )
+                        .CustomSql("as int")
+                )
+                .From()
+                .Table<Result>("r");
 
             var actualValue = (await Dao.GetItemsAsync<int>(queryBuilder).ConfigureAwait(false)).FirstOrDefault();
             Assert.True(expectedValue - actualValue < 1);
@@ -1367,32 +1366,31 @@ namespace Kyklos.Kernel.Data.Test
             };
 
             var queryBuilder =
-                    Dao
-                        .NewQueryBuilder()
-                            .Select()
-                                .Star("r")
-                            .From()
-                                .Table<Result>("r")
-                            .GroupBy()
-                                .Fields<Result>("r", x => x.ResultId, x => x.HomeTeamId, x => x.VisitorTeamId, x => x.GoalsHomeTeam, x => x.GoalsVisitorTeam, x => x.DayId)
-                            .Having()
-                                .OpenPar()
-                                    .Field<Result>("r", x => x.GoalsHomeTeam)
-                                    .OperPlus()
-                                    .Field<Result>("r", x => x.GoalsVisitorTeam)
-                                .ClosePar()
-                                .CustomSql("=")
-                                .OpenPar()
-                                    .Select()
-                                        .CustomSql("MAX")
-                                        .OpenPar()
-                                            .Field<Result>("r", x => x.GoalsHomeTeam)
-                                            .OperPlus()
-                                            .Field<Result>("r", x => x.GoalsVisitorTeam)
-                                        .ClosePar()
-                                    .From()
-                                        .Table<Result>("r")
-                                .ClosePar();
+                Dao
+                .NewQueryBuilder()
+                .Select()
+                .Star("r")
+                .From()
+                .Table<Result>("r")
+                .GroupBy()
+                .Fields<Result>("r", x => x.ResultId, x => x.HomeTeamId, x => x.VisitorTeamId, x => x.GoalsHomeTeam, x => x.GoalsVisitorTeam, x => x.DayId)
+                .Having()
+                .OpenPar()
+                    .Field<Result>("r", x => x.GoalsHomeTeam)
+                    .OperPlus()
+                    .Field<Result>("r", x => x.GoalsVisitorTeam)
+                .ClosePar()
+                .CustomSql("=")
+                .OpenPar()
+                    .Select()
+                    .Max<Result>
+                    (
+                        "r",
+                        x => x.GoalsHomeTeam + x.GoalsVisitorTeam
+                    )
+                    .From()
+                    .Table<Result>("r")
+                .ClosePar();
 
             var actualResult = (await Dao.GetItemsAsync<Result>(queryBuilder).ConfigureAwait(false)).FirstOrDefault();
             Assert.Equal(expectedResult, actualResult);
@@ -1457,13 +1455,13 @@ namespace Kyklos.Kernel.Data.Test
             };
 
             var queryBuilder =
-                    Dao
-                        .NewQueryBuilder()
-                            .Select()
-                                .Star("r")
-                            .From()
-                                .Table<Result>("r")
-                            .Where<Result>("r", x => x.ResultId == "idRes4");
+                Dao
+                .NewQueryBuilder()
+                .Select()
+                .Star("r")
+                .From()
+                .Table<Result>("r")
+                .Where<Result>("r", x => x.ResultId == "idRes4");
 
             var actualValue = (await Dao.GetItemsAsync<IDictionary<string, object>>(queryBuilder).ConfigureAwait(false)).FirstOrDefault();
 
@@ -1491,22 +1489,24 @@ namespace Kyklos.Kernel.Data.Test
             KeyValuePair<string, object>[] expectedTuples = null;
 
             var queryBuilder =
-                    Dao.
-                        NewQueryBuilder()
-                            .Select()
-                                .Field<Result>("r", x => x.ResultId)
-                                .Comma()
-                                .CustomSql("SUM")
-                                .OpenPar()
-                                    .Field<Result>("r", x => x.GoalsHomeTeam)
-                                    .OperPlus()
-                                    .Field<Result>("r", x => x.GoalsVisitorTeam)
-                                .ClosePar()
-                                .As("sum")
-                            .From()
-                                .Table<Result>("r")
-                            .GroupBy()
-                                .Field<Result>("r", x => x.ResultId);
+                Dao
+                .NewQueryBuilder()
+                .Select()
+                .Field<Result>("r", x => x.ResultId)
+                .Comma()
+                .Sum
+                (
+                    nqb =>
+                        nqb
+                        .Field<Result>("r", x => x.GoalsHomeTeam)
+                        .OperPlus()
+                        .Field<Result>("r", x => x.GoalsVisitorTeam)
+                )
+                .As("sum")
+                .From()
+                .Table<Result>("r")
+                .GroupBy()
+                .Field<Result>("r", x => x.ResultId);
 
             var actualTuples = (await Dao.GetItemsAsync<IDictionary<string, object>>(queryBuilder).ConfigureAwait(false)).SelectMany(x => x).OrderBy(x => x.Key).ThenBy(x => x.Value).ToArray();
 
@@ -1627,23 +1627,24 @@ namespace Kyklos.Kernel.Data.Test
 
         protected async Task SelectTeamFromConcatConditionShouldBeIdJuvCore()
         {
-            Team expectedTeam = new Team()
-            {
-                TeamId = "idJuv",
-                Name = "Juventus",
-                City = "Turin",
-                President = "Agnelli"
-            };
+            Team expectedTeam = 
+                new Team
+                {
+                    TeamId = "idJuv",
+                    Name = "Juventus",
+                    City = "Turin",
+                    President = "Agnelli"
+                };
 
             var queryBuilder =
-                    Dao
-                        .NewQueryBuilder()
-                            .Select()
-                                .Star("t")
-                            .From()
-                                .Table<Team>("t")
-                            .Where()
-                                .Condition<Team>("t", x => SqlAsyncUtils.StrConcat(SqlAsyncUtils.StrConcat(x.Name, " - "), x.City) == "Juventus - Turin");
+                Dao
+                .NewQueryBuilder()
+                .Select()
+                .Star("t")
+                .From()
+                .Table<Team>("t")
+                .Where()
+                .Condition<Team>("t", x => SqlAsyncUtils.StrConcat(SqlAsyncUtils.StrConcat(x.Name, " - "), x.City) == "Juventus - Turin");
 
             var actualTeam = (await Dao.GetItemsAsync<Team>(queryBuilder).ConfigureAwait(false)).FirstOrDefault();
             Assert.Equal(expectedTeam, actualTeam);

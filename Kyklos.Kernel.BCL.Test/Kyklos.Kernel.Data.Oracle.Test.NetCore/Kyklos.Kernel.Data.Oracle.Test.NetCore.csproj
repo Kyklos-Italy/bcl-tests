@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Kyklos.Kernel.Data.Async.Oracle" Version="1.0.0-beta.5" />
+    <PackageReference Include="Kyklos.Kernel.Data.Async.Oracle" Version="1.0.0-beta.7" />
     <PackageReference Include="Kyklos.Kernel.Data.Async.Support" Version="1.0.0-beta.1" />
 	<PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
     <PackageReference Include="Kyklos.Kernel.Core" Version="1.0.0-beta.2" />

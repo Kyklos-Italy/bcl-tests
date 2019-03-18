@@ -96,18 +96,18 @@ namespace Kyklos.Kernel.Compression.Test.Compression
             Utils.RemoveDir(dummyFolderPath);
         }
 
-        protected async Task ZipSingleFileContentCore()
-        {
-            string tempDir = GetTempDirectory();
-            string dummyFileName = "dummy.txt";
-            string dummyFolderPath = Utils.CreateDummyDirectory(_mockData.ResourceFolder, tempDir, cleanFolder: true);
-            string dummyFilePath = Utils.CreateDummyFile(dummyFolderPath, dummyFileName, cleanFolder: true);
-            byte[] originalBytes = await KFile.ReadAllBytesAsync(dummyFilePath);
-            Stream streamOfOriginalBytes = new MemoryStream(originalBytes);
-            Stream streamOfZippedBytes = Zipper.ZipSingleFileContent(originalBytes, "pippo");
-            Assert.False(true);
-            Utils.RemoveDir(dummyFolderPath);
-        }
+        //protected async Task ZipSingleFileContentCore()
+        //{
+        //    string tempDir = GetTempDirectory();
+        //    string dummyFileName = "dummy.txt";
+        //    string dummyFolderPath = Utils.CreateDummyDirectory(_mockData.ResourceFolder, tempDir, cleanFolder: true);
+        //    string dummyFilePath = Utils.CreateDummyFile(dummyFolderPath, dummyFileName, cleanFolder: false);
+        //    byte[] originalBytes = await KFile.ReadAllBytesAsync(dummyFilePath);
+        //    Stream streamOfOriginalBytes = new MemoryStream(originalBytes);
+        //    Stream streamOfZippedBytes = Zipper.ZipSingleFileContent(originalBytes, "pippo");
+        //    Assert.False(true);
+        //    Utils.RemoveDir(dummyFolderPath);
+        //}
 
         protected void UnZipStringCore()
         {
@@ -143,50 +143,50 @@ namespace Kyklos.Kernel.Compression.Test.Compression
             Utils.RemoveDir(dummyFolderPath);
         }
 
-        protected void WriteAllBytesAsyncCore()
-        {
-            string methodName = GetTempDirectory();
-            string dummyFileZip = "dummyZip.zip";
-            string dummyFolderPath = Utils.CreateDummyDirectory(_mockData.ResourceFolder, methodName, cleanFolder: true);
-            string dummyFileZipPath = Path.Combine(dummyFolderPath, dummyFileZip);
-            List<string> files = new List<string>
-            {
-                Path.Combine(dummyFolderPath, "dummy1.txt"),
-                Path.Combine(dummyFolderPath, "dummy2.txt"),
-                Path.Combine(dummyFolderPath, "dummy3.txt")
-            };
-            files.ForEach(file => Utils.CreateDummyFile(dummyFolderPath, Path.GetFileName(file), cleanFolder: false));
-            Zipper.CreateZipFileFromFileListWithFileNameOnly(dummyFileZipPath, files);
-            Directory.CreateDirectory(Path.Combine(dummyFolderPath , "dummy"));
-            byte[] bytesOfZippedFolder = Zipper.CreateZipContentFromFolder(dummyFolderPath, Path.Combine(dummyFolderPath , "dummy"), "*.txt", false);
-            IList<Pair<string, byte[]>> fileContents = UnZipper.GetFileContentsFromZipFile(bytesOfZippedFolder);
-            Assert.False(true);
-            Utils.RemoveDir(dummyFolderPath);
-        }
+        //protected void WriteAllBytesAsyncCore()
+        //{
+        //    string methodName = GetTempDirectory();
+        //    string dummyFileZip = "dummyZip.zip";
+        //    string dummyFolderPath = Utils.CreateDummyDirectory(_mockData.ResourceFolder, methodName, cleanFolder: true);
+        //    string dummyFileZipPath = Path.Combine(dummyFolderPath, dummyFileZip);
+        //    List<string> files = new List<string>
+        //    {
+        //        Path.Combine(dummyFolderPath, "dummy1.txt"),
+        //        Path.Combine(dummyFolderPath, "dummy2.txt"),
+        //        Path.Combine(dummyFolderPath, "dummy3.txt")
+        //    };
+        //    files.ForEach(file => Utils.CreateDummyFile(dummyFolderPath, Path.GetFileName(file), cleanFolder: false));
+        //    Zipper.CreateZipFileFromFileListWithFileNameOnly(dummyFileZipPath, files);
+        //    Directory.CreateDirectory(Path.Combine(dummyFolderPath , "dummy"));
+        //    byte[] bytesOfZippedFolder = Zipper.CreateZipContentFromFolder(dummyFolderPath, Path.Combine(dummyFolderPath , "dummy"), "*.txt", false);
+        //    IList<Pair<string, byte[]>> fileContents = UnZipper.GetFileContentsFromZipFile(bytesOfZippedFolder);
+        //    Assert.False(true);
+        //    Utils.RemoveDir(dummyFolderPath);
+        //}
 
-        protected async Task UnZipSingleFileContentToStreamCore()
-        {
-            string methodName = GetTempDirectory();
-            string dummyFileZip = "dummyZip.zip";
-            string dummyFolderPath = Utils.CreateDummyDirectory(_mockData.ResourceFolder, methodName, cleanFolder: true);
-            string dummyFileZipPath = Path.Combine(dummyFolderPath, dummyFileZip);
-            List<string> files = new List<string>
-            {
-                Path.Combine(dummyFolderPath, "dummy1.txt"),
-            };
-            files.ForEach(file => Utils.CreateDummyFile(dummyFolderPath, Path.GetFileName(file), cleanFolder: false));
-            Zipper.CreateZipFileFromFileListWithFileNameOnly(dummyFileZipPath, files);
-            byte[] fileContent = await KFile.ReadAllBytesAsync(dummyFileZipPath);
-            using (MemoryStream ms = new MemoryStream())
-            {
-                Zipper.UnZipSingleFileContentToStream(fileContent, ms);
-                byte[] bytesOfStream = ms.ToArray();
-                await KFile.WriteAllBytesAsync(Path.Combine(dummyFolderPath, "dummy.zip"), bytesOfStream).ConfigureAwait(false);
-            }
-            IList<Pair<string, byte[]>> fileContents = UnZipper.GetFileContentsFromZipFile(Path.Combine(dummyFolderPath, "dummy.zip"));
-            Assert.False(true);
-            Utils.RemoveDir(dummyFolderPath);
-        }
+        //protected async Task UnZipSingleFileContentToStreamCore()
+        //{
+        //    string methodName = GetTempDirectory();
+        //    string dummyFileZip = "dummyZip.zip";
+        //    string dummyFolderPath = Utils.CreateDummyDirectory(_mockData.ResourceFolder, methodName, cleanFolder: true);
+        //    string dummyFileZipPath = Path.Combine(dummyFolderPath, dummyFileZip);
+        //    List<string> files = new List<string>
+        //    {
+        //        Path.Combine(dummyFolderPath, "dummy1.txt"),
+        //    };
+        //    files.ForEach(file => Utils.CreateDummyFile(dummyFolderPath, Path.GetFileName(file), cleanFolder: false));
+        //    Zipper.CreateZipFileFromFileListWithFileNameOnly(dummyFileZipPath, files);
+        //    byte[] fileContent = await KFile.ReadAllBytesAsync(dummyFileZipPath);
+        //    using (MemoryStream ms = new MemoryStream())
+        //    {
+        //        Zipper.UnZipSingleFileContentToStream(fileContent, ms);
+        //        byte[] bytesOfStream = ms.ToArray();
+        //        await KFile.WriteAllBytesAsync(Path.Combine(dummyFolderPath, "dummy.zip"), bytesOfStream).ConfigureAwait(false);
+        //    }
+        //    IList<Pair<string, byte[]>> fileContents = UnZipper.GetFileContentsFromZipFile(Path.Combine(dummyFolderPath, "dummy.zip"));
+        //    Assert.False(true);
+        //    Utils.RemoveDir(dummyFolderPath);
+        //}
 
         protected async Task UnzipDllsFromNupkgFileCore()
         {

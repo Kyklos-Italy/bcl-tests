@@ -45,10 +45,12 @@
       <HintPath>..\packages\Kyklos.Kernel.Data.1.0.0-beta.1\lib\netstandard2.0\Kyklos.Kernel.Data.dll</HintPath>
     </Reference>
     <Reference Include="Kyklos.Kernel.Data.Async, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Data.Async.1.0.0-beta.5\lib\netstandard2.0\Kyklos.Kernel.Data.Async.dll</HintPath>
+      <HintPath>..\packages\Kyklos.Kernel.Data.Async.1.0.0-beta.9\lib\netstandard2.0\Kyklos.Kernel.Data.Async.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Kyklos.Kernel.Data.Async.SqlServer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Data.Async.SqlServer.1.0.0-beta.5\lib\netstandard2.0\Kyklos.Kernel.Data.Async.SqlServer.dll</HintPath>
+      <HintPath>..\packages\Kyklos.Kernel.Data.Async.SqlServer.1.0.0-beta.7\lib\netstandard2.0\Kyklos.Kernel.Data.Async.SqlServer.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Kyklos.Kernel.Data.Async.Support, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Kyklos.Kernel.Data.Async.Support.1.0.0-beta.1\lib\netstandard2.0\Kyklos.Kernel.Data.Async.Support.dll</HintPath>
@@ -83,8 +85,9 @@
     <Reference Include="System.Security.Permissions, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.Permissions.4.5.0\lib\net461\System.Security.Permissions.dll</HintPath>
     </Reference>
-    <Reference Include="System.Security.Principal.Windows, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Principal.Windows.4.5.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
+    <Reference Include="System.Security.Principal.Windows, Version=4.1.1.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Principal.Windows.4.5.1\lib\net461\System.Security.Principal.Windows.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">

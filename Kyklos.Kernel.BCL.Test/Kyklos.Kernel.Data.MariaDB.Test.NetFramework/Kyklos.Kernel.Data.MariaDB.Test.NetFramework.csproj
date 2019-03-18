@@ -45,10 +45,10 @@
       <HintPath>..\packages\Kyklos.Kernel.Data.1.0.0-beta.1\lib\netstandard2.0\Kyklos.Kernel.Data.dll</HintPath>
     </Reference>
     <Reference Include="Kyklos.Kernel.Data.Async, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Data.Async.1.0.0-beta.5\lib\netstandard2.0\Kyklos.Kernel.Data.Async.dll</HintPath>
+      <HintPath>..\packages\Kyklos.Kernel.Data.Async.1.0.0-beta.9\lib\netstandard2.0\Kyklos.Kernel.Data.Async.dll</HintPath>
     </Reference>
     <Reference Include="Kyklos.Kernel.Data.Async.MariaDB, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Data.Async.MariaDB.1.0.0-beta.1\lib\netstandard2.0\Kyklos.Kernel.Data.Async.MariaDB.dll</HintPath>
+      <HintPath>..\packages\Kyklos.Kernel.Data.Async.MariaDB.1.0.0-beta.7\lib\netstandard2.0\Kyklos.Kernel.Data.Async.MariaDB.dll</HintPath>
     </Reference>
     <Reference Include="Kyklos.Kernel.Data.Async.Support, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Kyklos.Kernel.Data.Async.Support.1.0.0-beta.1\lib\netstandard2.0\Kyklos.Kernel.Data.Async.Support.dll</HintPath>
@@ -56,8 +56,8 @@
     <Reference Include="Kyklos.Kernel.FSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Kyklos.Kernel.FSharp.1.0.0-beta.1\lib\netstandard2.0\Kyklos.Kernel.FSharp.dll</HintPath>
     </Reference>
-    <Reference Include="MySqlConnector, Version=0.49.3.0, Culture=neutral, PublicKeyToken=d33d3e53aa5f8c92, processorArchitecture=MSIL">
-      <HintPath>..\packages\MySqlConnector.0.49.3\lib\net461\MySqlConnector.dll</HintPath>
+    <Reference Include="MySqlConnector, Version=0.50.0.0, Culture=neutral, PublicKeyToken=d33d3e53aa5f8c92, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySqlConnector.0.50.0\lib\net461\MySqlConnector.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
