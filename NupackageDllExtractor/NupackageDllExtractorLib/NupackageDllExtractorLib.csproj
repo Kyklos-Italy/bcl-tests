@@ -138,7 +138,6 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -157,18 +156,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DllExtractor.cs" />
     <Compile Include="FileUtils\FileSystemUtils.cs" />
     <Compile Include="FileUtils\SemVersionUtils.cs" />
-    <Compile Include="FormControls\CustomTableLayoutPanel.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="FormControls\DestinationFolderExplorerControl.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="FormControls\SourceFolderExplorerControl.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="FormUtils\FormConfigurator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

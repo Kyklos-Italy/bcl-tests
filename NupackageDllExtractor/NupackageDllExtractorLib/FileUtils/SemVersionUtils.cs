@@ -21,7 +21,7 @@ namespace NupackageDllExtractorLib.FileUtils
                 int patch = Convert.ToInt32(match.Groups[3].Value);
                 string[] spl = match.Groups[4].Value.Split('.');
                 string preRelease = spl[0];
-                string build = spl[1];
+                string build = spl.Count() > 1 ? spl[1] : string.Empty;
                 SemVersion semVersion = new SemVersion(major, minor, patch, preRelease, build);
                 return semVersion;
             }
@@ -38,8 +38,8 @@ namespace NupackageDllExtractorLib.FileUtils
             for (var i = 0; i < nupkgPathFiles.Count; i++)
             {
                 SemVersion currentSemVersion = GetValidSemVersion(nupkgPathFiles[i]);
-                int comparison = currentSemVersion.CompareTo(latestSemVersion);
-                if (comparison > 0)
+                int comparison = latestSemVersion.CompareTo(currentSemVersion);
+                if (comparison < 0)
                 {
                     latestSemVersion = currentSemVersion;
                 }

@@ -99,9 +99,12 @@ namespace NupackageDllExtractorLib.FileUtils
             {
                 IList<string> nupkgFilesOfPackage = FilterNukpgFilesByPackageName(nupkgFiles, packageName);
                 string lastVersionOfPackage = SemVersionUtils.GetLastVersionOfNugetPackages(nupkgFilesOfPackage);
-                string nupkgFilesOfLastVersion = FilterNukpgFilesByFilter(nupkgFilesOfPackage, lastVersionOfPackage).First();
-                nupkgFilesFilteredByLastVersion.Add(nupkgFilesOfLastVersion);
-                ExtractDllToOutputFolder(nupkgFilesOfLastVersion, lastVersionOfPackage, destinationFolder);
+                string nupkgFilesOfLastVersion = FilterNukpgFilesByFilter(nupkgFilesOfPackage, lastVersionOfPackage).FirstOrDefault();
+				if (!string.IsNullOrEmpty(nupkgFilesOfLastVersion))
+				{
+					nupkgFilesFilteredByLastVersion.Add(nupkgFilesOfLastVersion);
+					ExtractDllToOutputFolder(nupkgFilesOfLastVersion, lastVersionOfPackage, destinationFolder);
+				}
             }
             return nupkgFilesFilteredByLastVersion;
         }

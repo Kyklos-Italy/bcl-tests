@@ -160,6 +160,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FormControls\CustomTableLayoutPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="FormControls\DestinationFolderExplorerControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="FormControls\SourceFolderExplorerControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="FormUtils\FormConfigurator.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

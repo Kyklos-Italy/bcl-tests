@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 
-namespace NupackageDllExtractorLib.FormControls
+namespace NupackageDllExtractor.FormControls
 {
     public class CustomTableLayoutPanel : TableLayoutPanel
     {
