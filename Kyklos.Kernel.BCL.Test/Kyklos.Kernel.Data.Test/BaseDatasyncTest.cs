@@ -17,11 +17,14 @@ using Kyklos.Kernel.Data.Support;
 using Kyklos.Kernel.Data.Test.Entities;
 using Xunit;
 using Xunit.Sdk;
+using XUnitTestSupport;
 
 namespace Kyklos.Kernel.Data.Test
 {
     public abstract class BaseDatasyncTest
     {        
+        protected TestNetPlatform NetPlatform { get;}
+
         protected abstract string Schema { get; }
 
         protected const int ThresholdForFastInCondition = 10;
@@ -110,13 +113,42 @@ namespace Kyklos.Kernel.Data.Test
             }
         }
 
-        protected BaseDatasyncTest()
+        protected BaseDatasyncTest(NetPlatformType netPlatformType)
         {
+            NetPlatform = new TestNetPlatform(netPlatformType);
             Dao = CreateAsyncDao(ConnectionString, ProviderName, Schema);
         }
 
         protected abstract string ConnectionString { get; }
         protected abstract string ProviderName { get; }
+
+        private Result[] InitialResults = 
+            new Result[]
+            {
+                new Result() { ResultId = "idRes1", HomeTeamId = "idFio", VisitorTeamId = "idJuv", GoalsHomeTeam = 1, GoalsVisitorTeam = 3, DayId = "idDay1" },
+                new Result() { ResultId = "idRes2", HomeTeamId = "idMil", VisitorTeamId = "idInt", GoalsHomeTeam = 0, GoalsVisitorTeam = 1, DayId = "idDay1" },
+                new Result() { ResultId = "idRes3", HomeTeamId = "idInt", VisitorTeamId = "idFio", GoalsHomeTeam = 4, GoalsVisitorTeam = 3, DayId = "idDay2" },
+                new Result() { ResultId = "idRes4", HomeTeamId = "idJuv", VisitorTeamId = "idMil", GoalsHomeTeam = 2, GoalsVisitorTeam = 2, DayId = "idDay2" },
+                new Result() { ResultId = "idRes5", HomeTeamId = "idFio", VisitorTeamId = "idInt", GoalsHomeTeam = 0, GoalsVisitorTeam = 2, DayId = "idDay3" },
+                new Result() { ResultId = "idRes6", HomeTeamId = "idMil", VisitorTeamId = "idJuv", GoalsHomeTeam = 4, GoalsVisitorTeam = 1, DayId = "idDay3" }
+            };
+
+        private Team[] InitialTeams = 
+            new Team[]
+            {
+                    new Team { TeamId = "idFio", Name = "Fiorentina", City = "Florence", President = "Della Valle" },
+                    new Team { TeamId = "idJuv", Name = "Juventus", City = "Turin", President = "Agnelli" },
+                    new Team { TeamId = "idMil", Name = "Milan", City = "Milan", President = "Tizio cinese" },
+                    new Team { TeamId = "idInt", Name = "Inter", City = "Milan", President = "Thoir" }
+            };
+
+        private Day[] InitialDays = 
+            new Day[]
+            {
+                new Day() { DayId = "idDay1", DayDate = new DateTime(2018, 09, 16), DayNumber = 1 },
+                new Day() { DayId = "idDay2", DayDate = new DateTime(2018, 09, 17), DayNumber = 2 },
+                new Day() { DayId = "idDay3", DayDate = new DateTime(2018, 09, 18), DayNumber = 3 }
+            };
 
         protected virtual IAsyncDao CreateAsyncDao(string connectionString, string providerName, string schema, bool ignoreEscape = false)
         {
@@ -135,42 +167,17 @@ namespace Kyklos.Kernel.Data.Test
 
         protected virtual async Task AddTeams()
         {
-            Team[] teams = new Team[]
-            {
-                new Team { TeamId = "idFio", Name = "Fiorentina", City = "Florence", President = "Della Valle" },
-                new Team { TeamId = "idJuv", Name = "Juventus", City = "Turin", President = "Agnelli" },
-                new Team { TeamId = "idMil", Name = "Milan", City = "Milan", President = "Tizio cinese" },
-                new Team { TeamId = "idInt", Name = "Inter", City = "Milan", President = "Thoir" }
-            };
-
-            await Dao.WriteToServerAsync(teams).ConfigureAwait(false);
+            await Dao.WriteToServerAsync(InitialTeams).ConfigureAwait(false);
         }
 
         protected virtual async Task AddDays()
         {
-            Day[] days = new Day[]
-            {
-                new Day() { DayId = "idDay1", DayDate = new DateTime(2018, 09, 16), DayNumber = 1 },
-                new Day() { DayId = "idDay2", DayDate = new DateTime(2018, 09, 17), DayNumber = 2 },
-                new Day() { DayId = "idDay3", DayDate = new DateTime(2018, 09, 18), DayNumber = 3 }
-            };
-
-            await Dao.WriteToServerAsync(days).ConfigureAwait(false);
+            await Dao.WriteToServerAsync(InitialDays).ConfigureAwait(false);
         }
 
         protected virtual async Task AddResults()
-        {
-            Result[] results = new Result[]
-            {
-                new Result() { ResultId = "idRes1", HomeTeamId = "idFio", VisitorTeamId = "idJuv", GoalsHomeTeam = 1, GoalsVisitorTeam = 3, DayId = "idDay1" },
-                new Result() { ResultId = "idRes2", HomeTeamId = "idMil", VisitorTeamId = "idInt", GoalsHomeTeam = 0, GoalsVisitorTeam = 1, DayId = "idDay1" },
-                new Result() { ResultId = "idRes3", HomeTeamId = "idInt", VisitorTeamId = "idFio", GoalsHomeTeam = 4, GoalsVisitorTeam = 3, DayId = "idDay2" },
-                new Result() { ResultId = "idRes4", HomeTeamId = "idJuv", VisitorTeamId = "idMil", GoalsHomeTeam = 2, GoalsVisitorTeam = 2, DayId = "idDay2" },
-                new Result() { ResultId = "idRes5", HomeTeamId = "idFio", VisitorTeamId = "idInt", GoalsHomeTeam = 0, GoalsVisitorTeam = 2, DayId = "idDay3" },
-                new Result() { ResultId = "idRes6", HomeTeamId = "idMil", VisitorTeamId = "idJuv", GoalsHomeTeam = 4, GoalsVisitorTeam = 1, DayId = "idDay3" }
-            };
-
-            await Dao.WriteToServerAsync(results).ConfigureAwait(false);
+        {           
+            await Dao.WriteToServerAsync(InitialResults).ConfigureAwait(false);
         }
 
 
@@ -409,7 +416,7 @@ namespace Kyklos.Kernel.Data.Test
                 );
 
             var sqlActualJoin = queryBuilder.BuildSqlTextWithParameters();
-            Assert.True(sqlActualJoin.SqlText.Contains(sqlExpectedJoin));
+            Assert.Contains(sqlExpectedJoin, sqlActualJoin.SqlText);
         }
 
         protected async Task GetNextValueForSequenceShouldBeCore(long expectedValue, string sequenceName)
@@ -420,11 +427,10 @@ namespace Kyklos.Kernel.Data.Test
 
         protected async Task GetRangeValuesForSequenceShouldBeCore(long[] expectedRange, string sequenceName)
         {
-            long[] actualRange =
-                await
-                    Dao
-                        .GetRangeValuesForSequenceAsync(sequenceName, expectedRange.Length)
-                            .ConfigureAwait(false);
+            long[] actualRange = await
+                Dao
+                .GetRangeValuesForSequenceAsync(sequenceName, expectedRange.Length)
+                .ConfigureAwait(false);
             Assert.Equal(expectedRange, actualRange);
         }
 
@@ -935,10 +941,10 @@ namespace Kyklos.Kernel.Data.Test
         {
             int n = 3;
             var updateTableBuilder =
-                    Dao
-                        .NewUpdateTableBuilder<Result>()
-                            .Set(x => x.GoalsHomeTeam, () => n)
-                            .Where(x => x.ResultId == "idRes2");
+                Dao
+                .NewUpdateTableBuilder<Result>()
+                .Set(x => x.GoalsHomeTeam, () => n)
+                .Where(x => x.ResultId == "idRes2");
 
             await Dao.UpdateTableAsync(updateTableBuilder).ConfigureAwait(false);
             var actualValue = await Dao.GetItemByExampleAsync<Result>(x => x.ResultId == "idRes2").ConfigureAwait(false);
@@ -1654,14 +1660,11 @@ namespace Kyklos.Kernel.Data.Test
         protected async Task DeleteResultByIdShouldBeIdRes4Core()
         {
             string idResult = "idRes4";
-            var expectedTeams = new Result[]
-            {
-                new Result() { ResultId = "idRes1", HomeTeamId = "idFio", VisitorTeamId = "idJuv", GoalsHomeTeam = 1, GoalsVisitorTeam = 3, DayId = "idDay1" },
-                new Result() { ResultId = "idRes2", HomeTeamId = "idMil", VisitorTeamId = "idInt", GoalsHomeTeam = 0, GoalsVisitorTeam = 1, DayId = "idDay1" },
-                new Result() { ResultId = "idRes3", HomeTeamId = "idInt", VisitorTeamId = "idFio", GoalsHomeTeam = 4, GoalsVisitorTeam = 3, DayId = "idDay2" },
-                new Result() { ResultId = "idRes5", HomeTeamId = "idFio", VisitorTeamId = "idInt", GoalsHomeTeam = 0, GoalsVisitorTeam = 2, DayId = "idDay3" },
-                new Result() { ResultId = "idRes6", HomeTeamId = "idMil", VisitorTeamId = "idJuv", GoalsHomeTeam = 4, GoalsVisitorTeam = 1, DayId = "idDay3" }
-            }.OrderBy(x => x.ResultId).ToArray();
+            var expectedTeams = 
+                InitialResults
+                .Where(x => x.ResultId != idResult)
+                .OrderBy(x => x.ResultId)
+                .ToArray();
 
             await Dao.DeleteByConditionAsync<Result>(x => x.ResultId == idResult).ConfigureAwait(false);
             var actualTeams = (await Dao.GetAllItemsArrayAsync<Result>().ConfigureAwait(false)).OrderBy(x => x.ResultId).ToArray();
@@ -1741,15 +1744,22 @@ namespace Kyklos.Kernel.Data.Test
             string newResId = "idRes7";
             Result newResult = new Result() { ResultId = newResId, HomeTeamId = "idMil", VisitorTeamId = "idInt", GoalsHomeTeam = 1, GoalsVisitorTeam = 3, DayId = "idDay1" };
 
-            var expectedDays = new Result[]
-            {
-                new Result() { ResultId = "idRes1", HomeTeamId = "idFio", VisitorTeamId = "idJuv", GoalsHomeTeam = 1, GoalsVisitorTeam = 3, DayId = "idDay1" },
-                new Result() { ResultId = "idRes3", HomeTeamId = "idInt", VisitorTeamId = "idFio", GoalsHomeTeam = 4, GoalsVisitorTeam = 3, DayId = "idDay2" },
-                new Result() { ResultId = "idRes4", HomeTeamId = "idJuv", VisitorTeamId = "idMil", GoalsHomeTeam = 2, GoalsVisitorTeam = 2, DayId = "idDay2" },
-                new Result() { ResultId = "idRes5", HomeTeamId = "idFio", VisitorTeamId = "idInt", GoalsHomeTeam = 0, GoalsVisitorTeam = 2, DayId = "idDay3" },
-                new Result() { ResultId = "idRes6", HomeTeamId = "idMil", VisitorTeamId = "idJuv", GoalsHomeTeam = 4, GoalsVisitorTeam = 1, DayId = "idDay3" },
-                newResult
-            }.OrderBy(x => x.ResultId).ToArray();
+            var expectedDays =
+                InitialResults
+                .Where(x => x.ResultId != "idRes2" && x.ResultId != "idRes4")
+                .Concat(newResult.AsArray())
+                .OrderBy(x => x.ResultId)
+                .ToArray();
+
+            //    new Result[]
+            //{
+            //    new Result() { ResultId = "idRes1", HomeTeamId = "idFio", VisitorTeamId = "idJuv", GoalsHomeTeam = 1, GoalsVisitorTeam = 3, DayId = "idDay1" },
+            //    new Result() { ResultId = "idRes3", HomeTeamId = "idInt", VisitorTeamId = "idFio", GoalsHomeTeam = 4, GoalsVisitorTeam = 3, DayId = "idDay2" },
+            //    new Result() { ResultId = "idRes4", HomeTeamId = "idJuv", VisitorTeamId = "idMil", GoalsHomeTeam = 2, GoalsVisitorTeam = 2, DayId = "idDay2" },
+            //    new Result() { ResultId = "idRes5", HomeTeamId = "idFio", VisitorTeamId = "idInt", GoalsHomeTeam = 0, GoalsVisitorTeam = 2, DayId = "idDay3" },
+            //    new Result() { ResultId = "idRes6", HomeTeamId = "idMil", VisitorTeamId = "idJuv", GoalsHomeTeam = 4, GoalsVisitorTeam = 1, DayId = "idDay3" },
+            //    newResult
+            //}.OrderBy(x => x.ResultId).ToArray();
 
             await
                 Dao
@@ -1810,7 +1820,7 @@ namespace Kyklos.Kernel.Data.Test
 
         protected async Task InsertTwoDaysInTwoTransactionsShouldBeIdDay4IdDay1Core()
         {
-            Day day4 = new Day() { DayId = "idDay4", DayDate = new DateTime(2018, 09, 19), DayNumber = 4 };
+            //Day day6 = new Day() { DayId = "idDay6", DayDate = new DateTime(2019, 2, 21), DayNumber = 6 };
             Day day5 = new Day() { DayId = "idDay1", DayDate = new DateTime(2018, 09, 20), DayNumber = 5 };
 
             await
@@ -1819,13 +1829,15 @@ namespace Kyklos.Kernel.Data.Test
                 (
                     async tDao =>
                     {
-                        await tDao.InsertEntityAsync(day4).ConfigureAwait(false);
+              //          await tDao.InsertEntityAsync(day6).ConfigureAwait(false);
                         await
                             tDao
                             .DoInTransactionAsync
                             (
-                                async ttDao => await ttDao.InsertEntityAsync(day5).ConfigureAwait(false),
-                                async ex => await ReplaceDuplicateKey(Dao, day5, "idDay5").ConfigureAwait(false)
+                                async ttDao => 
+                                    await ttDao.InsertEntityAsync(day5).ConfigureAwait(false),
+                                async ex => 
+                                    await ReplaceDuplicateKey(tDao, day5, "idDay5").ConfigureAwait(false)
                             );
                     }
                 )
@@ -1834,14 +1846,15 @@ namespace Kyklos.Kernel.Data.Test
             var actualDays = (await Dao.GetAllItemsArrayAsync<Day>().ConfigureAwait(false)).OrderBy(x => x.DayId).ToArray();
 
             Day[] expectedDays =
-                new Day[]
-                {
-                    new Day() { DayId = "idDay1", DayDate = new DateTime(2018, 09, 16), DayNumber = 1 },
-                    new Day() { DayId = "idDay2", DayDate = new DateTime(2018, 09, 17), DayNumber = 2 },
-                    new Day() { DayId = "idDay3", DayDate = new DateTime(2018, 09, 18), DayNumber = 3 },
-                    day4,
-                    day5
-                }
+                InitialDays
+                .Concat
+                (
+                    new Day[]
+                    {
+                        new Day() { DayId = "idDay4", DayDate = new DateTime(2018,9,19), DayNumber = 4 },
+                        new Day() { DayId = "idDay5", DayDate = day5.DayDate, DayNumber = day5.DayNumber }
+                    }
+                )
                 .OrderBy(x => x.DayId)
                 .ToArray();
 

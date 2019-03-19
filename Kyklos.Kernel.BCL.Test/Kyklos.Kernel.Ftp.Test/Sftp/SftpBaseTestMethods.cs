@@ -1,16 +1,15 @@
-﻿using Kyklos.Kernel.Ftp.Sftp;
-using Kyklos.Kernel.Ftp.Test.Support;
-using Kyklos.Kernel.Ftp.Test.Support.Mock;
-using Renci.SshNet.Sftp;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
+using Kyklos.Kernel.Ftp.Sftp;
+using Kyklos.Kernel.Ftp.Test.Support.Mock;
+using Renci.SshNet.Sftp;
 using Xunit;
-using static Kyklos.Kernel.Ftp.Test.Support.Framework;
+using XUnitTestSupport;
+using static XUnitTestSupport.TestNetPlatform;
 
 namespace Kyklos.Kernel.Ftp.Test.Sftp
 {
@@ -25,7 +24,7 @@ namespace Kyklos.Kernel.Ftp.Test.Sftp
             return method;
         }
 
-        public SftpBaseTestMethods(FrameworkType frameworkType)
+        public SftpBaseTestMethods(NetPlatformType frameworkType)
         {
             MockData = new MockData(frameworkType);
             Process = new Process();

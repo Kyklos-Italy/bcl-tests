@@ -4,60 +4,18 @@ using System.Threading.Tasks;
 using Kyklos.Kernel.Core.Exceptions;
 using Kyklos.Kernel.Data.Async;
 using Kyklos.Kernel.Data.Async.Support;
-using Kyklos.Kernel.Data.Test;
 using Kyklos.Kernel.Data.Test.Entities;
-using Newtonsoft.Json;
 using Xunit;
 
 namespace Kyklos.Kernel.Data.MariaDB.Test.NetCore
 {
-    public class MariaDBDatasyncTest : BaseDatasyncTest
+    public class MariaDBDatasyncTestQuery : MariaDBDatasyncTestCommon
     {
-        protected override string Schema => "testdb";
-        protected override string ConnectionString => "Server=kktitan;Port=3306;Database=testdb;Uid=testuser;Pwd=vuh1uf3nqx;";
-        protected override string ProviderName => "MariaDB";
-
-        public MariaDBDatasyncTest()
-        {
-            JsonConvert.DefaultSettings =
-                () =>
-                    new JsonSerializerSettings
-                    {
-                        Formatting = Newtonsoft.Json.Formatting.None,
-                        ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-                    };
-
-            SetupCore().Wait();
+        public MariaDBDatasyncTestQuery()
+        {            
         }
 
-        private async Task SetupCore()
-        {
-            await PrepareDB();
-            await GenerateScriptsForCreateAndDropSequence().ConfigureAwait(false);
-            await AddTeams();
-            await AddDays();
-            await AddResults();
-        }
-
-        private async Task ReplaceDuplicateKey(IAsyncDao tDao, Day newDay, string newKey)
-        {
-            newDay.DayId = newKey;
-            await tDao.InsertEntityAsync(newDay).ConfigureAwait(false);
-        }
-
-
-        private async Task GenerateScriptsForCreateAndDropSequence()
-        {
-            string createSequenceScript = @"CREATE SEQUENCE my_sequence
-                                           INCREMENT BY 1
-                                           MINVALUE 1 MAXVALUE 1000
-                                           START WITH 1";
-
-            string dropSequenceScript = "DROP SEQUENCE my_sequence";
-
-            await PrepareSequence(createSequenceScript, dropSequenceScript).ConfigureAwait(false);
-        }
-
+        #region collection 1
 
         [Fact]
         public void CheckIfDbSupportsValuesForFastInConditionShouldBe()
@@ -65,13 +23,11 @@ namespace Kyklos.Kernel.Data.MariaDB.Test.NetCore
             CheckIfDbSupportsValuesForFastInConditionShouldBeCore(true);
         }
 
-
         [Fact]
         public void CheckDbProviderNameShouldBe()
         {
             CheckDbProviderNameShouldBeCore("MariaDB");
         }
-
 
         [Fact]
         public void SqlInnerJoinShouldBe()
@@ -94,7 +50,6 @@ namespace Kyklos.Kernel.Data.MariaDB.Test.NetCore
             SqlLeftJoinShouldBeCore(sqlJoin);
         }
 
-
         [Fact]
         public void SqlRightJoinShouldBe()
         {
@@ -105,7 +60,6 @@ namespace Kyklos.Kernel.Data.MariaDB.Test.NetCore
             SqlRightJoinShouldBeCore(sqlJoin);
         }
 
-
         [Fact]
         public void SqlFullOuterJoinShouldBe()
         {
@@ -115,7 +69,6 @@ namespace Kyklos.Kernel.Data.MariaDB.Test.NetCore
 
             SqlFullOuterJoinShouldBeCore(sqlJoin);
         }
-
 
         [Fact]
         public void SqlInnerJoinWithEscapeShouldBeCore()
@@ -160,25 +113,10 @@ namespace Kyklos.Kernel.Data.MariaDB.Test.NetCore
             SqlFullOuterJoinShouldBeCore(sqlJoin, false);
         }
 
-
-        [Fact]
-        public void GetNextValueForSequenceShouldBe()
-        {
-            GetNextValueForSequenceShouldBeCore(1L, "my_sequence").Wait();
-        }
+        #endregion
 
 
-        [Fact]
-        public void GetRangeValuesForSequenceShouldBe()
-        {
-            long[] range = new long[]
-            {
-                1L, 2L, 3L, 4L, 5L
-            };
-
-            GetRangeValuesForSequenceShouldBeCore(range, "my_sequence").Wait();
-        }
-
+        #region Collection 2
 
         [Fact]
         public void GetResultTableMetadataFromQueryShouldBe()
@@ -188,7 +126,6 @@ namespace Kyklos.Kernel.Data.MariaDB.Test.NetCore
             GetResultTableMetadataFromQueryShouldBeCore(sql).Wait();
         }
 
-
         [Fact]
         public async Task FillDayDataTableShouldBe()
         {
@@ -196,7 +133,6 @@ namespace Kyklos.Kernel.Data.MariaDB.Test.NetCore
 
             await FillDayDataTableShouldBeCore(sql);
         }
-
 
         [Fact]
         public void GetScriptForCreateTableShouldBe()
@@ -206,7 +142,6 @@ namespace Kyklos.Kernel.Data.MariaDB.Test.NetCore
             GetScriptForCreateTableShouldBeCore(sql, false, typeof(Team));
         }
 
-
         [Fact]
         public void GetScriptForDropTableShouldBe()
         {
@@ -214,7 +149,6 @@ namespace Kyklos.Kernel.Data.MariaDB.Test.NetCore
 
             GetScriptForDropTableShouldBeCore(sql, "RESULTS");
         }
-
 
         [Fact]
         public void GetScriptsForForeignKeyShouldBe()
@@ -229,7 +163,6 @@ namespace Kyklos.Kernel.Data.MariaDB.Test.NetCore
             GetScriptsForForeignKeyShouldBeCore(sql, typeof(Result));
         }
 
-
         [Fact]
         public void GetScriptForUniqueConstraintShouldBe()
         {
@@ -240,7 +173,6 @@ namespace Kyklos.Kernel.Data.MariaDB.Test.NetCore
 
             GetScriptForUniqueConstraintShouldBeCore(sql, typeof(Day));
         }
-
 
         [Fact]
         public void GetScriptForCreateNonUniqueIndexShouldBe()
@@ -253,15 +185,19 @@ namespace Kyklos.Kernel.Data.MariaDB.Test.NetCore
             GetScriptForCreateNonUniqueIndexShouldBeCore(sql, typeof(Team));
         }
 
+        #endregion
 
-        private async Task CreateIndexes()
-        {
-            string scriptIndex1 = $@"CREATE INDEX RESULT_DAY_INDEX ON {Schema}.RESULTS(DAY_ID)";
-            string scriptIndex2 = $@"CREATE INDEX RESULT_GOALS_INDEX ON {Schema}.RESULTS(GOALS_HOME_TEAM, GOALS_VISITOR_TEAM)";
-            await ExecuteScript(scriptIndex1).ConfigureAwait(false);
-            await ExecuteScript(scriptIndex2).ConfigureAwait(false);
-        }
 
+        //private async Task CreateIndexes()
+        //{
+        //    string scriptIndex1 = $@"CREATE INDEX RESULT_DAY_INDEX ON {Schema}.RESULTS(DAY_ID)";
+        //    string scriptIndex2 = $@"CREATE INDEX RESULT_GOALS_INDEX ON {Schema}.RESULTS(GOALS_HOME_TEAM, GOALS_VISITOR_TEAM)";
+        //    await ExecuteScript(scriptIndex1).ConfigureAwait(false);
+        //    await ExecuteScript(scriptIndex2).ConfigureAwait(false);
+        //}
+
+
+        #region Collection 3
 
         [Fact]
         public async Task CancellationOfGetCompleteResultShouldBe()
@@ -344,6 +280,8 @@ namespace Kyklos.Kernel.Data.MariaDB.Test.NetCore
         {
             await SelectTotalTeamsGoalsShouldBe4TeamsCore().ConfigureAwait(false);
         }
+
+        #endregion
 
         [Fact]
         public async Task SelectHomeTeamsWhereConditionsAreMetShouldBe3Teams()

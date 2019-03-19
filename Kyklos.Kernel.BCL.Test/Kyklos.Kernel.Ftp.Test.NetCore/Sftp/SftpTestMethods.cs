@@ -1,16 +1,13 @@
-﻿using Kyklos.Kernel.Ftp.Test.Sftp;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Kyklos.Kernel.Ftp.Test.Sftp;
 using Xunit;
-using static Kyklos.Kernel.Ftp.Test.Support.Framework;
+using static XUnitTestSupport.TestNetPlatform;
 
 namespace Kyklos.Kernel.Ftp.Test.NetCore.Sftp
 {
     public class SftpTestMethods : SftpBaseTestMethods
     {
-        public SftpTestMethods() : base(FrameworkType.NETCORE) { }
+        public SftpTestMethods() : base(NetPlatformType.NETCORE) { }
 
         [Fact(DisplayName = "MustMakeDir")]
         public void MustMakeDir()

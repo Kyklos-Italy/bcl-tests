@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
+﻿using System.IO;
+using XUnitTestSupport;
 
 namespace Kyklos.Kernel.Ftp.Test.Support.Mock
 {
-    internal class MockData : Framework
+    internal class MockData : TestNetPlatform
     {
         public string RebexFolder { get; }
         public string RebexDataFolder { get; }
@@ -20,10 +18,10 @@ namespace Kyklos.Kernel.Ftp.Test.Support.Mock
         public string Username { get; } = "tester";
         public string Password { get; } = "password";
 
-        public MockData(FrameworkType frameworkType) : base(frameworkType)
+        public MockData(NetPlatformType frameworkType) : base(frameworkType)
         {
             DirectoryInfo BinFolderDirectoryInfo = new DirectoryInfo(BinFolder);
-            string TestBaseFolder = (frameworkType == FrameworkType.NETCORE) 
+            string TestBaseFolder = (frameworkType == NetPlatformType.NETCORE) 
                 ? 
                 BinFolderDirectoryInfo.Parent.Parent.Parent.Parent.FullName + "\\Kyklos.Kernel.Ftp.Test" 
                 :

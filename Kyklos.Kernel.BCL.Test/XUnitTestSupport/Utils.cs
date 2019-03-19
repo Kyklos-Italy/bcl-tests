@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
+﻿using System.IO;
 
-namespace Kyklos.Kernel.Ftp.Test.Support
+namespace XUnitTestSupport
 {
     public static class Utils
     {
@@ -27,7 +24,7 @@ namespace Kyklos.Kernel.Ftp.Test.Support
                 CleanDirectory(directoryPath);
             }
             string actualFilePath = Path.Combine(directoryPath, fileName);
-            File.WriteAllText(actualFilePath, "contenuto demo");
+            File.WriteAllText(actualFilePath, "Demo Content");
             actualFilePath = (File.Exists(actualFilePath)) ? actualFilePath : "";
             return actualFilePath;
         }

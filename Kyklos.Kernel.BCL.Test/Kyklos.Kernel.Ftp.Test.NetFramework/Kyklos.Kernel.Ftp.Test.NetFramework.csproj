@@ -103,6 +103,10 @@
       <Project>{BB5B7EE2-ECD3-4A86-A6AE-31D3C8254AE5}</Project>
       <Name>Kyklos.Kernel.Ftp.Test</Name>
     </ProjectReference>
+    <ProjectReference Include="..\XUnitTestSupport\XUnitTestSupport.csproj">
+      <Project>{454A8087-9999-4C52-A648-00895927E91B}</Project>
+      <Name>XUnitTestSupport</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -21,6 +21,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\XUnitTestSupport\XUnitTestSupport.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="Rebex\RebexTinySftpServer.exe">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>

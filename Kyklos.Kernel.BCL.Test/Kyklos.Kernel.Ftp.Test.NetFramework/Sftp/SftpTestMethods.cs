@@ -1,17 +1,13 @@
-﻿using Kyklos.Kernel.Ftp.Test.Sftp;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Kyklos.Kernel.Ftp.Test.Sftp;
 using Xunit;
-using static Kyklos.Kernel.Ftp.Test.Support.Framework;
+using static XUnitTestSupport.TestNetPlatform;
 
 namespace Kyklos.Kernel.Ftp.Test.NetFramework.Sftp
 {
     public class SftpTestMethods : SftpBaseTestMethods
     {
-        public SftpTestMethods() : base(FrameworkType.NETFRAMEWORK) { }
+        public SftpTestMethods() : base(NetPlatformType.NETFRAMEWORK) { }
 
         [Fact(DisplayName = "MustMakeDir")]
         public void MustMakeDir()
@@ -139,6 +135,6 @@ namespace Kyklos.Kernel.Ftp.Test.NetFramework.Sftp
             FilesTransferredMustBeEqualTo2Core();
         }
 
-        
+
     }
 }

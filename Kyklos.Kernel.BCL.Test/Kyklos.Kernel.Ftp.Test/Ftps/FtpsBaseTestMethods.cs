@@ -1,11 +1,7 @@
-﻿using Kyklos.Kernel.Ftp.Sftp;
-using Kyklos.Kernel.Ftp.Test.Support.Mock;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Diagnostics;
-using System.Text;
-using Xunit;
-using static Kyklos.Kernel.Ftp.Test.Support.Framework;
+using Kyklos.Kernel.Ftp.Test.Support.Mock;
+using static XUnitTestSupport.TestNetPlatform;
 
 namespace Kyklos.Kernel.Ftp.Test.Ftps
 {
@@ -14,7 +10,7 @@ namespace Kyklos.Kernel.Ftp.Test.Ftps
         private MockData MockData;
         private Process Process { get; }
 
-        public FtpsBaseTestMethods(FrameworkType frameworkType)
+        public FtpsBaseTestMethods(NetPlatformType frameworkType)
         {
             MockData = new MockData(frameworkType);
             Process = new Process();
@@ -24,7 +20,6 @@ namespace Kyklos.Kernel.Ftp.Test.Ftps
 
         public void Dispose()
         {
-            //Process.Kill();
             Process.WaitForExit();
         }
     }

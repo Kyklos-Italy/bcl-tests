@@ -69,6 +69,10 @@
       <Project>{6ff88df6-c503-42a5-aa61-61298da7038a}</Project>
       <Name>Kyklos.Kernel.Core.Test</Name>
     </ProjectReference>
+    <ProjectReference Include="..\XUnitTestSupport\XUnitTestSupport.csproj">
+      <Project>{454A8087-9999-4C52-A648-00895927E91B}</Project>
+      <Name>XUnitTestSupport</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

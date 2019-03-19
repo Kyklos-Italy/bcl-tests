@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using Kyklos.Kernel.Core.Test.Support.Mock;
 using Xunit;
-using static Kyklos.Kernel.Core.Test.Support.Framework;
+using static XUnitTestSupport.TestNetPlatform;
 
 namespace Kyklos.Kernel.Core.Test.Utilities
 {
@@ -9,7 +9,7 @@ namespace Kyklos.Kernel.Core.Test.Utilities
     {
         private MockData MockData;
 
-        public UtilitiesBaseTestMethods(FrameworkType frameworkType)
+        public UtilitiesBaseTestMethods(NetPlatformType frameworkType)
         {
             MockData = new MockData(frameworkType);
         }
