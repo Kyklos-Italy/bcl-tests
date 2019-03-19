@@ -272,7 +272,7 @@ namespace Kyklos.Kernel.Data.Oracle.Test.NetCore
         public async Task CancellationOfGetCompleteResultShouldBe()
         {
             await Assert
-               .ThrowsAsync<OracleException>
+               .ThrowsAsync<TaskCanceledException>
                (
                async () =>
                {
@@ -368,7 +368,7 @@ namespace Kyklos.Kernel.Data.Oracle.Test.NetCore
         [Fact]
         public void IgnoreDaoEscapeShouldBe()
         {
-            IAsyncDao myDao = AsyncDaoFactory.CreateAsyncDaoFromConnectionStringName(connectionStringName: "OracleCS", schema: Schema, ignoreEscape: true);
+            IAsyncDao myDao = AsyncDaoFactory.CreateAsyncDao(ConnectionString, ProviderName, Schema, ignoreEscape: true);
             bool actualBool = ContainsEscapeShouldBeCore('"', myDao, true);
             Assert.False(actualBool);
         }
@@ -377,7 +377,7 @@ namespace Kyklos.Kernel.Data.Oracle.Test.NetCore
         [Fact]
         public void NotIgnoreDaoEscapeShouldBe()
         {
-            IAsyncDao myDao = AsyncDaoFactory.CreateAsyncDaoFromConnectionStringName(connectionStringName: "OracleCS", schema: Schema, ignoreEscape: true);
+            IAsyncDao myDao = AsyncDaoFactory.CreateAsyncDao(ConnectionString, ProviderName, Schema, ignoreEscape: true);
             bool actualBool = ContainsEscapeShouldBeCore('"', myDao, false);
             Assert.True(actualBool);
         }
@@ -687,7 +687,5 @@ namespace Kyklos.Kernel.Data.Oracle.Test.NetCore
         {
             await SelectDoubleFirstDayShouldBeDay1Core().ConfigureAwait(false);
         }
-
-
     }
 }

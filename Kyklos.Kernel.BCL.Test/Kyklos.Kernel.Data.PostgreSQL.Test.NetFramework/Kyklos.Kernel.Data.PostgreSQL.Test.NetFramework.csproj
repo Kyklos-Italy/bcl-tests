@@ -42,14 +42,15 @@
       <HintPath>..\packages\Kyklos.Kernel.Core.1.0.0-beta.2\lib\netstandard2.0\Kyklos.Kernel.Core.dll</HintPath>
     </Reference>
     <Reference Include="Kyklos.Kernel.Data, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Data.1.0.0-beta.1\lib\netstandard2.0\Kyklos.Kernel.Data.dll</HintPath>
+      <HintPath>..\packages\Kyklos.Kernel.Data.1.0.0-beta.3\lib\netstandard2.0\Kyklos.Kernel.Data.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Kyklos.Kernel.Data.Async, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Data.Async.1.0.0-beta.9\lib\netstandard2.0\Kyklos.Kernel.Data.Async.dll</HintPath>
+      <HintPath>..\packages\Kyklos.Kernel.Data.Async.1.0.0-beta.11\lib\netstandard2.0\Kyklos.Kernel.Data.Async.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Kyklos.Kernel.Data.Async.PostgreSQL, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Data.Async.PostgreSQL.1.0.0-beta.7\lib\netstandard2.0\Kyklos.Kernel.Data.Async.PostgreSQL.dll</HintPath>
+      <HintPath>..\packages\Kyklos.Kernel.Data.Async.PostgreSQL.1.0.0-beta.8\lib\netstandard2.0\Kyklos.Kernel.Data.Async.PostgreSQL.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Kyklos.Kernel.Data.Async.Support, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">

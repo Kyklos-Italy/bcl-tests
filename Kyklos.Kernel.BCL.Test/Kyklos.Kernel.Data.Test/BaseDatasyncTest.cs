@@ -21,7 +21,7 @@ using Xunit.Sdk;
 namespace Kyklos.Kernel.Data.Test
 {
     public abstract class BaseDatasyncTest
-    {
+    {        
         protected abstract string Schema { get; }
 
         protected const int ThresholdForFastInCondition = 10;

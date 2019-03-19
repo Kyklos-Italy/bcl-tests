@@ -290,7 +290,7 @@ namespace Kyklos.Kernel.Data.MariaDB.Test.NetCore
         [Fact]
         public void IgnoreDaoEscapeShouldBeBackTick()
         {
-            IAsyncDao myDao = AsyncDaoFactory.CreateAsyncDaoFromConnectionStringName(connectionStringName: ConnectionString, schema: Schema, ignoreEscape: true);
+            IAsyncDao myDao = AsyncDaoFactory.CreateAsyncDao(ConnectionString, ProviderName, Schema, ignoreEscape: true);
             bool actualBool = ContainsEscapeShouldBeCore('`', myDao, true);
             Assert.False(actualBool);
         }
@@ -298,7 +298,7 @@ namespace Kyklos.Kernel.Data.MariaDB.Test.NetCore
         [Fact]
         public void NotIgnoreDaoEscapeShouldBeBackTick()
         {
-            IAsyncDao myDao = AsyncDaoFactory.CreateAsyncDaoFromConnectionStringName(connectionStringName: ConnectionString, schema: Schema, ignoreEscape: true);
+            IAsyncDao myDao = AsyncDaoFactory.CreateAsyncDao(ConnectionString, ProviderName, Schema, ignoreEscape: true);
             bool actualBool = ContainsEscapeShouldBeCore('`', myDao, false);
             Assert.True(actualBool);
         }

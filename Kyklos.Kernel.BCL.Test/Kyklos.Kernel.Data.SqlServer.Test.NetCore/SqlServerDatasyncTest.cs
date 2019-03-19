@@ -12,6 +12,7 @@ using Kyklos.Kernel.Data.Query;
 using Kyklos.Kernel.Data.Support;
 using Kyklos.Kernel.Data.Test;
 using Kyklos.Kernel.Data.Test.Entities;
+using Newtonsoft.Json;
 using Xunit;
 using Xunit.Sdk;
 
@@ -321,7 +322,7 @@ namespace Kyklos.Kernel.Data.SqlServer.Test.NetCore
         [Fact]
         public void IgnoreDaoEscapeShouldBe()
         {
-            IAsyncDao myDao = AsyncDaoFactory.CreateAsyncDaoFromConnectionStringName(connectionStringName: "SQLServerCS", schema: Schema, ignoreEscape: true);
+            IAsyncDao myDao = AsyncDaoFactory.CreateAsyncDao(ConnectionString, ProviderName, Schema, ignoreEscape: true);
             bool actualBool = ContainsEscapeShouldBeCore('[', myDao, true);
             Assert.False(actualBool);
         }
@@ -330,7 +331,7 @@ namespace Kyklos.Kernel.Data.SqlServer.Test.NetCore
         [Fact]
         public void NotIgnoreDaoEscapeShouldBe()
         {
-            IAsyncDao myDao = AsyncDaoFactory.CreateAsyncDaoFromConnectionStringName(connectionStringName: "SQLServerCS", schema: Schema, ignoreEscape: true);
+            IAsyncDao myDao = AsyncDaoFactory.CreateAsyncDao(ConnectionString, ProviderName, Schema, ignoreEscape: true);
             bool actualBool = ContainsEscapeShouldBeCore('[', myDao, false);
             Assert.True(actualBool);
         }

@@ -315,7 +315,7 @@ namespace Kyklos.Kernel.Data.SqlServer.Test.NetFramework
         [Fact]
         public void IgnoreDaoEscapeShouldBe()
         {
-            IAsyncDao myDao = AsyncDaoFactory.CreateAsyncDaoFromConnectionStringName(connectionStringName: "SQLServerCS", schema: Schema, ignoreEscape: true);
+            IAsyncDao myDao = AsyncDaoFactory.CreateAsyncDao(ConnectionString, ProviderName, Schema, ignoreEscape: true);
             bool actualBool = ContainsEscapeShouldBeCore('[', myDao, true);
             Assert.False(actualBool);
         }
@@ -324,7 +324,7 @@ namespace Kyklos.Kernel.Data.SqlServer.Test.NetFramework
         [Fact]
         public void NotIgnoreDaoEscapeShouldBe()
         {
-            IAsyncDao myDao = AsyncDaoFactory.CreateAsyncDaoFromConnectionStringName(connectionStringName: "SQLServerCS", schema: Schema, ignoreEscape: true);
+            IAsyncDao myDao = AsyncDaoFactory.CreateAsyncDao(ConnectionString, ProviderName, Schema, ignoreEscape: true);
             bool actualBool = ContainsEscapeShouldBeCore('[', myDao, false);
             Assert.True(actualBool);
         }
