@@ -11,7 +11,10 @@ namespace TypeFollower
 {
     public static class ReferenceAssemblyLoader
     {
-        public static Assembly ResolveAssemblyEventHandler(object sender, ResolveEventArgs args)
+		public static string SourceAssemblyFolder { get; set; }
+		public static string TargetAssemblyFolder { get; set; }
+
+		public static Assembly ResolveAssemblyEventHandler(object sender, ResolveEventArgs args)
         {
             AppDomain domain = sender as AppDomain;
             string defaultPath = domain?.SetupInformation?.ApplicationName ?? string.Empty;
@@ -30,7 +33,19 @@ namespace TypeFollower
                 return AssemblyLoad(assPath);
             }
 
-            assPath = Path.Combine(Settings.Default.ReferenceAssemblyPoolPath, assemblyName, assemblyInfo[1].Replace("Version=", "").Trim(), $"{assemblyName}.dll");
+			assPath = Path.Combine(SourceAssemblyFolder ?? string.Empty, $"{assemblyName}.dll");
+			if (File.Exists(assPath))
+			{
+				return AssemblyLoad(assPath);
+			}
+
+			assPath = Path.Combine(TargetAssemblyFolder ?? string.Empty, $"{assemblyName}.dll");
+			if (File.Exists(assPath))
+			{
+				return AssemblyLoad(assPath);
+			}
+
+			assPath = Path.Combine(Settings.Default.ReferenceAssemblyPoolPath, assemblyName, assemblyInfo[1].Replace("Version=", "").Trim(), $"{assemblyName}.dll");
             if (File.Exists(assPath))
             {
                 return AssemblyLoad(assPath);

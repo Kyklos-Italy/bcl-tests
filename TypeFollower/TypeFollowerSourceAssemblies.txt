@@ -1,0 +1,13 @@
+Kyklos.Kernel.dll
+Kyklos.Kernel.AsyncSupport.dll
+Kyklos.Kernel.Communication.dll
+Kyklos.Kernel.Config.dll
+Kyklos.Kernel.Data.dll
+Kyklos.Kernel.Data.Async.dll
+Kyklos.Kernel.Dynamic.dll
+Kyklos.Kernel.FSharp.dll
+Kyklos.Kernel.JavaSupport.dll
+Kyklos.Kernel.QuartzSupport.dll
+--Kyklos.Kernel.ReaderTagsSupport.dll
+Kyklos.Kernel.ScriptingSupport.dll
+Kyklos.Kernel.SpringSupport.dll

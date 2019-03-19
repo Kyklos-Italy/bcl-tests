@@ -7,8 +7,10 @@ namespace TypeFollower
 {
     public class TypeFollow
     {
-        string _sourceAssemblyListPath;
-        string _targetAssemblyListPath;
+		string _sourceAssemblyFolder;
+		string _sourceAssemblyListPath;
+		string _targetAssemblyFolder;
+		string _targetAssemblyListPath;
         string _typeNameMapPath;
 
         Dictionary<string, List<AssemblyObject>> _typeMapSource = new Dictionary<string, List<AssemblyObject>>();
@@ -21,20 +23,20 @@ namespace TypeFollower
 
         Dictionary<string, Tuple<string, string>> _typeNameMap = new Dictionary<string, Tuple<string, string>>();
 
-        public TypeFollow(string sourceListPath, string targetListPath, string typeNameMapPath)
+        public TypeFollow(string sourceFolderPath, string sourceListFilePath, string targetFolderPath, string targetListFilePath, string typeNameMapPath)
         {
-            _sourceAssemblyListPath = sourceListPath;
-            _targetAssemblyListPath = targetListPath;
+			_sourceAssemblyFolder = sourceFolderPath;
+			_sourceAssemblyListPath = sourceListFilePath;
+			_targetAssemblyFolder = targetFolderPath;
+			_targetAssemblyListPath = targetListFilePath;
             _typeNameMapPath = typeNameMapPath;
-
-            CompareTypeResult.TestMethod();
         }
 
         public void GenerateComparationResult(ComparationResultType resultType, string pathDestination)
         {
-            FillTypeMap(_sourceAssemblyListPath, out _typeMapSource, out _methodMapSource);
+            FillTypeMap(_sourceAssemblyFolder, _sourceAssemblyListPath, out _typeMapSource, out _methodMapSource);
             FillTypeNameMap(_typeNameMapPath);
-            FillTypeMap(_targetAssemblyListPath, out _typeMapTarget, out _methodMapTarget);
+            FillTypeMap(_targetAssemblyFolder, _targetAssemblyListPath, out _typeMapTarget, out _methodMapTarget);
             CreateTypeFollowResult();
             CreateMethodFollowResult();
             switch (resultType)
@@ -79,16 +81,17 @@ namespace TypeFollower
             }
         }
 
-        private void FillTypeMap(string pathAssemblyList, out Dictionary<string, List<AssemblyObject>> typeMap, out Dictionary<string, List<AssemblyObject>> methodMap)
+        private void FillTypeMap(string assemblyFolder, string assemblyListFilePath, out Dictionary<string, List<AssemblyObject>> typeMap, out Dictionary<string, List<AssemblyObject>> methodMap)
         {
             typeMap = new Dictionary<string, List<AssemblyObject>>();
             methodMap = new Dictionary<string, List<AssemblyObject>>();
-            var paths = File.ReadAllLines(pathAssemblyList);
-            foreach (string path in paths)
+            var assemblyNames = File.ReadAllLines(assemblyListFilePath);
+            foreach (string assemblyName in assemblyNames)
             {
-                if (!string.IsNullOrEmpty(path))
+                if (!string.IsNullOrEmpty(assemblyName))
                 {
-                    LoadAssemblyTypes(path, ref typeMap, ref methodMap);
+					string path = Path.Combine(assemblyFolder, assemblyName);
+					LoadAssemblyTypes(path, ref typeMap, ref methodMap);
                 }
             }
         }
@@ -140,7 +143,9 @@ namespace TypeFollower
                 AppDomainSetup setup = AppDomain.CurrentDomain.SetupInformation;
                 setup.ApplicationName = Path.GetDirectoryName(path);
                 AppDomain newDomain = AppDomain.CreateDomain("newDomain", AppDomain.CurrentDomain.Evidence, setup);
-                newDomain.AssemblyResolve += new ResolveEventHandler(ReferenceAssemblyLoader.ResolveAssemblyEventHandler);
+				ReferenceAssemblyLoader.SourceAssemblyFolder = _sourceAssemblyFolder;
+				ReferenceAssemblyLoader.TargetAssemblyFolder = _targetAssemblyFolder;
+				newDomain.AssemblyResolve += new ResolveEventHandler(ReferenceAssemblyLoader.ResolveAssemblyEventHandler);
                 System.Runtime.Remoting.ObjectHandle obj = newDomain.CreateInstance(typeof(AssemblyLoader).Assembly.FullName, typeof(AssemblyLoader).FullName);
                 AssemblyLoader loader = (AssemblyLoader)obj.Unwrap();
                 loader.LoadAssembly(path);
