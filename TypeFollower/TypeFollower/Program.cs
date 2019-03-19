@@ -10,15 +10,15 @@ namespace TypeFollower
 		{
 			try
 			{
-				if (args.Count() < 2)
+				if (args.Count() < 4)
 					Console.WriteLine("Wrong number of arguments!");
 				else
 				{					
 					ComparationResultType resultType = ComparationResultType.JSON;
-					string filenameTypeNameMap = args.Count() > 2 ? args[2] : string.Empty;
-					TypeFollow tf = new TypeFollow(args[0], args[1], filenameTypeNameMap);
+					string filenameTypeNameMap = args.Count() > 4 ? args[4] : string.Empty;
+					TypeFollow tf = new TypeFollow(args[0], args[1], args[2], args[3], filenameTypeNameMap);
 
-					string resultFileName = args.Count() > 3 ? args[3] : $"CompareResult.html";
+					string resultFileName = args.Count() > 5 ? args[5] : $"CompareResult.txt";
 					tf.GenerateComparationResult(resultType, resultFileName);
 					if (resultType == ComparationResultType.Console)
 						Console.ReadKey();
