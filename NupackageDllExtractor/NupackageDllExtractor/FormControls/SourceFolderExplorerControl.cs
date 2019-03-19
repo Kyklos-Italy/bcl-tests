@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace NupackageDllExtractorLib.FormControls
+namespace NupackageDllExtractor.FormControls
 {
     public class SourceFolderExplorerControl : CustomTableLayoutPanel
     {

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace NupackageDllExtractorLib.FormUtils
+namespace NupackageDllExtractor.FormUtils
 {
     public static class FormConfigurator
     {

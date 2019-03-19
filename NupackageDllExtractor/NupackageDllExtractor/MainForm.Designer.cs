@@ -1,4 +1,6 @@
-﻿namespace NupackageDllExtractor
+﻿using NupackageDllExtractor.FormControls;
+
+namespace NupackageDllExtractor
 {
     partial class MainForm
     {
@@ -45,8 +47,8 @@
             this.BtnClose = new System.Windows.Forms.Button();
             this.BtnSave = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.DestinationFolderComponent = new NupackageDllExtractorLib.FormControls.DestinationFolderExplorerControl();
-            this.SourceFolderComponent = new NupackageDllExtractorLib.FormControls.SourceFolderExplorerControl();
+            this.DestinationFolderComponent = new DestinationFolderExplorerControl();
+            this.SourceFolderComponent = new SourceFolderExplorerControl();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -300,7 +302,7 @@
         #endregion
 
         private System.IO.FileSystemWatcher fileSystemWatcher1;
-        private NupackageDllExtractorLib.FormControls.SourceFolderExplorerControl SourceFolderComponent;
+        private SourceFolderExplorerControl SourceFolderComponent;
         private System.Windows.Forms.CheckBox ChkClearDestinationFolder;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label2;
@@ -313,7 +315,7 @@
         private System.Windows.Forms.Button BtnClose;
         private System.Windows.Forms.RadioButton RadioRelease;
         private System.Windows.Forms.RadioButton radioDebug;
-        private NupackageDllExtractorLib.FormControls.DestinationFolderExplorerControl DestinationFolderComponent;
+        private DestinationFolderExplorerControl DestinationFolderComponent;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox TxtCustom;
         private System.Windows.Forms.RadioButton RadioCustom;
