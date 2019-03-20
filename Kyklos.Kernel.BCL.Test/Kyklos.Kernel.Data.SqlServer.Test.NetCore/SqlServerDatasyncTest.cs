@@ -393,7 +393,7 @@ namespace Kyklos.Kernel.Data.SqlServer.Test.NetCore
         [Fact]
         public void CountAllResultsAfterFourAreDeletedShouldBe2()
         {
-            CountAllResultsAfterFourAreDeletedShouldBe2Core();
+            CountAllResultsAfterFourAreDeletedShouldBe1Core();
         }
 
         [Fact]

@@ -1,20 +1,15 @@
 ﻿using System;
-using Xunit;
-using Kyklos.Kernel.Graphics;
-using System.Threading.Tasks;
 using System.Drawing;
 using System.IO;
-using System.Reflection;
-using System.Collections.Generic;
-using System.Drawing.Imaging;
-using System.Linq;
 using FluentAssertions;
 using Kyklos.Kernel.Graphics.Test.Support;
 using Kyklos.Kernel.Graphics.Test.Support.Mock;
+using Xunit;
 using static Kyklos.Kernel.Graphics.Test.Support.Framework;
+
 namespace Kyklos.Kernel.Graphics.Test.Graphics
 {
-    public class GraphicsBaseTestMethods
+    public class GraphicsBaseTestMethods : IDisposable
     {
         private MockData<PngMockData> MockDataPng { get; }
         private MockData<JpgMockData> MockDataJpg { get; }
@@ -288,6 +283,15 @@ namespace Kyklos.Kernel.Graphics.Test.Graphics
             Image expectedImage = MockDataTif.Image;
             Image actualImage = ImageUtility.SafeByteArrayToImage(MockDataTif.Bytes);
             expectedImage.Should().BeEquivalentTo(expectedImage);
+        }
+
+        public void Dispose()
+        {
+            MockDataPng.Dispose();
+            MockDataJpg.Dispose();
+            MockDataGif.Dispose();
+            MockDataBmp.Dispose();
+            MockDataTif.Dispose();
         }
 
         #endregion

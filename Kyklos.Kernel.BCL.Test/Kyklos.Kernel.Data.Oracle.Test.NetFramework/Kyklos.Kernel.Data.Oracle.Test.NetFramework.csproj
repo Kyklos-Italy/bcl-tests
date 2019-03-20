@@ -45,7 +45,7 @@
       <HintPath>..\packages\Kyklos.Kernel.Data.1.0.0-beta.3\lib\netstandard2.0\Kyklos.Kernel.Data.dll</HintPath>
     </Reference>
     <Reference Include="Kyklos.Kernel.Data.Async, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Data.Async.1.0.0-beta.11\lib\netstandard2.0\Kyklos.Kernel.Data.Async.dll</HintPath>
+      <HintPath>..\packages\Kyklos.Kernel.Data.Async.1.0.0-beta.12\lib\netstandard2.0\Kyklos.Kernel.Data.Async.dll</HintPath>
     </Reference>
     <Reference Include="Kyklos.Kernel.Data.Async.Oracle, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Kyklos.Kernel.Data.Async.Oracle.1.0.0-beta.8\lib\netstandard2.0\Kyklos.Kernel.Data.Async.Oracle.dll</HintPath>

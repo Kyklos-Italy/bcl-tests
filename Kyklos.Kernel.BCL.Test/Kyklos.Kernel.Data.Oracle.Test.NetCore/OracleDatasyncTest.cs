@@ -439,7 +439,7 @@ namespace Kyklos.Kernel.Data.Oracle.Test.NetCore
         [Fact]
         public void CountAllResultsAfterFourAreDeletedShouldBe2()
         {
-            CountAllResultsAfterFourAreDeletedShouldBe2Core();
+            CountAllResultsAfterFourAreDeletedShouldBe1Core();
         }
 
         [Fact]

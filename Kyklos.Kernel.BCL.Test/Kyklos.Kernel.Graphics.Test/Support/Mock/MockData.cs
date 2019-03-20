@@ -7,7 +7,7 @@ using static Kyklos.Kernel.Graphics.Test.Graphics.GraphicsBaseTestMethods;
 
 namespace Kyklos.Kernel.Graphics.Test.Support.Mock
 {
-    internal class MockData<T> : Framework
+    internal class MockData<T> : Framework, IDisposable
     {
         public string ImagePath { get; }
         public Image Image { get; }
@@ -40,5 +40,26 @@ namespace Kyklos.Kernel.Graphics.Test.Support.Mock
             ImageFormat = Image.RawFormat;
             Bytes = Utils.ImageToByteArray(ImagePath);
         }
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    Image.Dispose();   
+                }
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+        #endregion
     }
 }

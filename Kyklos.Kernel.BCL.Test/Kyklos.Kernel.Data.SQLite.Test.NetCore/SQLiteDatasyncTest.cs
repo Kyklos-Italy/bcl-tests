@@ -453,7 +453,7 @@ namespace Kyklos.Kernel.Data.SQLite.Test.NetCore
         [Fact]
         public void CountAllResultsAfterFourAreDeletedShouldBe2()
         {
-            CountAllResultsAfterFourAreDeletedShouldBe2Core();
+            CountAllResultsAfterFourAreDeletedShouldBe1Core();
         }
 
         [Fact]

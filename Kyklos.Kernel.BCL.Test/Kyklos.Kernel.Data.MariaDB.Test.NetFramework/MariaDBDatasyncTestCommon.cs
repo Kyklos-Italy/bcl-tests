@@ -2,7 +2,7 @@
 using Kyklos.Kernel.Data.Test;
 using XUnitTestSupport;
 
-namespace Kyklos.Kernel.Data.MariaDB.Test.NetCore
+namespace Kyklos.Kernel.Data.MariaDB.Test.NetFramework
 {
     public abstract class MariaDBDatasyncTestCommon : BaseDatasyncTest
     {
@@ -13,7 +13,7 @@ namespace Kyklos.Kernel.Data.MariaDB.Test.NetCore
         protected override string ConnectionString => "Server=kktitan;Port=3306;Database=testdb;Uid=testuser;Pwd=vuh1uf3nqx;";
         protected override string ProviderName => "MariaDB";
 
-        protected MariaDBDatasyncTestCommon() : base(NetPlatformType.NETCORE)
+        protected MariaDBDatasyncTestCommon() : base(NetPlatformType.NETFRAMEWORK)
         {
             if (!isInitialized)
             {
@@ -25,7 +25,7 @@ namespace Kyklos.Kernel.Data.MariaDB.Test.NetCore
                         isInitialized = true;
                     }
                 }
-            }            
+            }
         }
 
         private async Task SetupCore()

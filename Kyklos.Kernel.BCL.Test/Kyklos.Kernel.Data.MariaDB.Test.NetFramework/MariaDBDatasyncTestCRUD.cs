@@ -2,7 +2,7 @@
 using Xunit;
 using XUnitTestSupport;
 
-namespace Kyklos.Kernel.Data.MariaDB.Test.NetCore
+namespace Kyklos.Kernel.Data.MariaDB.Test.NetFramework
 {
     [TestCaseOrderer("XUnitTestSupport.PriorityOrderer", "XUnitTestSupport")]
     public class MariaDBDatasyncTestCRUD : MariaDBDatasyncTestCommon

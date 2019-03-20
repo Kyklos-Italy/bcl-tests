@@ -226,7 +226,7 @@ namespace Kyklos.Kernel.Data.Test
                 .From()
                 .Table<Result>("r");
 
-            var actualValue = (await Dao.GetItemsAsync<int>(queryBuilder).ConfigureAwait(false)).FirstOrDefault();
+            var actualValue = await Dao.ExecuteScalarAsync<int>(queryBuilder).ConfigureAwait(false);
             Assert.Equal(n, actualValue);
         }
 
@@ -248,7 +248,7 @@ namespace Kyklos.Kernel.Data.Test
                 .From()
                 .Table<Result>("r");
 
-            var actualValue = (await Dao.GetItemsAsync<int>(queryBuilder).ConfigureAwait(false)).ToArray().FirstOrDefault();
+            var actualValue = await Dao.ExecuteScalarAsync<int>(queryBuilder).ConfigureAwait(false);
             Assert.Equal(expectedSum, actualValue);
         }
 
@@ -262,7 +262,7 @@ namespace Kyklos.Kernel.Data.Test
                 .From()
                 .Table<Result>("r");
 
-            var actualValue = (await Dao.GetItemsAsync<int>(queryBuilder).ConfigureAwait(false)).ToArray().FirstOrDefault();
+            var actualValue = await Dao.ExecuteScalarAsync<int>(queryBuilder).ConfigureAwait(false);
             Assert.Equal(expectedSum, actualValue);
         }
 
@@ -930,10 +930,10 @@ namespace Kyklos.Kernel.Data.Test
         }
 
 
-        protected void CountAllResultsAfterFourAreDeletedShouldBe2Core()
+        protected async Task CountAllResultsAfterFourAreDeletedShouldBe1Core()
         {
-            DeleteFourResults().Wait();
-            CountAllResultsShouldBeN(2).Wait();
+            await DeleteFourResults();
+            await CountAllResultsShouldBeN(1);
         }
 
 
@@ -1112,7 +1112,11 @@ namespace Kyklos.Kernel.Data.Test
 
         protected async Task MaxOfTotalGoalsShouldBe7Core()
         {
-            int expectedValue = 7;
+            int expectedValue =
+                InitialResults
+                .Select(x => x.GoalsHomeTeam + x.GoalsVisitorTeam)
+                .Max();
+
             var queryBuilder =
                 Dao
                 .NewQueryBuilder()

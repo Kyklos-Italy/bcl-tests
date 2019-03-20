@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Kyklos.Kernel.Graphics.Test.Graphics;
 using Xunit;
-using Kyklos.Kernel.Graphics.Test.Graphics;
 using static Kyklos.Kernel.Graphics.Test.Support.Framework;
 
 namespace Kyklos.Kernel.Graphics.Test.NetCore.Graphics
