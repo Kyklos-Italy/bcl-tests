@@ -865,36 +865,40 @@ namespace Kyklos.Kernel.Data.Test
 
         protected async Task SelectHomeTeamsWhereConditionsAreMetShouldBe3TeamsCore()
         {
-            Tuple<string, int>[] expectedValue = new Tuple<string, int>[]
-            {
-                new Tuple<string, int>("Milan", 4),
-                new Tuple<string, int>("Fiorentina", 0),
-                new Tuple<string, int>("Milan", 0)
-            }.OrderBy(x => x.Item2).ThenByDescending(x => x.Item1).ToArray();
+            Tuple<string, int>[] expectedValue = new 
+                Tuple<string, int>[]
+                {
+                    new Tuple<string, int>("Milan", 4),
+                    new Tuple<string, int>("Fiorentina", 0),
+                    new Tuple<string, int>("Milan", 0)
+                }
+                .OrderBy(x => x.Item2)
+                .ThenByDescending(x => x.Item1)
+                .ToArray();
 
             var queryBuilder =
-                    Dao
-                    .NewQueryBuilder()
-                    .Select()
-                    .Field<Team>("T", x => x.Name)
-                    .Comma()
-                    .Field<Result>("R", x => x.GoalsHomeTeam)
-                    .From()
-                    .Table<Result>("R")
-                    .TablesJoin<Result, Team>
-                    (
-                        "R",
-                        InnerJoin<Team>.WithAlias("T"),
-                        (R, T) => R.HomeTeamId == T.TeamId
-                    )
-                    .Where()
-                    .OpenPar()
-                        .Condition<Result>("R", x => x.GoalsHomeTeam > 2)
-                        .And<Result>("R", x => x.GoalsVisitorTeam, WhereOperator.LessThan, 2)
-                    .ClosePar()
-                    .Or<Result>("R", x => x.GoalsHomeTeam, WhereOperator.EqualTo, 0)
-                    .OrderBy<Result>("R", x => x.GoalsHomeTeam, OrderByDirection.Ascending)
-                    .ThenBy<Team>("T", x => x.Name, OrderByDirection.Descending);
+                Dao
+                .NewQueryBuilder()
+                .Select()
+                .Field<Team>("T", x => x.Name)
+                .Comma()
+                .Field<Result>("R", x => x.GoalsHomeTeam)
+                .From()
+                .Table<Result>("R")
+                .TablesJoin<Result, Team>
+                (
+                    "R",
+                    InnerJoin<Team>.WithAlias("T"),
+                    (R, T) => R.HomeTeamId == T.TeamId
+                )
+                .Where()
+                .OpenPar()
+                    .Condition<Result>("R", x => x.GoalsHomeTeam > 2)
+                    .And<Result>("R", x => x.GoalsVisitorTeam, WhereOperator.LessThan, 2)
+                .ClosePar()
+                .Or<Result>("R", x => x.GoalsHomeTeam, WhereOperator.EqualTo, 0)
+                .OrderBy<Result>("R", x => x.GoalsHomeTeam, OrderByDirection.Ascending)
+                .ThenBy<Team>("T", x => x.Name, OrderByDirection.Descending);
 
             var xx = queryBuilder.BuildSqlTextWithParameters();
 
@@ -903,30 +907,38 @@ namespace Kyklos.Kernel.Data.Test
                 .GetItemsAsync<Tuple<string, int>>(queryBuilder)
                 .ConfigureAwait(false))
                 .ToArray();
+
             Assert.Equal(expectedValue, actualValue);
         }
 
-
         protected async Task SelectTeamsNameLikeShouldBe3TeamsCore()
         {
-            var expectedValue = new string[]
+            var expectedValues = 
+                new string[]
                 {
                     "Fiorentina",
                     "Juventus",
                     "Inter"
-                }.OrderBy(x => x).ToArray();
+                }
+                .OrderBy(x => x)
+                .ToArray();
 
             var queryBuilder =
-                    Dao
-                        .NewQueryBuilder()
-                            .Select()
-                                .Field<Team>("T", x => x.Name)
-                            .From()
-                                .Table<Team>("T")
-                            .Where<Team>("T", x => x.Name.Contains("nt"));
+                Dao
+                .NewQueryBuilder()
+                .Select()
+                .Field<Team>("T", x => x.Name)
+                .From()
+                .Table<Team>("T")
+                .Where<Team>("T", x => x.Name.Contains("nt"))
+                .OrderBy("1");
 
-            var actualValue = (await Dao.GetItemsAsync<string>(queryBuilder).ConfigureAwait(false)).OrderBy(x => x).ToArray();
-            Assert.Equal(expectedValue, actualValue);
+            var actualValues = await 
+                Dao
+                .GetItemsArrayAsync<string>(queryBuilder)
+                .ConfigureAwait(false);
+
+            Assert.Equal(expectedValues, actualValues);
         }
 
 
@@ -935,7 +947,6 @@ namespace Kyklos.Kernel.Data.Test
             await DeleteFourResults();
             await CountAllResultsShouldBeN(1);
         }
-
 
         protected async Task UpdateGoalsHomeTeamShouldBe3Core()
         {
@@ -996,7 +1007,8 @@ namespace Kyklos.Kernel.Data.Test
                     InnerJoin<Result>.WithAlias("R"), (T, R) => T.TeamId == R.HomeTeamId
                 )
                 .Where<Team>("T", x => x.Name, WhereOperator.Contains, "nt")
-                .AndFastInCondition<Result>("R", x => x.ResultId, new string[] { "idRes1", "idRes3" }, 1);
+                .AndFastInCondition<Result>("R", x => x.ResultId, new string[] { "idRes1", "idRes3" }, 1)
+                .OrderBy(1);
 
             var xx = queryBuilder.BuildSqlTextWithParameters();
             var actualValue = (await
@@ -1009,18 +1021,15 @@ namespace Kyklos.Kernel.Data.Test
             Assert.Equal(expectedValue, actualValue);
         }
 
-
         protected async Task SumOfGoalsHomeTeamShouldBe11Core()
         {
             await SumOfGoalsHomeTeamShouldBeN(11).ConfigureAwait(false);
         }
 
-
         protected async Task SumOfGoalsVisitorTeamShouldBe12Core()
         {
             await SumOfGoalsVisitorTeamShouldBeN(12).ConfigureAwait(false);
         }
-
 
         protected async Task SumOfTotalGoalsForResultShouldBeOKCore()
         {
@@ -1059,24 +1068,26 @@ namespace Kyklos.Kernel.Data.Test
             Assert.Equal(expectedTuples, actualTuples);
         }
 
-
         protected async Task SumOfTotalGoalsShouldBe23Core()
         {
             int expectedValue = 23;
             var queryBuilder =
-                    Dao.
-                        NewQueryBuilder()
-                            .Select()
-                                .Sum<Result>("r", x => x.GoalsHomeTeam)
-                                .OperPlus()
-                                .Sum<Result>("r", x => x.GoalsVisitorTeam)
-                            .From()
-                                .Table<Result>("r");
+                Dao
+                .NewQueryBuilder()
+                .Select()
+                .Sum<Result>("r", x => x.GoalsHomeTeam)
+                .OperPlus()
+                .Sum<Result>("r", x => x.GoalsVisitorTeam)
+                .From()
+                .Table<Result>("r");
 
-            var actualValue = (await Dao.GetItemsAsync<int>(queryBuilder).ConfigureAwait(false)).FirstOrDefault();
+            var actualValue = await 
+                Dao
+                .ExecuteScalarAsync<int>(queryBuilder)
+                .ConfigureAwait(false);
+
             Assert.Equal(expectedValue, actualValue);
         }
-
 
         protected async Task MaxOfGoalsHomeTeamShouldBe4Core()
         {
@@ -1089,26 +1100,24 @@ namespace Kyklos.Kernel.Data.Test
                 .From()
                 .Table<Result>("r");
 
-            var actualValue = (await Dao.GetItemsAsync<int>(queryBuilder).ConfigureAwait(false)).ToArray().FirstOrDefault();
+            var actualValue = await Dao.ExecuteScalarAsync<int>(queryBuilder).ConfigureAwait(false);
             Assert.Equal(expectedValue, actualValue);
         }
-
 
         protected async Task MaxOfGoalsVisitorTeamShouldBe3Core()
         {
             int expectedValue = 3;
             var queryBuilder =
-                    Dao
-                        .NewQueryBuilder()
-                            .Select()
-                                .Max<Result>("r", x => x.GoalsVisitorTeam)
-                            .From()
-                                .Table<Result>("r");
+                Dao
+                .NewQueryBuilder()
+                .Select()
+                .Max<Result>("r", x => x.GoalsVisitorTeam)
+                .From()
+                .Table<Result>("r");
 
-            var actualValue = (await Dao.GetItemsAsync<int>(queryBuilder).ConfigureAwait(false)).ToArray().FirstOrDefault();
+            var actualValue = await Dao.ExecuteScalarAsync<int>(queryBuilder).ConfigureAwait(false);
             Assert.Equal(expectedValue, actualValue);
         }
-
 
         protected async Task MaxOfTotalGoalsShouldBe7Core()
         {
@@ -1125,10 +1134,9 @@ namespace Kyklos.Kernel.Data.Test
                 .From()
                 .Table<Result>("r");
 
-            var actualValue = (await Dao.GetItemsAsync<int>(queryBuilder).ConfigureAwait(false)).FirstOrDefault();
+            var actualValue = await Dao.ExecuteScalarAsync<int>(queryBuilder).ConfigureAwait(false);
             Assert.Equal(expectedValue, actualValue);
         }
-
 
         protected async Task MinOfGoalsHomeTeamShouldBeZeroCore()
         {
@@ -1141,26 +1149,24 @@ namespace Kyklos.Kernel.Data.Test
                 .From()
                 .Table<Result>("r");
 
-            var actualValue = (await Dao.GetItemsAsync<int>(queryBuilder).ConfigureAwait(false)).ToArray().FirstOrDefault();
+            var actualValue = await Dao.ExecuteScalarAsync<int>(queryBuilder).ConfigureAwait(false);
             Assert.Equal(expectedValue, actualValue);
         }
-
 
         protected async Task MinOfGoalsVisitorTeamShouldBe1Core()
         {
             int expectedValue = 1;
             var queryBuilder =
-                    Dao
-                        .NewQueryBuilder()
-                            .Select()
-                                .Min<Result>("r", x => x.GoalsVisitorTeam)
-                            .From()
-                                .Table<Result>("r");
+                Dao
+                .NewQueryBuilder()
+                .Select()
+                .Min<Result>("r", x => x.GoalsVisitorTeam)
+                .From()
+                .Table<Result>("r");
 
-            var actualValue = (await Dao.GetItemsAsync<int>(queryBuilder).ConfigureAwait(false)).ToArray().FirstOrDefault();
+            var actualValue = await Dao.ExecuteScalarAsync<int>(queryBuilder).ConfigureAwait(false);
             Assert.Equal(expectedValue, actualValue);
         }
-
 
         protected async Task MinOfTotalGoalsShouldBe1Core()
         {
@@ -1180,10 +1186,9 @@ namespace Kyklos.Kernel.Data.Test
                 .From()
                 .Table<Result>("r");
 
-            var actualValue = (await Dao.GetItemsAsync<int>(queryBuilder).ConfigureAwait(false)).FirstOrDefault();
+            var actualValue = await Dao.ExecuteScalarAsync<int>(queryBuilder).ConfigureAwait(false);
             Assert.Equal(expectedValue, actualValue);
         }
-
 
         protected async Task AvgOfGoalsHomeTeamShouldBe1Point83Core()
         {
@@ -1203,10 +1208,9 @@ namespace Kyklos.Kernel.Data.Test
                 .From()
                 .Table<Result>("r");
 
-            var actualValue = (await Dao.GetItemsAsync<int>(queryBuilder).ConfigureAwait(false)).ToArray().FirstOrDefault();
+            var actualValue = await Dao.ExecuteScalarAsync<int>(queryBuilder).ConfigureAwait(false);
             Assert.True(expectedValue - actualValue < 1);
         }
-
 
         protected async Task AvgOfGoalsVisitorTeamShouldBe2Core()
         {
@@ -1226,7 +1230,7 @@ namespace Kyklos.Kernel.Data.Test
                 .From()
                 .Table<Result>("r");
 
-            var actualValue = (await Dao.GetItemsAsync<int>(queryBuilder).ConfigureAwait(false)).ToArray().FirstOrDefault();
+            var actualValue = await Dao.ExecuteScalarAsync<int>(queryBuilder).ConfigureAwait(false);
             Assert.True(expectedValue - actualValue < 1);
         }
 
@@ -1254,10 +1258,9 @@ namespace Kyklos.Kernel.Data.Test
                 .From()
                 .Table<Result>("r");
 
-            var actualValue = (await Dao.GetItemsAsync<int>(queryBuilder).ConfigureAwait(false)).FirstOrDefault();
+            var actualValue = await Dao.ExecuteScalarAsync<int>(queryBuilder).ConfigureAwait(false);
             Assert.True(expectedValue - actualValue < 1);
         }
-
 
         protected async Task GetCompleteResultShouldBe6ResultsCore()
         {
@@ -1277,43 +1280,50 @@ namespace Kyklos.Kernel.Data.Test
 
             var queryBuilder =
                     Dao
-                        .NewQueryBuilder()
-                            .Select()
-                                .Field<Day>("d", x => x.DayNumber)
-                                .Comma()
-                                .Field<Team>("ht", x => x.Name)
-                                .Comma()
-                                .Field<Result>("r", x => x.GoalsHomeTeam)
-                                .Comma()
-                                .Case()
-                                    .When<Result>("r", x => x.GoalsHomeTeam > x.GoalsVisitorTeam)
-                                    .Then("'v'")
-                                    .When<Result>("r", x => x.GoalsHomeTeam == x.GoalsVisitorTeam)
-                                    .Then("'d'")
-                                    .Else("'l'")
-                                .EndCase()
-                                .Comma()
-                                .Field<Team>("vt", x => x.Name)
-                                .Comma()
-                                .Field<Result>("r", x => x.GoalsVisitorTeam)
-                                .Comma()
-                                .Case()
-                                    .When<Result>("r", x => x.GoalsHomeTeam < x.GoalsVisitorTeam)
-                                    .Then("'v'")
-                                    .When<Result>("r", x => x.GoalsHomeTeam == x.GoalsVisitorTeam)
-                                    .Then("'d'")
-                                    .Else("'l'")
-                                .EndCase()
-                            .From()
-                                .Tables
-                                (
-                                    FlatTable<Result>.WithAlias("r"),
-                                    InnerJoin<Day>.WithAlias("d"), (r, d) => r.DayId == d.DayId,
-                                    InnerJoin<Team>.WithAlias("ht"), (r, d, ht) => r.HomeTeamId == ht.TeamId,
-                                    InnerJoin<Team>.WithAlias("vt"), (r, d, ht, vt) => r.VisitorTeamId == vt.TeamId
-                                );
+                    .NewQueryBuilder()
+                    .Select()
+                    .Field<Day>("d", x => x.DayNumber)
+                    .Comma()
+                    .Field<Team>("ht", x => x.Name)
+                    .Comma()
+                    .Field<Result>("r", x => x.GoalsHomeTeam)
+                    .Comma()
+                    .Case()
+                        .When<Result>("r", x => x.GoalsHomeTeam > x.GoalsVisitorTeam)
+                        .Then("'v'")
+                        .When<Result>("r", x => x.GoalsHomeTeam == x.GoalsVisitorTeam)
+                        .Then("'d'")
+                        .Else("'l'")
+                    .EndCase()
+                    .Comma()
+                    .Field<Team>("vt", x => x.Name)
+                    .Comma()
+                    .Field<Result>("r", x => x.GoalsVisitorTeam)
+                    .Comma()
+                    .Case()
+                        .When<Result>("r", x => x.GoalsHomeTeam < x.GoalsVisitorTeam)
+                        .Then("'v'")
+                        .When<Result>("r", x => x.GoalsHomeTeam == x.GoalsVisitorTeam)
+                        .Then("'d'")
+                        .Else("'l'")
+                    .EndCase()
+                    .From()
+                    .Tables
+                    (
+                        FlatTable<Result>.WithAlias("r"),
+                        InnerJoin<Day>.WithAlias("d"), (r, d) => r.DayId == d.DayId,
+                        InnerJoin<Team>.WithAlias("ht"), (r, d, ht) => r.HomeTeamId == ht.TeamId,
+                        InnerJoin<Team>.WithAlias("vt"), (r, d, ht, vt) => r.VisitorTeamId == vt.TeamId
+                    )
+                    .OrderBy<Day>("d", x => x.DayNumber)
+                    .ThenBy<Team>("ht", x => x.Name);
 
-            var actualTuples = (await Dao.GetItemsAsync<Tuple<int, string, int, char, string, int, char>>(queryBuilder).ConfigureAwait(false)).OrderBy(x => x.Item1).ThenBy(x => x.Item2).ToArray();
+            var actualTuples = await
+                Dao
+                .GetItemsArrayAsync<Tuple<int, string, int, char, string, int, char>>(queryBuilder)
+                .ConfigureAwait(false);
+                //.OrderBy(x => x.Item1).ThenBy(x => x.Item2).ToArray();
+
             Assert.Equal(expectedTuples, actualTuples);
         }
 
@@ -1929,32 +1939,38 @@ namespace Kyklos.Kernel.Data.Test
         {
             string dayId = "idDay1";
 
-            var expectedResults = new Tuple<Result, Day>[]
-            {
-                new Tuple<Result, Day>(new Result() { ResultId = "idRes1", HomeTeamId = "idFio", VisitorTeamId = "idJuv", GoalsHomeTeam = 1, GoalsVisitorTeam = 3, DayId = "idDay1" }, new Day() { DayId = "idDay1", DayDate = new DateTime(2018, 09, 16), DayNumber = 1 }),
-                new Tuple<Result, Day>(new Result() { ResultId = "idRes2", HomeTeamId = "idMil", VisitorTeamId = "idInt", GoalsHomeTeam = 0, GoalsVisitorTeam = 1, DayId = "idDay1" }, new Day() { DayId = "idDay1", DayDate = new DateTime(2018, 09, 16), DayNumber = 1 })
-            }.OrderBy(x => x.Item1.ResultId).ToArray();
+            var expectedResults = 
+                new Tuple<Result, Day>[]
+                {
+                    new Tuple<Result, Day>(new Result() { ResultId = "idRes1", HomeTeamId = "idFio", VisitorTeamId = "idJuv", GoalsHomeTeam = 1, GoalsVisitorTeam = 3, DayId = "idDay1" }, new Day() { DayId = "idDay1", DayDate = new DateTime(2018, 09, 16), DayNumber = 1 }),
+                    new Tuple<Result, Day>(new Result() { ResultId = "idRes2", HomeTeamId = "idMil", VisitorTeamId = "idInt", GoalsHomeTeam = 0, GoalsVisitorTeam = 1, DayId = "idDay1" }, new Day() { DayId = "idDay1", DayDate = new DateTime(2018, 09, 16), DayNumber = 1 })
+                }
+                .OrderBy(x => x.Item1.ResultId)
+                .ToArray();
 
             var queryBuilder =
                 Dao
                 .NewQueryBuilder()
-                    .Select()
-                        .Star("r")
-                        .Comma()
-                        .Star("d")
-                    .From()
-                        .Tables
-                        (
-                            FlatTable<Result>.WithAlias("r"),
-                            InnerJoin<Day>.WithAlias("d"), (r, d) => r.DayId == d.DayId
-                        )
-                    .Where<Result>("r", x => x.DayId == dayId);
+                .Select()
+                .Star("r")
+                .Comma()
+                .Star("d")
+                .From()
+                .Tables
+                (
+                    FlatTable<Result>.WithAlias("r"),
+                    InnerJoin<Day>.WithAlias("d"), (r, d) => r.DayId == d.DayId
+                )
+                .Where<Result>("r", x => x.DayId == dayId)
+                .OrderBy<Result>("r", x => x.ResultId);
 
-            var actualResults = (await Dao.GetItemsAsync<Tuple<Result, Day>>(queryBuilder).ConfigureAwait(false)).OrderBy(x => x.Item1.ResultId).ToArray();
+            var actualResults = await
+                Dao
+                .GetItemsArrayAsync<Tuple<Result, Day>>(queryBuilder)
+                .ConfigureAwait(false);
 
             Assert.Equal(expectedResults, actualResults);
         }
-
 
         protected async Task SelectResultsForADayWithInvertedTuplesShouldBeDay1Core()
         {
@@ -1980,38 +1996,40 @@ namespace Kyklos.Kernel.Data.Test
         protected async Task SelectResultsForADayWithIncompletedFieldsShouldBeDay1Core()
         {
             string dayId = "idDay1";
-            var expectedResults = new Tuple<Result, Day>[]
-            {
-                new Tuple<Result, Day>(new Result() { ResultId = "idRes1", HomeTeamId = "idFio", VisitorTeamId = "idJuv", DayId = "idDay1" }, new Day() { DayId = "idDay1" }),
-                new Tuple<Result, Day>(new Result() { ResultId = "idRes2", HomeTeamId = "idMil", VisitorTeamId = "idInt", DayId = "idDay1" }, new Day() { DayId = "idDay1" })
-            }.OrderBy(x => x.Item1.ResultId).ToArray();
+            var expectedResults = 
+                new Tuple<Result, Day>[]
+                {
+                    new Tuple<Result, Day>(new Result() { ResultId = "idRes1", HomeTeamId = "idFio", VisitorTeamId = "idJuv", DayId = "idDay1" }, new Day() { DayId = "idDay1" }),
+                    new Tuple<Result, Day>(new Result() { ResultId = "idRes2", HomeTeamId = "idMil", VisitorTeamId = "idInt", DayId = "idDay1" }, new Day() { DayId = "idDay1" })
+                }
+                .OrderBy(x => x.Item1.ResultId)
+                .ToArray();
 
             var queryBuilder =
                 Dao
                 .NewQueryBuilder()
-                    .Select()
-                        .Field<Result>("r", x => x.ResultId)
-                        .Comma()
-                        .Field<Result>("r", x => x.HomeTeamId)
-                        .Comma()
-                        .Field<Result>("r", x => x.VisitorTeamId)
-                        .Comma()
-                        .Field<Result>("r", x => x.DayId)
-                        .Comma()
-                        .Field<Day>("d", x => x.DayId)
-                    .From()
-                        .Tables
-                        (
-                            FlatTable<Result>.WithAlias("r"),
-                            InnerJoin<Day>.WithAlias("d"), (r, d) => r.DayId == d.DayId
-                        )
-                    .Where<Result>("r", x => x.DayId == dayId);
+                .Select()
+                .Field<Result>("r", x => x.ResultId)
+                .Comma()
+                .Field<Result>("r", x => x.HomeTeamId)
+                .Comma()
+                .Field<Result>("r", x => x.VisitorTeamId)
+                .Comma()
+                .Field<Result>("r", x => x.DayId)
+                .Comma()
+                .Field<Day>("d", x => x.DayId)
+                .From()
+                .Tables
+                (
+                    FlatTable<Result>.WithAlias("r"),
+                    InnerJoin<Day>.WithAlias("d"), (r, d) => r.DayId == d.DayId
+                )
+                .Where<Result>("r", x => x.DayId == dayId);
 
             var actualResults = (await Dao.GetItemsAsync<Tuple<Result, Day>>(queryBuilder).ConfigureAwait(false)).OrderBy(x => x.Item1.ResultId).ToArray();
 
             Assert.Equal(expectedResults, actualResults);
         }
-
 
         protected async Task SelectDoubleFirstDayShouldBeDay1Core()
         {
@@ -2046,6 +2064,36 @@ namespace Kyklos.Kernel.Data.Test
             var actualDays = (await Dao.GetItemsAsync<Tuple<Day, Day>>(queryBuilder).ConfigureAwait(false)).FirstOrDefault();
 
             Assert.Equal(expectedDays, actualDays);
+        }
+
+        protected async Task CountWithNestedQueryShouldBeTheSameCore()
+        {
+            int maxDays = 3;
+
+            var queryBuilder =
+                Dao
+                .NewQueryBuilder()
+                .Select()
+                .CountStar("X")
+                .Comma()
+                .NestedQuery
+                (
+                    nqb =>
+                        nqb
+                        .Select()
+                        .CountStar()
+                        .From()
+                        .Table<Day>("d2")
+                        .Where<Day>("d2", x => x.DayNumber <= maxDays)
+                )
+                .As("Y")
+                .From()
+                .Table<Day>("d")
+                .Where<Day>("d", x => x.DayNumber <= maxDays);
+
+            var actualDays = (await Dao.GetItemsAsync<Tuple<int, int>>(queryBuilder).ConfigureAwait(false)).FirstOrDefault();
+
+            Assert.True(actualDays.Item1 == actualDays.Item2);
         }
     }
 }

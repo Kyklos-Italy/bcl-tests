@@ -1,5 +1,5 @@
 ﻿using Kyklos.Kernel.Ftp.Test.Ftp;
-using static XUnitTestSupport.TestNetPlatform;
+using XUnitTestSupport;
 
 namespace Kyklos.Kernel.Ftp.Test.NetFramework.Ftp
 {

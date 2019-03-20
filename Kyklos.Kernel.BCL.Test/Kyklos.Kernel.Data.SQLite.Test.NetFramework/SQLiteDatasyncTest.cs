@@ -16,7 +16,11 @@ namespace Kyklos.Kernel.Data.SQLite.Test.NetFramework
     public class SQLiteDatasyncTest : BaseDatasyncTest
     {
         protected override string Schema => null;
-        protected override string ConnectionString => "Data Source={$ExecutionPath}..\\..\\SQLite\\KykDB.db;Version=3;FailIfMissing=false;Foreign Keys=True";
+
+        protected override string ConnectionString => 
+            "Data Source={$ExecutionPath}..\\..\\SQLite\\KykDB.db;Version=3;FailIfMissing=false;Foreign Keys=True"
+            .Replace("{$ExecutionPath}", NetPlatform.BinFolder);
+
         protected override string ProviderName => "SQLite";
 
         private void Setup()
@@ -24,7 +28,7 @@ namespace Kyklos.Kernel.Data.SQLite.Test.NetFramework
             SetupCore().Wait();
         }
 
-        public SQLiteDatasyncTest()
+        public SQLiteDatasyncTest() : base(XUnitTestSupport.NetPlatformType.NETFRAMEWORK)
         {
             Setup();
         }

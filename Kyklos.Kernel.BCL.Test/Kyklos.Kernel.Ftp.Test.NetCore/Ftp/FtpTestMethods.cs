@@ -1,6 +1,6 @@
 ﻿using Kyklos.Kernel.Ftp.Test.Ftp;
 using Xunit;
-using static XUnitTestSupport.TestNetPlatform;
+using XUnitTestSupport;
 
 namespace Kyklos.Kernel.Ftp.Test.NetCore.Ftp
 {

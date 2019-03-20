@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,37 +7,28 @@ using Kyklos.Kernel.Data.Async;
 using Kyklos.Kernel.Data.Async.SqlBuilders;
 using Kyklos.Kernel.Data.Async.Support;
 using Kyklos.Kernel.Data.Entities;
-using Kyklos.Kernel.Data.Query;
-using Kyklos.Kernel.Data.Support;
 using Kyklos.Kernel.Data.Test;
 using Kyklos.Kernel.Data.Test.Entities;
-using Newtonsoft.Json;
 using Xunit;
-using Xunit.Sdk;
 
 namespace Kyklos.Kernel.Data.SQLite.Test.NetCore
 {
     public class SQLiteDatasyncTest : BaseDatasyncTest
     {
         protected override string Schema => null;
-        
-        protected override string ConnectionString => "Data Source={$ExecutionPath}..\\..\\SQLite\\KykDB.db;Version=3;FailIfMissing=false;Foreign Keys=True";
+
+        protected override string ConnectionString => 
+            "Data Source={$ExecutionPath}..\\..\\SQLite\\KykDB.db;Version=3;FailIfMissing=false;Foreign Keys=True"
+            .Replace("{$ExecutionPath}", NetPlatform.BinFolder);
+
         protected override string ProviderName => "SQLite";
 
         private void Setup()
-        {
-            JsonConvert.DefaultSettings =
-                () =>
-                    new JsonSerializerSettings
-                    {
-                        Formatting = Newtonsoft.Json.Formatting.None,
-                        ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-                    };
-
+        {        
             SetupCore().Wait();
         }
 
-        public SQLiteDatasyncTest()
+        public SQLiteDatasyncTest() : base(XUnitTestSupport.NetPlatformType.NETCORE)
         {
             Setup();
         }

@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Kyklos.Kernel.Ftp.Test.Sftp;
 using Xunit;
-using static XUnitTestSupport.TestNetPlatform;
+using XUnitTestSupport;
 
 namespace Kyklos.Kernel.Ftp.Test.NetFramework.Sftp
 {

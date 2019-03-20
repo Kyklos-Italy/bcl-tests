@@ -22,7 +22,7 @@ namespace Kyklos.Kernel.Data.SqlServer.Test.NetFramework
             SetupCore().Wait();
         }
 
-        public SqlServerDatsyncTest()
+        public SqlServerDatsyncTest() : base(XUnitTestSupport.NetPlatformType.NETFRAMEWORK)
         {
             Setup();
         }

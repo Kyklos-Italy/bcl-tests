@@ -1,6 +1,6 @@
 ﻿using Kyklos.Kernel.Core.Test.Utilities;
 using Xunit;
-using static XUnitTestSupport.TestNetPlatform;
+using XUnitTestSupport;
 
 namespace Kyklos.Kernel.Core.Test.NetFramework.Utilities
 {

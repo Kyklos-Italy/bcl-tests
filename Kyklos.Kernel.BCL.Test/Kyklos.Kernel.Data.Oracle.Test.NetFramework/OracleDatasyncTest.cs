@@ -21,7 +21,7 @@ namespace Kyklos.Kernel.Data.Oracle.Test.NetFramework
         protected override string ProviderName => "Oracle";
 
 
-        public OracleDatasyncTest()
+        public OracleDatasyncTest() : base(XUnitTestSupport.NetPlatformType.NETFRAMEWORK)
         {
             SetupCore().Wait();
         }

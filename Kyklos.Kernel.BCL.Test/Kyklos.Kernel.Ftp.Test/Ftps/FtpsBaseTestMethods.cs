@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using Kyklos.Kernel.Ftp.Test.Support.Mock;
-using static XUnitTestSupport.TestNetPlatform;
+using XUnitTestSupport;
 
 namespace Kyklos.Kernel.Ftp.Test.Ftps
 {

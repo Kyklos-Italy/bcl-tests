@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Kyklos.Kernel.Core" Version="1.0.0-beta.2" />
-    <PackageReference Include="Kyklos.Kernel.Data.Async.SqlServer" Version="1.0.0-beta.8" />
+    <PackageReference Include="Kyklos.Kernel.Data.Async.SqlServer" Version="1.0.0-beta.10" />
     <PackageReference Include="Kyklos.Kernel.Data.Async.Support" Version="1.0.0-beta.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
     <PackageReference Include="xunit" Version="2.4.1" />

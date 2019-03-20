@@ -29,7 +29,7 @@ namespace Kyklos.Kernel.Data.SqlServer.Test.NetCore
             SetupCore().Wait();
         }
 
-        public SqlServerDatsyncTest()
+        public SqlServerDatsyncTest() : base(XUnitTestSupport.NetPlatformType.NETCORE)
         {
             Setup();
         }

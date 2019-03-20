@@ -1,18 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Kyklos.Kernel.Core.Exceptions;
 using Kyklos.Kernel.Data.Async;
-using Kyklos.Kernel.Data.Async.SqlBuilders;
 using Kyklos.Kernel.Data.Async.Support;
-using Kyklos.Kernel.Data.Entities;
-using Kyklos.Kernel.Data.Query;
-using Kyklos.Kernel.Data.Support;
 using Kyklos.Kernel.Data.Test;
 using Kyklos.Kernel.Data.Test.Entities;
-using Newtonsoft.Json;
 using Xunit;
 using Xunit.Sdk;
 
@@ -29,15 +22,15 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetCore
             SetupCore().Wait();
         }
 
-        public PostgreSQLDatasyncTest()
+        public PostgreSQLDatasyncTest() : base(XUnitTestSupport.NetPlatformType.NETCORE)
         {
-            JsonConvert.DefaultSettings =
-                () =>
-                    new JsonSerializerSettings
-                    {
-                        Formatting = Newtonsoft.Json.Formatting.None,
-                        ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-                    };
+            //JsonConvert.DefaultSettings =
+            //    () =>
+            //        new JsonSerializerSettings
+            //        {
+            //            Formatting = Newtonsoft.Json.Formatting.None,
+            //            ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            //        };
 
             SetupCore().Wait();
 

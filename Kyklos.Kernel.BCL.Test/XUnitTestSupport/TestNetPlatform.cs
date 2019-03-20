@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using Newtonsoft.Json;
 
 namespace XUnitTestSupport
 {
@@ -31,13 +30,13 @@ namespace XUnitTestSupport
                     {
                         if (!isInitialized)
                         {
-                            JsonConvert.DefaultSettings =
-                                () =>
-                                    new JsonSerializerSettings
-                                    {
-                                        Formatting = Formatting.None,
-                                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                                    };
+                            //JsonConvert.DefaultSettings =
+                            //    () =>
+                            //        new JsonSerializerSettings
+                            //        {
+                            //            Formatting = Formatting.None,
+                            //            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                            //        };
                             isInitialized = true;
                         }
                     }

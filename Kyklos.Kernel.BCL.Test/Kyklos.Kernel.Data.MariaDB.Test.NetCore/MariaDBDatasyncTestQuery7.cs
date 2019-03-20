@@ -47,6 +47,12 @@ namespace Kyklos.Kernel.Data.MariaDB.Test.NetCore
             await SelectDoubleFirstDayShouldBeDay1Core().ConfigureAwait(false);
         }
 
+        [Fact]
+        public async Task CountWithNestedQueryShouldBeTheSame()
+        {
+            await CountWithNestedQueryShouldBeTheSameCore();
+        }
+
         #endregion
     }
 }

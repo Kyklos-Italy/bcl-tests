@@ -45,10 +45,10 @@
       <HintPath>..\packages\Kyklos.Kernel.Data.1.0.0-beta.3\lib\netstandard2.0\Kyklos.Kernel.Data.dll</HintPath>
     </Reference>
     <Reference Include="Kyklos.Kernel.Data.Async, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Data.Async.1.0.0-beta.12\lib\netstandard2.0\Kyklos.Kernel.Data.Async.dll</HintPath>
+      <HintPath>..\packages\Kyklos.Kernel.Data.Async.1.0.0-beta.18\lib\netstandard2.0\Kyklos.Kernel.Data.Async.dll</HintPath>
     </Reference>
     <Reference Include="Kyklos.Kernel.Data.Async.SQLite, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Data.Async.SQLite.1.0.0-beta.8\lib\netstandard2.0\Kyklos.Kernel.Data.Async.SQLite.dll</HintPath>
+      <HintPath>..\packages\Kyklos.Kernel.Data.Async.SQLite.1.0.0-beta.10\lib\netstandard2.0\Kyklos.Kernel.Data.Async.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="Kyklos.Kernel.Data.Async.Support, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Kyklos.Kernel.Data.Async.Support.1.0.0-beta.1\lib\netstandard2.0\Kyklos.Kernel.Data.Async.Support.dll</HintPath>
@@ -136,6 +136,10 @@
     <ProjectReference Include="..\Kyklos.Kernel.Data.Test\Kyklos.Kernel.Data.Test.csproj">
       <Project>{11b6f7f8-1516-43e2-929c-f8f187350da0}</Project>
       <Name>Kyklos.Kernel.Data.Test</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XUnitTestSupport\XUnitTestSupport.csproj">
+      <Project>{454A8087-9999-4C52-A648-00895927E91B}</Project>
+      <Name>XUnitTestSupport</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using Kyklos.Kernel.Core.Test.Support.Mock;
 using Xunit;
-using static XUnitTestSupport.TestNetPlatform;
+using XUnitTestSupport;
 
 namespace Kyklos.Kernel.Core.Test.Utilities
 {

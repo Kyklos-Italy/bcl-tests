@@ -8,7 +8,6 @@ using Kyklos.Kernel.Data.Async.SqlBuilders;
 using Kyklos.Kernel.Data.Async.Support;
 using Kyklos.Kernel.Data.Test;
 using Kyklos.Kernel.Data.Test.Entities;
-using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using Xunit;
 
@@ -22,15 +21,15 @@ namespace Kyklos.Kernel.Data.Oracle.Test.NetCore
         protected override string ProviderName => "Oracle";
 
 
-        public OracleDatasyncTest()
+        public OracleDatasyncTest() : base(XUnitTestSupport.NetPlatformType.NETCORE)
         {
-            JsonConvert.DefaultSettings = 
-                () => 
-                    new JsonSerializerSettings
-                    {
-                        Formatting = Newtonsoft.Json.Formatting.None,
-                        ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-                    };
+            //JsonConvert.DefaultSettings = 
+            //    () => 
+            //        new JsonSerializerSettings
+            //        {
+            //            Formatting = Newtonsoft.Json.Formatting.None,
+            //            ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            //        };
 
             SetupCore().Wait();
         }
