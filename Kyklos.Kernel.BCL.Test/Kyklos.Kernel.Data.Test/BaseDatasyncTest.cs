@@ -22,8 +22,8 @@ using XUnitTestSupport;
 namespace Kyklos.Kernel.Data.Test
 {
     public abstract class BaseDatasyncTest
-    {        
-        protected TestNetPlatform NetPlatform { get;}
+    {
+        protected TestNetPlatform NetPlatform { get; }
 
         protected abstract string Schema { get; }
 
@@ -37,7 +37,7 @@ namespace Kyklos.Kernel.Data.Test
             {
                 if (x == null && y == null)
                 {
-                    return 0; 
+                    return 0;
                 }
 
                 if (x == null)
@@ -122,7 +122,7 @@ namespace Kyklos.Kernel.Data.Test
         protected abstract string ConnectionString { get; }
         protected abstract string ProviderName { get; }
 
-        private Result[] InitialResults = 
+        private Result[] InitialResults =
             new Result[]
             {
                 new Result() { ResultId = "idRes1", HomeTeamId = "idFio", VisitorTeamId = "idJuv", GoalsHomeTeam = 1, GoalsVisitorTeam = 3, DayId = "idDay1" },
@@ -133,7 +133,7 @@ namespace Kyklos.Kernel.Data.Test
                 new Result() { ResultId = "idRes6", HomeTeamId = "idMil", VisitorTeamId = "idJuv", GoalsHomeTeam = 4, GoalsVisitorTeam = 1, DayId = "idDay3" }
             };
 
-        private Team[] InitialTeams = 
+        private Team[] InitialTeams =
             new Team[]
             {
                     new Team { TeamId = "idFio", Name = "Fiorentina", City = "Florence", President = "Della Valle" },
@@ -142,7 +142,7 @@ namespace Kyklos.Kernel.Data.Test
                     new Team { TeamId = "idInt", Name = "Inter", City = "Milan", President = "Thoir" }
             };
 
-        private Day[] InitialDays = 
+        private Day[] InitialDays =
             new Day[]
             {
                 new Day() { DayId = "idDay1", DayDate = new DateTime(2018, 09, 16), DayNumber = 1 },
@@ -154,13 +154,13 @@ namespace Kyklos.Kernel.Data.Test
         {
             //return AsyncDaoFactory.CreateAsyncDaoFromConnectionStringName(connectionString, schema, ignoreEscape: ignoreEscape);
 
-            return 
+            return
                 AsyncDaoFactory
                 .CreateAsyncDao
                 (
-                    connectionString: connectionString,  
+                    connectionString: connectionString,
                     providerName: providerName,
-                    schema: schema, 
+                    schema: schema,
                     ignoreEscape: ignoreEscape
                 );
         }
@@ -176,7 +176,7 @@ namespace Kyklos.Kernel.Data.Test
         }
 
         protected virtual async Task AddResults()
-        {           
+        {
             await Dao.WriteToServerAsync(InitialResults).ConfigureAwait(false);
         }
 
@@ -324,7 +324,7 @@ namespace Kyklos.Kernel.Data.Test
                 .Where<Result>("r", x => x.ResultId == "idRes4");
 
             var actualValue = (await Dao.GetItemsAsync<IDictionary<int, char>>(queryBuilder).ConfigureAwait(false)).FirstOrDefault();
-            Assert.Equal(null, actualValue);
+            Assert.Null(actualValue);
         }
 
         protected void CheckIfDbSupportsValuesForFastInConditionShouldBeCore(bool expectedBool)
@@ -342,61 +342,61 @@ namespace Kyklos.Kernel.Data.Test
         protected void SqlInnerJoinShouldBeCore(string sqlExpectedJoin, bool ignoreEscape = true)
         {
             var queryBuilder =
-                    Dao
-                        .NewQueryBuilder(ignoreEscape: ignoreEscape)
-                            .Select()
-                                .Star()
-                            .From()
-                                .Tables
-                                (
-                                    FlatTable<Result>.WithAlias("r"),
-                                    InnerJoin<Day>.WithAlias("d"), (r, d) => r.DayId == d.DayId,
-                                    InnerJoin<Team>.WithAlias("ht"), (r, d, ht) => r.HomeTeamId == ht.TeamId,
-                                    InnerJoin<Team>.WithAlias("vt"), (r, d, ht, vt) => r.VisitorTeamId == vt.TeamId
-                                );
+                Dao
+                .NewQueryBuilder(ignoreEscape: ignoreEscape)
+                .Select()
+                .Star()
+                .From()
+                .Tables
+                (
+                    FlatTable<Result>.WithAlias("r"),
+                    InnerJoin<Day>.WithAlias("d"), (r, d) => r.DayId == d.DayId,
+                    InnerJoin<Team>.WithAlias("ht"), (r, d, ht) => r.HomeTeamId == ht.TeamId,
+                    InnerJoin<Team>.WithAlias("vt"), (r, d, ht, vt) => r.VisitorTeamId == vt.TeamId
+                );
 
             var sqlActualJoin = queryBuilder.BuildSqlTextWithParameters().SqlText;
-            Assert.True(sqlActualJoin.Contains(sqlExpectedJoin));
+            Assert.Contains(sqlExpectedJoin, sqlActualJoin);
         }
 
         protected void SqlLeftJoinShouldBeCore(string sqlExpectedJoin, bool ignoreEscape = true)
         {
             var queryBuilder =
-                    Dao
-                        .NewQueryBuilder(ignoreEscape: ignoreEscape)
-                            .Select()
-                                .Star()
-                            .From()
-                                .Tables
-                                (
-                                    FlatTable<Result>.WithAlias("r"),
-                                    LeftJoin<Day>.WithAlias("d"), (r, d) => r.DayId == d.DayId,
-                                    LeftJoin<Team>.WithAlias("ht"), (r, d, ht) => r.HomeTeamId == ht.TeamId,
-                                    LeftJoin<Team>.WithAlias("vt"), (r, d, ht, vt) => r.VisitorTeamId == vt.TeamId
-                                );
+                Dao
+                .NewQueryBuilder(ignoreEscape: ignoreEscape)
+                .Select()
+                .Star()
+                .From()
+                .Tables
+                (
+                    FlatTable<Result>.WithAlias("r"),
+                    LeftJoin<Day>.WithAlias("d"), (r, d) => r.DayId == d.DayId,
+                    LeftJoin<Team>.WithAlias("ht"), (r, d, ht) => r.HomeTeamId == ht.TeamId,
+                    LeftJoin<Team>.WithAlias("vt"), (r, d, ht, vt) => r.VisitorTeamId == vt.TeamId
+                );
 
             var sqlActualJoin = queryBuilder.BuildSqlTextWithParameters().SqlText;
-            Assert.True(sqlActualJoin.Contains(sqlExpectedJoin));
+            Assert.Contains(sqlExpectedJoin, sqlActualJoin);
         }
 
         protected void SqlRightJoinShouldBeCore(string sqlExpectedJoin, bool ignoreEscape = true)
         {
             var queryBuilder =
-                    Dao
-                        .NewQueryBuilder(ignoreEscape: ignoreEscape)
-                            .Select()
-                                .Star()
-                            .From()
-                                .Tables
-                                (
-                                    FlatTable<Result>.WithAlias("r"),
-                                    RightJoin<Day>.WithAlias("d"), (r, d) => r.DayId == d.DayId,
-                                    RightJoin<Team>.WithAlias("ht"), (r, d, ht) => r.HomeTeamId == ht.TeamId,
-                                    RightJoin<Team>.WithAlias("vt"), (r, d, ht, vt) => r.VisitorTeamId == vt.TeamId
-                                );
+                Dao
+                .NewQueryBuilder(ignoreEscape: ignoreEscape)
+                .Select()
+                .Star()
+                .From()
+                .Tables
+                (
+                    FlatTable<Result>.WithAlias("r"),
+                    RightJoin<Day>.WithAlias("d"), (r, d) => r.DayId == d.DayId,
+                    RightJoin<Team>.WithAlias("ht"), (r, d, ht) => r.HomeTeamId == ht.TeamId,
+                    RightJoin<Team>.WithAlias("vt"), (r, d, ht, vt) => r.VisitorTeamId == vt.TeamId
+                );
 
             var sqlActualJoin = queryBuilder.BuildSqlTextWithParameters().SqlText;
-            Assert.True(sqlActualJoin.Contains(sqlExpectedJoin));
+            Assert.Contains(sqlExpectedJoin, sqlActualJoin);
         }
 
         protected void SqlFullOuterJoinShouldBeCore(string sqlExpectedJoin, bool ignoreEscape = true)
@@ -488,8 +488,8 @@ namespace Kyklos.Kernel.Data.Test
             var actualScripts =
                 Dao
                 .GenerateSqlScriptsForCreateUniqueConstraints(entityType)
-                    .Select(x => x.ScriptText)
-                        .ToArray();
+                .Select(x => x.ScriptText)
+                .ToArray();
 
             Assert.Equal(expectedScripts, actualScripts);
         }
@@ -514,57 +514,53 @@ namespace Kyklos.Kernel.Data.Test
         protected async Task CancellationOfGetCompleteResultShouldBeCore(int n, CancellationToken cancellationToken)
         {
             var queryBuilder =
-                    Dao
-                        .NewQueryBuilder()
-                            .Select()
-                                .Field<Day>("d", x => x.DayNumber)
-                                .Comma()
-                                .Field<Team>("ht", x => x.Name)
-                                .Comma()
-                                .Field<Result>("r", x => x.GoalsHomeTeam)
-                                .Comma()
-                                .Case()
-                                    .When<Result>("r", x => x.GoalsHomeTeam > x.GoalsVisitorTeam)
-                                    .Then("'v'")
-                                    .When<Result>("r", x => x.GoalsHomeTeam == x.GoalsVisitorTeam)
-                                    .Then("'d'")
-                                    .Else("'l'")
-                                .EndCase()
-                                .Comma()
-                                .Field<Team>("vt", x => x.Name)
-                                .Comma()
-                                .Field<Result>("r", x => x.GoalsVisitorTeam)
-                                .Comma()
-                                .Case()
-                                    .When<Result>("r", x => x.GoalsHomeTeam < x.GoalsVisitorTeam)
-                                    .Then("'v'")
-                                    .When<Result>("r", x => x.GoalsHomeTeam == x.GoalsVisitorTeam)
-                                    .Then("'d'")
-                                    .Else("'l'")
-                                .EndCase()
-                            .From()
-                                .Tables
-                                (
-                                    FlatTable<Result>.WithAlias("r"),
-                                    InnerJoin<Day>.WithAlias("d"), (r, d) => r.DayId == d.DayId,
-                                    InnerJoin<Team>.WithAlias("ht"), (r, d, ht) => r.HomeTeamId == ht.TeamId,
-                                    InnerJoin<Team>.WithAlias("vt"), (r, d, ht, vt) => r.VisitorTeamId == vt.TeamId
-                                );
+                Dao
+                .NewQueryBuilder()
+                .Select()
+                    .Field<Day>("d", x => x.DayNumber)
+                    .Comma()
+                    .Field<Team>("ht", x => x.Name)
+                    .Comma()
+                    .Field<Result>("r", x => x.GoalsHomeTeam)
+                    .Comma()
+                    .Case()
+                        .When<Result>("r", x => x.GoalsHomeTeam > x.GoalsVisitorTeam)
+                        .Then("'v'")
+                        .When<Result>("r", x => x.GoalsHomeTeam == x.GoalsVisitorTeam)
+                        .Then("'d'")
+                        .Else("'l'")
+                    .EndCase()
+                    .Comma()
+                    .Field<Team>("vt", x => x.Name)
+                    .Comma()
+                    .Field<Result>("r", x => x.GoalsVisitorTeam)
+                    .Comma()
+                    .Case()
+                        .When<Result>("r", x => x.GoalsHomeTeam < x.GoalsVisitorTeam)
+                        .Then("'v'")
+                        .When<Result>("r", x => x.GoalsHomeTeam == x.GoalsVisitorTeam)
+                        .Then("'d'")
+                        .Else("'l'")
+                    .EndCase()
+                .From()
+                    .Tables
+                    (
+                        FlatTable<Result>.WithAlias("r"),
+                        InnerJoin<Day>.WithAlias("d"), (r, d) => r.DayId == d.DayId,
+                        InnerJoin<Team>.WithAlias("ht"), (r, d, ht) => r.HomeTeamId == ht.TeamId,
+                        InnerJoin<Team>.WithAlias("vt"), (r, d, ht, vt) => r.VisitorTeamId == vt.TeamId
+                    )
+                .OrderBy(1)
+                .ThenBy<Team>("ht", x => x.Name);
 
             Stopwatch timer = new Stopwatch();
             timer.Start();
             for (int i = 0; i < n; i++)
             {
-                var actualTuples =
-                    (
-                        await
-                        Dao
-                        .GetItemsAsync<Tuple<int, string, int, char, string, int, char>>(queryBuilder: queryBuilder, cancellationToken: cancellationToken)
-                        .ConfigureAwait(false)
-                    )
-                    .OrderBy(x => x.Item1)
-                    .ThenBy(x => x.Item2)
-                    .ToArray();
+                var actualTuples = await
+                    Dao
+                    .GetItemsArrayAsync<Tuple<int, string, int, char, string, int, char>>(queryBuilder: queryBuilder, cancellationToken: cancellationToken)
+                    .ConfigureAwait(false);
             }
             timer.Stop();
             double avgTime = timer.Elapsed.Milliseconds / n;
@@ -781,15 +777,20 @@ namespace Kyklos.Kernel.Data.Test
                 .ToArray();
 
             var queryBuilder =
-                    Dao
-                        .NewQueryBuilder()
-                            .Select()
-                                .Distinct()
-                                    .Field<Team>("T", x => x.Name)
-                            .From()
-                                .Table<Result>("R")
-                                    .TablesJoin<Result, Team>("R", InnerJoin<Team>.WithAlias("T"), (R, T) => R.VisitorTeamId == T.TeamId)
-                            .Where<Result>("R", x => x.GoalsVisitorTeam > 2);
+                Dao
+                .NewQueryBuilder()
+                .Select()
+                .Distinct()
+                .Field<Team>("T", x => x.Name)
+                .From()
+                .Table<Result>("R")
+                .TablesJoin<Result, Team>
+                (
+                    "R", 
+                    InnerJoin<Team>.WithAlias("T"), 
+                    (R, T) => R.VisitorTeamId == T.TeamId
+                )
+                .Where<Result>("R", x => x.GoalsVisitorTeam > 2);
 
             var actualValue = (await Dao.GetItemsAsync<string>(queryBuilder).ConfigureAwait(false)).OrderBy(x => x).ToArray();
             Assert.Equal(expectedValue, actualValue);
@@ -865,7 +866,7 @@ namespace Kyklos.Kernel.Data.Test
 
         protected async Task SelectHomeTeamsWhereConditionsAreMetShouldBe3TeamsCore()
         {
-            Tuple<string, int>[] expectedValue = new 
+            Tuple<string, int>[] expectedValue = new
                 Tuple<string, int>[]
                 {
                     new Tuple<string, int>("Milan", 4),
@@ -913,7 +914,7 @@ namespace Kyklos.Kernel.Data.Test
 
         protected async Task SelectTeamsNameLikeShouldBe3TeamsCore()
         {
-            var expectedValues = 
+            var expectedValues =
                 new string[]
                 {
                     "Fiorentina",
@@ -933,7 +934,7 @@ namespace Kyklos.Kernel.Data.Test
                 .Where<Team>("T", x => x.Name.Contains("nt"))
                 .OrderBy("1");
 
-            var actualValues = await 
+            var actualValues = await
                 Dao
                 .GetItemsArrayAsync<string>(queryBuilder)
                 .ConfigureAwait(false);
@@ -1081,7 +1082,7 @@ namespace Kyklos.Kernel.Data.Test
                 .From()
                 .Table<Result>("r");
 
-            var actualValue = await 
+            var actualValue = await
                 Dao
                 .ExecuteScalarAsync<int>(queryBuilder)
                 .ConfigureAwait(false);
@@ -1199,8 +1200,8 @@ namespace Kyklos.Kernel.Data.Test
                 .Select()
                 .Function
                 (
-                    "cast", 
-                    nqb => 
+                    "cast",
+                    nqb =>
                         nqb
                         .Avg<Result>("r", x => x.GoalsHomeTeam)
                         .CustomSql("as int")
@@ -1246,7 +1247,7 @@ namespace Kyklos.Kernel.Data.Test
                 .Function
                 (
                     "CAST",
-                    nqb => 
+                    nqb =>
                         nqb
                         .Avg<Result>
                         (
@@ -1322,7 +1323,7 @@ namespace Kyklos.Kernel.Data.Test
                 Dao
                 .GetItemsArrayAsync<Tuple<int, string, int, char, string, int, char>>(queryBuilder)
                 .ConfigureAwait(false);
-                //.OrderBy(x => x.Item1).ThenBy(x => x.Item2).ToArray();
+            //.OrderBy(x => x.Item1).ThenBy(x => x.Item2).ToArray();
 
             Assert.Equal(expectedTuples, actualTuples);
         }
@@ -1647,7 +1648,7 @@ namespace Kyklos.Kernel.Data.Test
 
         protected async Task SelectTeamFromConcatConditionShouldBeIdJuvCore()
         {
-            Team expectedTeam = 
+            Team expectedTeam =
                 new Team
                 {
                     TeamId = "idJuv",
@@ -1674,7 +1675,7 @@ namespace Kyklos.Kernel.Data.Test
         protected async Task DeleteResultByIdShouldBeIdRes4Core()
         {
             string idResult = "idRes4";
-            var expectedTeams = 
+            var expectedTeams =
                 InitialResults
                 .Where(x => x.ResultId != idResult)
                 .OrderBy(x => x.ResultId)
@@ -1843,14 +1844,14 @@ namespace Kyklos.Kernel.Data.Test
                 (
                     async tDao =>
                     {
-              //          await tDao.InsertEntityAsync(day6).ConfigureAwait(false);
+                        //          await tDao.InsertEntityAsync(day6).ConfigureAwait(false);
                         await
                             tDao
                             .DoInTransactionAsync
                             (
-                                async ttDao => 
+                                async ttDao =>
                                     await ttDao.InsertEntityAsync(day5).ConfigureAwait(false),
-                                async ex => 
+                                async ex =>
                                     await ReplaceDuplicateKey(tDao, day5, "idDay5").ConfigureAwait(false)
                             );
                     }
@@ -1939,7 +1940,7 @@ namespace Kyklos.Kernel.Data.Test
         {
             string dayId = "idDay1";
 
-            var expectedResults = 
+            var expectedResults =
                 new Tuple<Result, Day>[]
                 {
                     new Tuple<Result, Day>(new Result() { ResultId = "idRes1", HomeTeamId = "idFio", VisitorTeamId = "idJuv", GoalsHomeTeam = 1, GoalsVisitorTeam = 3, DayId = "idDay1" }, new Day() { DayId = "idDay1", DayDate = new DateTime(2018, 09, 16), DayNumber = 1 }),
@@ -1996,7 +1997,7 @@ namespace Kyklos.Kernel.Data.Test
         protected async Task SelectResultsForADayWithIncompletedFieldsShouldBeDay1Core()
         {
             string dayId = "idDay1";
-            var expectedResults = 
+            var expectedResults =
                 new Tuple<Result, Day>[]
                 {
                     new Tuple<Result, Day>(new Result() { ResultId = "idRes1", HomeTeamId = "idFio", VisitorTeamId = "idJuv", DayId = "idDay1" }, new Day() { DayId = "idDay1" }),
@@ -2094,6 +2095,39 @@ namespace Kyklos.Kernel.Data.Test
             var actualDays = (await Dao.GetItemsAsync<Tuple<int, int>>(queryBuilder).ConfigureAwait(false)).FirstOrDefault();
 
             Assert.True(actualDays.Item1 == actualDays.Item2);
+        }
+
+        protected void TestForNullShouldProduceIsNullOperatorCore()
+        {
+            var queryBuilder =
+                Dao
+                .NewQueryBuilder()
+                .Select()
+                .Star("r")
+                .From()
+                .Table<Result>("r")
+                .Where<Result>("r", r => SqlAsyncUtils.IsNull(r.VisitorTeamId));
+
+            var sqlActualJoin = queryBuilder.BuildSqlTextWithParameters().SqlText;
+
+            Assert.Contains("is null", sqlActualJoin, StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        protected void TestForCoalesceCore()
+        {
+            var queryBuilder =
+                Dao
+                .NewQueryBuilder()
+                .Select()
+                .Coalesce<Result, Day>("r", x => x.HomeTeamId, "d", x => x.DayDate, "SMTNG")
+                .From()
+                .Table<Result>("r")
+                .TablesJoin<Result, Day>("d", InnerJoin<Day>.WithAlias("d"), (r, d) => true);
+
+            var twp = queryBuilder.BuildSqlTextWithParameters();
+            var sqlActualJoin = twp.SqlText;
+
+            //Assert.Contains("coalesce", sqlActualJoin, StringComparison.InvariantCultureIgnoreCase);
         }
     }
 }

@@ -79,6 +79,12 @@ namespace Kyklos.Kernel.Data.MariaDB.Test.NetFramework
             GetScriptForCreateNonUniqueIndexShouldBeCore(sql, typeof(Team));
         }
 
+        [Fact]
+        public void TestForCoalesce()
+        {
+            TestForCoalesceCore();
+        }
+
         #endregion
 
     }

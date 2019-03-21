@@ -106,6 +106,12 @@ namespace Kyklos.Kernel.Data.MariaDB.Test.NetFramework
             SqlFullOuterJoinShouldBeCore(sqlJoin, false);
         }
 
+        [Fact]
+        public void TestForNullShouldProduceIsNullOperator()
+        {
+            TestForNullShouldProduceIsNullOperatorCore();
+        }
+
         #endregion
 
     }

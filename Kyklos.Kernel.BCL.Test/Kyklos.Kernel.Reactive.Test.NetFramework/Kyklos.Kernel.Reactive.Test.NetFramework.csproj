@@ -36,7 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Kyklos.Kernel.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Core.1.0.0-beta.2\lib\netstandard2.0\Kyklos.Kernel.Core.dll</HintPath>
+      <HintPath>..\packages\Kyklos.Kernel.Core.1.0.0-beta.3\lib\netstandard2.0\Kyklos.Kernel.Core.dll</HintPath>
     </Reference>
     <Reference Include="Kyklos.Kernel.Reactive, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Kyklos.Kernel.Reactive.1.0.0-beta.1\lib\netstandard2.0\Kyklos.Kernel.Reactive.dll</HintPath>

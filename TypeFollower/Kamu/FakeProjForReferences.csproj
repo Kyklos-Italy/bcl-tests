@@ -94,25 +94,25 @@
       <HintPath>..\packages\Kyklos.Kernel.Core.1.0.0-beta.2\lib\netstandard2.0\Kyklos.Kernel.Core.dll</HintPath>
     </Reference>
     <Reference Include="Kyklos.Kernel.Data, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Data.1.0.0-beta.1\lib\netstandard2.0\Kyklos.Kernel.Data.dll</HintPath>
+      <HintPath>..\packages\Kyklos.Kernel.Data.1.0.0-beta.3\lib\netstandard2.0\Kyklos.Kernel.Data.dll</HintPath>
     </Reference>
     <Reference Include="Kyklos.Kernel.Data.Async, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Data.Async.1.0.0-beta.5\lib\netstandard2.0\Kyklos.Kernel.Data.Async.dll</HintPath>
+      <HintPath>..\packages\Kyklos.Kernel.Data.Async.1.0.0-beta.18\lib\netstandard2.0\Kyklos.Kernel.Data.Async.dll</HintPath>
     </Reference>
     <Reference Include="Kyklos.Kernel.Data.Async.MariaDB, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Data.Async.MariaDB.1.0.0-beta.5\lib\netstandard2.0\Kyklos.Kernel.Data.Async.MariaDB.dll</HintPath>
+      <HintPath>..\packages\Kyklos.Kernel.Data.Async.MariaDB.1.0.0-beta.10\lib\netstandard2.0\Kyklos.Kernel.Data.Async.MariaDB.dll</HintPath>
     </Reference>
     <Reference Include="Kyklos.Kernel.Data.Async.Oracle, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Data.Async.Oracle.1.0.0-beta.5\lib\netstandard2.0\Kyklos.Kernel.Data.Async.Oracle.dll</HintPath>
+      <HintPath>..\packages\Kyklos.Kernel.Data.Async.Oracle.1.0.0-beta.10\lib\netstandard2.0\Kyklos.Kernel.Data.Async.Oracle.dll</HintPath>
     </Reference>
     <Reference Include="Kyklos.Kernel.Data.Async.PostgreSQL, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Data.Async.PostgreSQL.1.0.0-beta.5\lib\netstandard2.0\Kyklos.Kernel.Data.Async.PostgreSQL.dll</HintPath>
+      <HintPath>..\packages\Kyklos.Kernel.Data.Async.PostgreSQL.1.0.0-beta.10\lib\netstandard2.0\Kyklos.Kernel.Data.Async.PostgreSQL.dll</HintPath>
     </Reference>
     <Reference Include="Kyklos.Kernel.Data.Async.SQLite, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Data.Async.SQLite.1.0.0-beta.5\lib\netstandard2.0\Kyklos.Kernel.Data.Async.SQLite.dll</HintPath>
+      <HintPath>..\packages\Kyklos.Kernel.Data.Async.SQLite.1.0.0-beta.10\lib\netstandard2.0\Kyklos.Kernel.Data.Async.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="Kyklos.Kernel.Data.Async.SqlServer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Data.Async.SqlServer.1.0.0-beta.5\lib\netstandard2.0\Kyklos.Kernel.Data.Async.SqlServer.dll</HintPath>
+      <HintPath>..\packages\Kyklos.Kernel.Data.Async.SqlServer.1.0.0-beta.10\lib\netstandard2.0\Kyklos.Kernel.Data.Async.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Kyklos.Kernel.Data.Async.Support, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Kyklos.Kernel.Data.Async.Support.1.0.0-beta.1\lib\netstandard2.0\Kyklos.Kernel.Data.Async.Support.dll</HintPath>
@@ -177,8 +177,8 @@
     <Reference Include="Magick.NET-Q16-AnyCPU, Version=7.11.0.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=MSIL">
       <HintPath>..\packages\Magick.NET-Q16-AnyCPU.7.11.0\lib\net40\Magick.NET-Q16-AnyCPU.dll</HintPath>
     </Reference>
-    <Reference Include="MySqlConnector, Version=0.49.3.0, Culture=neutral, PublicKeyToken=d33d3e53aa5f8c92, processorArchitecture=MSIL">
-      <HintPath>..\packages\MySqlConnector.0.49.3\lib\net461\MySqlConnector.dll</HintPath>
+    <Reference Include="MySqlConnector, Version=0.50.0.0, Culture=neutral, PublicKeyToken=d33d3e53aa5f8c92, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySqlConnector.0.50.0\lib\net461\MySqlConnector.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>

@@ -42,10 +42,10 @@
       <HintPath>..\packages\Common.Logging.Core.3.4.1\lib\net40\Common.Logging.Core.dll</HintPath>
     </Reference>
     <Reference Include="Kyklos.Kernel.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Core.1.0.0-beta.2\lib\netstandard2.0\Kyklos.Kernel.Core.dll</HintPath>
+      <HintPath>..\packages\Kyklos.Kernel.Core.1.0.0-beta.3\lib\netstandard2.0\Kyklos.Kernel.Core.dll</HintPath>
     </Reference>
     <Reference Include="Kyklos.Kernel.Data, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Data.1.0.0-beta.3\lib\netstandard2.0\Kyklos.Kernel.Data.dll</HintPath>
+      <HintPath>..\packages\Kyklos.Kernel.Data.1.0.0-beta.4\lib\netstandard2.0\Kyklos.Kernel.Data.dll</HintPath>
     </Reference>
     <Reference Include="Kyklos.Kernel.Dynamic, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Kyklos.Kernel.Dynamic.1.0.0-beta.1\lib\netstandard2.0\Kyklos.Kernel.Dynamic.dll</HintPath>

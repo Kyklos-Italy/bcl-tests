@@ -36,10 +36,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Kyklos.Kernel.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Core.1.0.0-beta.2\lib\netstandard2.0\Kyklos.Kernel.Core.dll</HintPath>
+      <HintPath>..\packages\Kyklos.Kernel.Core.1.0.0-beta.3\lib\netstandard2.0\Kyklos.Kernel.Core.dll</HintPath>
     </Reference>
     <Reference Include="Kyklos.Kernel.Threading, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Threading.1.0.0-beta.1\lib\netstandard2.0\Kyklos.Kernel.Threading.dll</HintPath>
+      <HintPath>..\packages\Kyklos.Kernel.Threading.1.0.0-beta.2\lib\netstandard2.0\Kyklos.Kernel.Threading.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
