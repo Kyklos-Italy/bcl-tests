@@ -7,6 +7,22 @@ namespace TypeFollower
     public class Program
 	{
         static void Main(string[] args)
+        {
+            args =
+                new string[]
+                {
+                    @"..\..\..\..\TypeFollower\ProcessingFolder\source",
+                    @"..\..\..\..\TypeFollower\ProcessingFolder\src-dlls.txt",
+                    @"..\..\..\..\TypeFollower\ProcessingFolder\target",
+                    @"..\..\..\..\TypeFollower\ProcessingFolder\target-dlls.txt",
+                    @"..\..\..\..\TypeFollower\ProcessingFolder\types-map.txt",
+                    @"..\..\..\..\TypeFollower\ProcessingFolder\cmp-results.json"
+                };
+
+            DoWork(args);
+        }
+
+        private static void DoWork(string[] args)
 		{
 			try
 			{

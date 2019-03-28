@@ -129,7 +129,7 @@ namespace NupackageDllExtractorLib.FileUtils
         private static void ExtractDllToOutputFolder(string nupkgPathFile, string filterVersion, string destinationFolder)
         {
             List<string> dllPathFiles = ExtractNupkgDllsToOutputDirectory(nupkgPathFile, destinationFolder).Result;
-            RenameDllToSemVersion(dllPathFiles, destinationFolder, nupkgPathFile, filterVersion);
+            //RenameDllToSemVersion(dllPathFiles, destinationFolder, nupkgPathFile, filterVersion);
         }
 
         public static void CleanDirectory(string folderPath)

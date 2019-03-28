@@ -19,20 +19,36 @@ namespace ProjectAdj
 {
     public class ProjectMapper
     {
-        string _sourceProjectPath;
-        string _destinationFolder;
-        string _mapFilePath;
+        private string _sourceProjectFilePath;
+        private string _destinationFolder;
+        private string _mapFilePath;
 
-        List<CompareTypeResult> _listTypeMap;
-        List<CompareMethodResult> _listMethodMap;
+        private List<CompareTypeResult> _listTypeMap;
+        private List<CompareMethodResult> _listMethodMap;
+
+        private class CacheResult
+        {
+            public IPackage Package { get; }
+            public bool AlreadyInstalled { get; set; }
+
+            public CacheResult(IPackage package, bool alreadyInstalled)
+            {
+                Package = package;
+                AlreadyInstalled = alreadyInstalled;
+            }
+        }
+
+        private Dictionary<string, CacheResult> _cache;
 
         ILog Logger = LogManager.GetLogger(typeof(ProjectMapper));
 
-        public ProjectMapper(string sourcePath, string destinationFolder, string mapFilePath)
+        public ProjectMapper(string sourceProjectFilePath, string destinationFolder, string mapFilePath)
         {
-            _sourceProjectPath = sourcePath;
+            _sourceProjectFilePath = sourceProjectFilePath;
             _destinationFolder = destinationFolder;
             _mapFilePath = mapFilePath;
+
+            _cache = new Dictionary<string, CacheResult>();
 
             LoadTypeMap();
         }
@@ -43,9 +59,10 @@ namespace ProjectAdj
             {
                 DirectoryInfo destFolder = Directory.CreateDirectory(_destinationFolder);
                 MSBuildLocator.RegisterDefaults();
-                string sourceDir = Path.GetDirectoryName(_sourceProjectPath);
+                string sourceDir = Path.GetDirectoryName(_sourceProjectFilePath);
                 CopyFolder(sourceDir, _destinationFolder);
-                string destProjPath = Path.Combine(_destinationFolder, Path.GetFileName(_sourceProjectPath));
+                string destProjPath = Path.Combine(_destinationFolder, Path.GetFileName(_sourceProjectFilePath));
+
                 ReplaceRenamedStaticMethodReferences(destProjPath);
                 ReplaceRenamedTypeReferences(destProjPath);
                 ReplaceNugetPackages(destProjPath, nugetApiEndpoint);
@@ -74,8 +91,8 @@ namespace ProjectAdj
 
         private void CheckInput()
         {
-            if (!File.Exists(_sourceProjectPath))
-                throw new Exception($"Source project file {_sourceProjectPath} not found!");
+            if (!File.Exists(_sourceProjectFilePath))
+                throw new Exception($"Source project file {_sourceProjectFilePath} not found!");
 
             if (!File.Exists(_mapFilePath))
                 throw new Exception($"Mapping file {_mapFilePath} not found!");
@@ -178,9 +195,23 @@ namespace ProjectAdj
                 {
                     workspace.WorkspaceFailed += Workspace_WorkspaceFailed;
                     var projectDestination = workspace.OpenProjectAsync(destProjPath).Result;
+
                     Solution solution = projectDestination.Solution;
+
                     Logger.Debug($"Replace moved static method usage");
-                    foreach (var doc in projectDestination.Documents.Where(d => d.SourceCodeKind == SourceCodeKind.Regular && d.SupportsSyntaxTree && d.FilePath.StartsWith(Path.GetDirectoryName(d.Project.FilePath))))
+
+                    var docs =
+                        projectDestination
+                        .Documents
+                        .Where
+                        (
+                            d => 
+                                d.SourceCodeKind == SourceCodeKind.Regular 
+                                && d.SupportsSyntaxTree 
+                                && d.FilePath.StartsWith(Path.GetDirectoryName(d.Project.FilePath))
+                        );
+
+                    foreach (var doc in docs)
                     {
                         Logger.Debug($"Processing source file: {doc.FilePath}...");
                         var syntaxTree = doc.GetSyntaxTreeAsync().Result;
@@ -207,12 +238,16 @@ namespace ProjectAdj
                     if (comparation.OriginalAssemblyName != comparation.NewAssemblyName)
                     {
                         string packageName = comparation.NewAssemblyName;
-                        IPackage packageDownloaded = DownloadNugetPackageV2(packageName, repositoryApiEndpoint, packageInstallPath);
-                        if (packageDownloaded != null)
+                        CacheResult cacheResult = GetNugetPackageV2(packageName, repositoryApiEndpoint, packageInstallPath);
+                        //IPackage packageDownloaded = DownloadNugetPackageV2(packageName, repositoryApiEndpoint, packageInstallPath);
+
+                        if (!cacheResult.AlreadyInstalled)
                         {
+                            var packageDownloaded = cacheResult.Package;
                             UpdatePackagesConfigFile($"{rootPath}\\packages.config", packageDownloaded, comparation.OriginalAssemblyName);
                             RemoveReferenceFromProject(destProjPath, $"{comparation.OriginalAssemblyName}");
                             AddReferenceToProject(destProjPath, packageInstallPath, packageDownloaded);
+                            cacheResult.AlreadyInstalled = true;
                         }
                     }
                 }
@@ -223,10 +258,27 @@ namespace ProjectAdj
             }
         }
 
+        private CacheResult GetNugetPackageV2(string packageName, string repositoryApiEndpointUrl, string packageInstallPath)
+        {
+            CacheResult cacheResult;
+            if (!_cache.TryGetValue(packageName, out cacheResult))
+            {
+                IPackage package = DownloadNugetPackageV2(packageName, repositoryApiEndpointUrl, packageInstallPath);
+                _cache.Add(packageName, new CacheResult(package, false));
+            }
+
+            return cacheResult;
+        }
+
         private IPackage DownloadNugetPackageV2(string packageName, string repositoryApiEndpointUrl, string packageInstallPath)
         {
             IPackageRepository repo = PackageRepositoryFactory.Default.CreateRepository(repositoryApiEndpointUrl);
-            List<IPackage> packages = repo.FindPackagesById(packageName).ToList();
+            
+            List<IPackage> packages = 
+                repo
+                .FindPackagesById(packageName)
+                .OrderByDescending(x => x.Version)
+                .ToList();
 
             var nugetFound = packages.FirstOrDefault();
             if (nugetFound != null)
@@ -235,7 +287,7 @@ namespace ProjectAdj
 
                 PackageManager packageManager = new PackageManager(repo, packageInstallPath);
 
-                packageManager.InstallPackage(packageName, nugetFound.Version);
+                packageManager.InstallPackage(packageName, nugetFound.Version, true, true);
 
                 Logger.Debug($"{nugetFound.Id} nuget package downloaded");
             }
