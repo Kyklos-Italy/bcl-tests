@@ -10,11 +10,17 @@ namespace ProjectAdj
     public class StaticMethodInvocationRewriter : CSharpSyntaxRewriter
     {
         ILog Logger = LogManager.GetLogger(typeof(ProjectMapper));
-        private List<CompareMethodResult> _listMethodMap;
 
-        public StaticMethodInvocationRewriter(List<CompareMethodResult> methodMap)
+        //private List<CompareMethodResult> _listMethodMap;
+        private IDictionary<string, List<CompareMethodResult>> _listMethodMap;
+
+
+        public IList<CompareMethodResult> ReplacedMethods { get; }
+
+        public StaticMethodInvocationRewriter(IDictionary<string, List<CompareMethodResult>> methodMap)
         {
             _listMethodMap = methodMap;
+            ReplacedMethods = new List<CompareMethodResult>();
         }
 
         public override SyntaxNode VisitInvocationExpression(InvocationExpressionSyntax node)
@@ -24,6 +30,7 @@ namespace ProjectAdj
                 CompareMethodResult comparation = GetChangedMethodInfo(node.Expression as MemberAccessExpressionSyntax);
                 if (comparation != null)
                 {
+                    ReplacedMethods.Add(comparation);
                     var newnode = node.WithExpression(SyntaxFactory.ParseExpression($"{comparation.NewNamespace}.{comparation.NewType}.{comparation.NewMethodName}"));
                     Logger.Debug($"{node.ToFullString()} --> {newnode.ToFullString()}");
                     return newnode;
@@ -34,13 +41,30 @@ namespace ProjectAdj
 
         private CompareMethodResult GetChangedMethodInfo(MemberAccessExpressionSyntax memberAccess)
         {
-            var changedMethodList = _listMethodMap.Where(m => m.IsChanged());
+            //var changedMethodList = _listMethodMap.Where(m => m.IsChanged());
             //var identifiers = expression.DescendantNodes().OfType<IdentifierNameSyntax>();
             string typeFullName = memberAccess.Expression.ToString();
             string methodName = memberAccess.Name.ToString();
-            return 
-                changedMethodList
-                .FirstOrDefault(m => methodName == m.OriginalMethodName && $"{m.OriginalNamespace}.{m.OriginalType}".EndsWith(typeFullName));
+
+            List<CompareMethodResult> list;
+            if (_listMethodMap.TryGetValue(methodName, out list))
+            {
+                return list.FirstOrDefault(m => $"{m.OriginalNamespace}.{m.OriginalType}".EndsWith(typeFullName));
+            }
+            else
+            {
+                return null;
+            }
+
+
+            //return 
+            //    changedMethodList
+            //    .FirstOrDefault
+            //    (
+            //        m => 
+            //            methodName == m.OriginalMethodName 
+            //            && $"{m.OriginalNamespace}.{m.OriginalType}".EndsWith(typeFullName)
+            //    );
         }
     }
  }

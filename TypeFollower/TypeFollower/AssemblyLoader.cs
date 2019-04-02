@@ -21,7 +21,7 @@ namespace TypeFollower
 
         public string GetAssemblyName()
         {
-            return _assembly == null ? null : _assembly.GetName().Name;
+            return _assembly?.GetName()?.Name;
         }
 
         public void ParseTypes(ref Dictionary<string, List<AssemblyObject>> mapTypes, ref Dictionary<string, List<AssemblyObject>> mapMethods)
@@ -39,11 +39,14 @@ namespace TypeFollower
                 assemblies.Add(new AssemblyObject { AssemblyName = GetAssemblyName(), TypeName = tp.Name, TypeNamespace = tp.Namespace });
                 mapTypes[typeName] = assemblies;
 
-                var methods = tp.GetMethods(BindingFlags.Public | BindingFlags.Static);
+
+
+                var methods = tp.GetMethods(BindingFlags.Public | BindingFlags.Static).Where(x => !x.IsSpecialName);
                 foreach (var method in methods)
                 {
                     List<AssemblyObject> mal = new List<AssemblyObject>();
-                    string methodName = $"{method.ReturnType.Name} {method.Name}({string.Join(", ", method.GetParameters().Select(p => $"{p.ParameterType.Name} {p.Name}"))})";
+                    //string methodName = $"{GetAssemblyName()}|{tp.Namespace}.{tp.Name}.{method.Name}({string.Join(", ", method.GetParameters().Select(p => $"{p.ParameterType.FullName}"))}):{method.ReturnType.Name}";
+                    string methodName = $"{GetAssemblyName()}|{tp.Namespace}.{tp.Name}.{method.Name}";
                     if (mapMethods.ContainsKey(methodName))
                     {
                         mal = mapMethods[methodName];
@@ -51,8 +54,25 @@ namespace TypeFollower
                     mal.Add(new AssemblyObject { AssemblyName = GetAssemblyName(), TypeName = tp.Name, TypeNamespace = tp.Namespace, MethodName = method.Name });
                     mapMethods[methodName] = mal;
                 }
+
+                var props = tp.GetProperties(BindingFlags.Public | BindingFlags.Static);
+                foreach (var prop in props)
+                {
+                    List<AssemblyObject> mal;
+                    string propName = $"{prop.PropertyType.Name} {prop.Name}";
+
+                    if (mapMethods.TryGetValue(propName, out mal))
+                    {
+                        mal.Add(new AssemblyObject { AssemblyName = GetAssemblyName(), TypeName = tp.Name, TypeNamespace = tp.Namespace, MethodName = prop.Name });
+                    }
+                    else
+                    {
+                        mal = new List<AssemblyObject>();
+                        mal.Add(new AssemblyObject { AssemblyName = GetAssemblyName(), TypeName = tp.Name, TypeNamespace = tp.Namespace, MethodName = prop.Name });
+                        mapMethods.Add(propName, mal);
+                    }
+                }
             }
         }
-       
     }
 }

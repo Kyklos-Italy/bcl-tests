@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyLoader.cs" />
+    <Compile Include="AssemblyObject.cs" />
     <Compile Include="ComparationResultType.cs" />
     <Compile Include="CompareMethodResult.cs" />
     <Compile Include="CompareTypeResult.cs" />
@@ -62,7 +63,6 @@
     </Compile>
     <Compile Include="ReferenceAssemblyLoader.cs" />
     <Compile Include="TypeFollow.cs" />
-    <Compile Include="TypeInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

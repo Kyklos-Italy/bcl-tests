@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ProjectAdj
+﻿namespace ProjectAdj
 {
     public class CompareTypeResult
     {
@@ -15,9 +9,11 @@ namespace ProjectAdj
         public string NewNamespace { get; set; }
         public string NewType { get; set; }
 
-        public bool IsChanged()
+        public virtual bool IsChanged()
         {
-            return !string.IsNullOrEmpty(NewType) &&
+            return 
+                !string.IsNullOrEmpty(NewType) 
+                &&
                 (OriginalAssemblyName != NewAssemblyName || OriginalNamespace != NewNamespace || OriginalType != NewType);
         }
     }

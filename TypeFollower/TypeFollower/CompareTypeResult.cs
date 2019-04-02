@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TypeFollower
+﻿namespace TypeFollower
 {
+    //public enum CompareObjectType
+    //{
+    //    Type,
+    //    Property,
+    //    Method
+    //}
+
     public class CompareTypeResult
     {
         public string OriginalAssemblyName { get; set; }
@@ -14,5 +15,6 @@ namespace TypeFollower
         public string NewAssemblyName { get; set; }
         public string NewNamespace { get; set; }
         public string NewType { get; set; }
+        
     }
 }
