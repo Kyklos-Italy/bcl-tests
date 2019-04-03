@@ -2,7 +2,6 @@ Kyklos.Kernel.AsyncSupport.dll
 Kyklos.Kernel.Communication.dll
 Kyklos.Kernel.Config.dll
 Kyklos.Kernel.DAL.DB2.dll
-Kyklos.Kernel.DAL.dll
 Kyklos.Kernel.DAL.Oracle.dll
 Kyklos.Kernel.DAL.PostgreSQL.dll
 Kyklos.Kernel.DAL.SQLite.dll

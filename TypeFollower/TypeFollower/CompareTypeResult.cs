@@ -14,7 +14,6 @@
         public string OriginalType { get; set; }
         public string NewAssemblyName { get; set; }
         public string NewNamespace { get; set; }
-        public string NewType { get; set; }
-        
+        public string NewType { get; set; }        
     }
 }

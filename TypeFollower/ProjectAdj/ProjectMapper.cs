@@ -32,18 +32,6 @@ namespace ProjectAdj
         private List<CompareTypeResult> _listTypeMap;
         private List<CompareMethodResult> _listMethodMap;
 
-        private class CacheResult
-        {
-            public IPackage Package { get; }
-            public bool AlreadyInstalled { get; set; }
-
-            public CacheResult(IPackage package, bool alreadyInstalled)
-            {
-                Package = package;
-                AlreadyInstalled = alreadyInstalled;
-            }
-        }
-
         private KCache<string, CacheResult> _cache;
 
         ILog Logger = LogManager.GetLogger(typeof(ProjectMapper));

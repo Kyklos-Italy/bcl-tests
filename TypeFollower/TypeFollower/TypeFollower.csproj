@@ -36,6 +36,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Kyklos.Kernel.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Kyklos.Kernel.Core.1.0.0-beta.23\lib\netstandard2.0\Kyklos.Kernel.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -51,6 +54,7 @@
   <ItemGroup>
     <Compile Include="AssemblyLoader.cs" />
     <Compile Include="AssemblyObject.cs" />
+    <Compile Include="AssemblyObjectContainer.cs" />
     <Compile Include="ComparationResultType.cs" />
     <Compile Include="CompareMethodResult.cs" />
     <Compile Include="CompareTypeResult.cs" />
@@ -63,6 +67,7 @@
     </Compile>
     <Compile Include="ReferenceAssemblyLoader.cs" />
     <Compile Include="TypeFollow.cs" />
+    <Compile Include="TypeFollowResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

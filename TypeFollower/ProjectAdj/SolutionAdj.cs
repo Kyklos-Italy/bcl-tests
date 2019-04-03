@@ -27,39 +27,10 @@ namespace ProjectAdj
         public IList<CompareTypeResult> ListTypeMap { get; private set; }
         public IList<CompareMethodResult> ListMethodMap { get; private set; }
         private Dictionary<string, ProjectWithCompilation> _compilations;
-        private IList<INamedTypeSymbol> _usedTypes;
-
-        #region Nested classes
-
-        private class ProjectWithCompilation
-        {
-            public Project Project { get; }
-            public Compilation Compilation { get; }
-
-            public ProjectWithCompilation(Project project, Compilation compilation)
-            {
-                Project = project;
-                Compilation = compilation;
-            }
-        }
-
-        private class CacheResult
-        {
-            public IPackage Package { get; }
-            public bool AlreadyInstalled { get; set; }
-
-            public CacheResult(IPackage package, bool alreadyInstalled)
-            {
-                Package = package;
-                AlreadyInstalled = alreadyInstalled;
-            }
-        }
-
-        #endregion
-        
         private KCache<string, CacheResult> _cache;
+        private IPackageRepository _nugetRepo;
 
-        
+
         public SolutionAdj(string solutionFilePath, string mapFilePath, string nugetApiEndpoint)
         {
             SolutionFilePath = solutionFilePath;
@@ -68,7 +39,7 @@ namespace ProjectAdj
 
             int timeToLiveInSeconds = 3600;
             _cache = new KCache<string, CacheResult>(timeToLiveInSeconds * 1000, true);
-
+            _nugetRepo = PackageRepositoryFactory.Default.CreateRepository(nugetApiEndpoint);
             _compilations = new Dictionary<string, ProjectWithCompilation>();
         }
 
@@ -76,14 +47,15 @@ namespace ProjectAdj
         {
             await LoadData().ConfigureAwait(false);
             await CompileSolution().ConfigureAwait(false);
-            await LoadUsedTypes().ConfigureAwait(false);
+            //await LoadUsedTypes().ConfigureAwait(false);
+            await AdjustProjects().ConfigureAwait(false);
         }
 
         private async Task LoadData()
         {
             LoadTypeMap();
             LoadWorkspace();
-            await LoadSolution().ConfigureAwait(false);
+            await LoadSolution().ConfigureAwait(false);            
         }
 
         private void LoadTypeMap()
@@ -122,34 +94,85 @@ namespace ProjectAdj
             }
         }
 
-        private async Task LoadUsedTypes()
-        {
-            var compilations =
-                _compilations
-                .Values
-                .Select(x => x.Compilation);
+        //private async Task LoadUsedTypes()
+        //{
+        //    var compilations =
+        //        _compilations
+        //        .Values
+        //        .Select(x => x.Compilation);
 
-            var allUsedTypes = await
-                compilations
-                .GetAllUsedTypesInCompilations()
+        //    var allUsedTypes = await
+        //        compilations
+        //        .GetAllUsedTypesInCompilations()
+        //        .ConfigureAwait(false);
+
+        //    _usedTypes = allUsedTypes.ExcludeSystemTypes();
+        //}
+
+        //private IList<string> DetermineMissingNugets()
+        //{
+        //    return
+        //        ListTypeMap
+        //        .Join
+        //        (
+        //            _usedTypes,
+        //            x => $"{x.OriginalNamespace}.{x.OriginalType}@{x.OriginalAssemblyName}",
+        //            x => $"{x.ContainingNamespace.ToString()}.{x.Name}@{x.ContainingAssembly.Name}",
+        //            (x, y) => x.NewAssemblyName
+        //        )
+        //        .Distinct()
+        //        .ToList();
+        //}
+
+        internal async Task<CacheResult> GetNugetPackageV2(string packageName, string packageInstallPath)
+        {
+            var getAddRes = await _cache
+                .GetOrAddWithFactoryTask
+                (
+                    packageName,
+                    key =>
+                    {
+                        IPackage package = DownloadNugetPackageV2(key, packageInstallPath);
+                        return new CacheResult(package, false);
+                    }
+                )
                 .ConfigureAwait(false);
 
-            _usedTypes = allUsedTypes.ExcludeSystemTypes();
+            return getAddRes.Result.Value;
         }
 
-        private IList<string> DetermineMissingNugets()
-        {
-            return
-                ListTypeMap
-                .Join
-                (
-                    _usedTypes,
-                    x => $"{x.OriginalNamespace}.{x.OriginalType}@{x.OriginalAssemblyName}",
-                    x => $"{x.ContainingNamespace.ToString()}.{x.Name}@{x.ContainingAssembly.Name}",
-                    (x, y) => x.NewAssemblyName
-                )
-                .Distinct()
+        private IPackage DownloadNugetPackageV2(string packageName, string packageInstallPath)
+        {           
+            List<IPackage> packages =
+                _nugetRepo
+                .FindPackagesById(packageName)
+                .OrderByDescending(x => x.Version)
                 .ToList();
+
+            var nugetFound = packages.FirstOrDefault();
+            if (nugetFound != null)
+            {
+                Logger.Debug($"Downloading {nugetFound.GetFullName()} package...");
+
+                PackageManager packageManager = new PackageManager(_nugetRepo, packageInstallPath);
+
+                packageManager.InstallPackage(packageName, nugetFound.Version, false, true);
+
+                Logger.Debug($"{nugetFound.Id} nuget package downloaded");
+            }
+
+            return nugetFound;
+        }
+
+        private async Task AdjustProjects()
+        {
+            Solution originalSolution = Solution;
+            foreach (var prjWithComp in _compilations.Values)
+            {
+                PrjAdj prjAdj = new PrjAdj(Workspace, this, prjWithComp);
+                originalSolution = await prjAdj.Adjust().ConfigureAwait(false);
+            }
+            var res = Workspace.TryApplyChanges(originalSolution);
         }
 
 
