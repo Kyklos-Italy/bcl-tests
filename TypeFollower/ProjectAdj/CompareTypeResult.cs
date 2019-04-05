@@ -14,7 +14,14 @@
             return 
                 !string.IsNullOrEmpty(NewType) 
                 &&
-                (OriginalAssemblyName != NewAssemblyName || OriginalNamespace != NewNamespace || OriginalType != NewType);
+                (
+                    OriginalAssemblyName != NewAssemblyName 
+                    || OriginalNamespace != NewNamespace 
+                    || OriginalType != NewType
+                );
         }
+
+        public string OriginalFullTypeName => $"{OriginalNamespace}.{OriginalType}";
+        public string NewFullTypeName => $"{NewNamespace}.{NewType}";
     }
 }

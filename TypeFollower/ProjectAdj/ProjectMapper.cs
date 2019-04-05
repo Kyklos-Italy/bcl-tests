@@ -271,7 +271,7 @@ namespace ProjectAdj
                     var root = syntaxTree.GetRoot();
                     var rewriter = new StaticMethodInvocationRewriter(collapsedData);
                     var newnode = rewriter.Visit(root);
-                    replacedMethods.AddRange(rewriter.ReplacedMethods);
+                    //replacedMethods.AddRange(rewriter.ReplacedMethods);
                     _solution = _solution.WithDocumentSyntaxRoot(doc.Id, newnode);
                 }
 

@@ -41,13 +41,20 @@ namespace ProjectAdj
 
         public Compilation CurrentCompilation =>
             History
-            .Last()
+            .Last(x => x.ProjectWithCompilation.Compilation != null)
             .ProjectWithCompilation
             .Compilation;
 
-        public ProjectWithCompilation CurrentProjectWithCompilation =>
+        public Solution CurrentSolution =>
             History
-            .Last()
-            .ProjectWithCompilation;
+            .Last(x => x.ProjectWithCompilation.Solution != null)
+            .ProjectWithCompilation
+            .Solution;
+
+
+        //public ProjectWithCompilation CurrentProjectWithCompilation =>
+        //    History
+        //    .Last()
+        //    .ProjectWithCompilation;
     }
 }

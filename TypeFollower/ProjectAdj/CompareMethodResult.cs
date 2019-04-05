@@ -7,7 +7,7 @@
 
         public override bool IsChanged()
         {
-            return !string.IsNullOrEmpty(NewMethodName) && OriginalMethodName != NewMethodName || base.IsChanged();
+            return (!string.IsNullOrEmpty(NewMethodName) && OriginalMethodName != NewMethodName) || base.IsChanged();
         }
     }
 }

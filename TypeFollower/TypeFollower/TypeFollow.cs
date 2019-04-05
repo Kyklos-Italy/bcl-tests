@@ -89,7 +89,7 @@ namespace TypeFollower
                 .MethodDefinitions
                 .LeftJoin
                 (
-                    _sourceMapping.MethodDefinitions,
+                    _targetMapping.MethodDefinitions,
                     x => $"{x.TypeName}.{x.MethodName}",
                     x => $"{x.TypeName}.{x.MethodName}",
                     (x, y) => new TypeFollowResult(x, y)

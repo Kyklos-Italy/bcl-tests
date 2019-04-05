@@ -1,3 +1,4 @@
+t "Kyklos.Kernel.Support.Asserts.KyklosAssertUtils2, Kyklos.Kernel" => "Kyklos.Kernel.Core.Asserts.KyklosAssertUtils, Kyklos.Kernel.Core"
 t "Kyklos.Kernel.Support.Ftp.Common.FTPReply, Kyklos.Kernel" => "Kyklos.Kernel.Ftp.Common.FtpReply, Kyklos.Kernel.Ftp"
 t "Kyklos.Kernel.Support.Ftp.Common.FTPStream, Kyklos.Kernel" => "Kyklos.Kernel.Ftp.Common.FtpStream, Kyklos.Kernel.Ftp"
 t "Kyklos.Kernel.Exceptions.FTPCommandException, Kyklos.Kernel" => "Kyklos.Kernel.Ftp.Exceptions.FtpCommandException, Kyklos.Kernel.Ftp"
@@ -10,7 +11,7 @@ t "Kyklos.Kernel.Support.FTPS.IFTPSClient, Kyklos.Kernel" => "Kyklos.Kernel.Ftp.
 t "Kyklos.Kernel.Support.FTPS.FTPSClient, Kyklos.Kernel" => "Kyklos.Kernel.Ftp.Ftps.FtpsClient, Kyklos.Kernel.Ftp"
 t "Kyklos.Kernel.Support.Options.KyklosFTPSOptions, Kyklos.Kernel" => "Kyklos.Kernel.Ftp.Options.KyklosFtpsOptions, Kyklos.Kernel.Ftp"
 t "Kyklos.Kernel.Support.Options.KyklosSFTPOptions, Kyklos.Kernel" => "Kyklos.Kernel.Ftp.Options.KyklosFtpsOptions, Kyklos.Kernel.Ftp"
-t "Kyklos.Kernel.Support.SFTP.ISFTPClient, Kyklos.Kernel" => "Kyklos.Kernel.Ftp.Sftp.ISftpClient, Kyklos.Kernel.Ftp"c cc
+t "Kyklos.Kernel.Support.SFTP.ISFTPClient, Kyklos.Kernel" => "Kyklos.Kernel.Ftp.Sftp.ISftpClient, Kyklos.Kernel.Ftp"
 t "Kyklos.Kernel.Support.SFTP.SFTPClient, Kyklos.Kernel" => "Kyklos.Kernel.Ftp.Sftp.SftpClient, Kyklos.Kernel.Ftp"
 m "Kyklos.Kernel.Support.KernelExtensionMethods.Coalesce`1, Kyklos.Kernel" => "Kyklos.Kernel.Core.Strings.StringExtensionMethods.CoalesceStr, Kyklos.Kernel.Core"
 m "Kyklos.Kernel.Utilities.Coalesce, Kyklos.Kernel" => "Kyklos.Kernel.Core.Utilities.CoalesceRef, Kyklos.Kernel.Core"

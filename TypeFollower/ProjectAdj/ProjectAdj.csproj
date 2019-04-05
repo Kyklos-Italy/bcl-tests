@@ -276,6 +276,7 @@
     <Compile Include="CacheResult.cs" />
     <Compile Include="CompareMethodResult.cs" />
     <Compile Include="CompareTypeResult.cs" />
+    <Compile Include="CustomSymbolFinder.cs" />
     <Compile Include="NugetManagement\NuGetLogger.cs" />
     <Compile Include="PrjAdj.cs" />
     <Compile Include="ProjectMapper.cs" />
@@ -284,6 +285,7 @@
     <Compile Include="ProjectWithCompilationKey.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SolutionAdj.cs" />
+    <Compile Include="OriginalTypesRewriter.cs" />
     <Compile Include="StaticMethodInvocationRewriter.cs" />
     <Compile Include="TypeVisitor.cs" />
   </ItemGroup>

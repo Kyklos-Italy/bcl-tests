@@ -94,36 +94,6 @@ namespace ProjectAdj
             }
         }
 
-        //private async Task LoadUsedTypes()
-        //{
-        //    var compilations =
-        //        _compilations
-        //        .Values
-        //        .Select(x => x.Compilation);
-
-        //    var allUsedTypes = await
-        //        compilations
-        //        .GetAllUsedTypesInCompilations()
-        //        .ConfigureAwait(false);
-
-        //    _usedTypes = allUsedTypes.ExcludeSystemTypes();
-        //}
-
-        //private IList<string> DetermineMissingNugets()
-        //{
-        //    return
-        //        ListTypeMap
-        //        .Join
-        //        (
-        //            _usedTypes,
-        //            x => $"{x.OriginalNamespace}.{x.OriginalType}@{x.OriginalAssemblyName}",
-        //            x => $"{x.ContainingNamespace.ToString()}.{x.Name}@{x.ContainingAssembly.Name}",
-        //            (x, y) => x.NewAssemblyName
-        //        )
-        //        .Distinct()
-        //        .ToList();
-        //}
-
         internal async Task<CacheResult> GetNugetPackageV2(string packageName, string packageInstallPath)
         {
             var getAddRes = await _cache
@@ -171,8 +141,8 @@ namespace ProjectAdj
             {
                 PrjAdj prjAdj = new PrjAdj(Workspace, this, prjWithComp);
                 originalSolution = await prjAdj.Adjust().ConfigureAwait(false);
-            }
-            var res = Workspace.TryApplyChanges(originalSolution);
+                var res = Workspace.TryApplyChanges(originalSolution);
+            }            
         }
 
 

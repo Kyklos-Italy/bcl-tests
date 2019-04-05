@@ -40,14 +40,15 @@ namespace ProjectAdjConsoleApp
                     {
                         await solAdj.Adjust().ConfigureAwait(false);
                     }
-                    Console.WriteLine($"Completed");
-                    Console.ReadKey();
+                    //Console.WriteLine($"Completed");
+                    //Console.ReadKey();
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                Console.ReadKey();
+                throw;
+                //Console.WriteLine(ex.Message);
+                //Console.ReadKey();
             }
         }
 
