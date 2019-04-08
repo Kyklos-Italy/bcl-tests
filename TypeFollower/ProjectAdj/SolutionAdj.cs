@@ -15,6 +15,12 @@ namespace ProjectAdj
 {
     public class SolutionAdj : IDisposable
     {
+        //private enum ProcessingMode
+        //{
+        //    BySolution,
+        //    BySingleProject
+        //}
+
         public string SolutionFilePath { get; }
         public string MapFilePath { get; }
         public string NugetApiEndpoint { get; }
@@ -26,10 +32,12 @@ namespace ProjectAdj
 
         public IList<CompareTypeResult> ListTypeMap { get; private set; }
         public IList<CompareMethodResult> ListMethodMap { get; private set; }
-        private Dictionary<string, ProjectWithCompilation> _compilations;
+//        private Dictionary<string, ProjectWithCompilation> _compilations;
         private KCache<string, CacheResult> _cache;
-        private IPackageRepository _nugetRepo;
 
+        private Dictionary<string, CacheResult> _dictCache;
+        private IPackageRepository _nugetRepo;
+       // private ProcessingMode _processingMode;
 
         public SolutionAdj(string solutionFilePath, string mapFilePath, string nugetApiEndpoint)
         {
@@ -40,13 +48,14 @@ namespace ProjectAdj
             int timeToLiveInSeconds = 3600;
             _cache = new KCache<string, CacheResult>(timeToLiveInSeconds * 1000, true);
             _nugetRepo = PackageRepositoryFactory.Default.CreateRepository(nugetApiEndpoint);
-            _compilations = new Dictionary<string, ProjectWithCompilation>();
+            _dictCache = new Dictionary<string, CacheResult>();
+            //_compilations = new Dictionary<string, ProjectWithCompilation>();
         }
 
         public async Task Adjust()
         {
             await LoadData().ConfigureAwait(false);
-            await CompileSolution().ConfigureAwait(false);
+            //await CompileSolution().ConfigureAwait(false);
             //await LoadUsedTypes().ConfigureAwait(false);
             await AdjustProjects().ConfigureAwait(false);
         }
@@ -55,7 +64,7 @@ namespace ProjectAdj
         {
             LoadTypeMap();
             LoadWorkspace();
-            await LoadSolution().ConfigureAwait(false);            
+            await LoadSolution().ConfigureAwait(false);
         }
 
         private void LoadTypeMap()
@@ -78,41 +87,65 @@ namespace ProjectAdj
             MSBuildLocator.RegisterDefaults();
             Workspace = MSBuildWorkspace.Create();
             Workspace.WorkspaceFailed += (sender, e) => Logger.Error(e.Diagnostic.Message);
+            Workspace.AssociateFileExtensionWithLanguage("fsproj", "FSharp");
+            Workspace.SkipUnrecognizedProjects = true;
         }
 
         private async Task LoadSolution()
         {
+            //if (SolutionContainsFSharpProjects(SolutionFilePath))
+            //{
+            //    _processingMode = ProcessingMode.BySingleProject;
+            //}
+            //else
+            //{
+            //    _processingMode = ProcessingMode.BySolution;
+            //    Solution = await Workspace.OpenSolutionAsync(SolutionFilePath).ConfigureAwait(false);
+            //}
             Solution = await Workspace.OpenSolutionAsync(SolutionFilePath).ConfigureAwait(false);
         }
 
-        private async Task CompileSolution()
+        private static bool SolutionContainsFSharpProjects(string solutionFilePath)
         {
-            foreach (var project in Solution.Projects)
+            return
+                File
+                .ReadAllLines(solutionFilePath)
+                .Where(x => x.StartsWith("Project"))
+                .Any(x => x.Contains(".fsproj"));
+        }
+
+        //internal async Task<CacheResult> GetNugetPackageV2(string packageName, string packageInstallPath)
+        //{
+        //    var getAddRes = await _cache
+        //        .GetOrAddWithFactoryTask
+        //        (
+        //            packageName,
+        //            key =>
+        //            {
+        //                IPackage package = DownloadNugetPackageV2(key, packageInstallPath);
+        //                return new CacheResult(package, false);
+        //            }
+        //        )
+        //        .ConfigureAwait(false);
+
+        //    return getAddRes?.Result?.Value;
+        //}
+
+        internal Task<CacheResult> GetNugetPackageV2(string packageName, string packageInstallPath)
+        {
+            CacheResult cacheResult;
+            if (!_dictCache.TryGetValue(packageName, out cacheResult))
             {
-                var compilation = await project.GetCompilationAsync().ConfigureAwait(false);
-                _compilations.Add(project.Name, new ProjectWithCompilation(project, compilation));
+                IPackage package = DownloadNugetPackageV2(packageName, packageInstallPath);
+                cacheResult = new CacheResult(package, false);
+                _dictCache.Add(packageName, cacheResult);
             }
+            
+            return Task.FromResult(cacheResult);
         }
 
-        internal async Task<CacheResult> GetNugetPackageV2(string packageName, string packageInstallPath)
+        internal IPackage DownloadNugetPackageV2(string packageName, string packageInstallPath)
         {
-            var getAddRes = await _cache
-                .GetOrAddWithFactoryTask
-                (
-                    packageName,
-                    key =>
-                    {
-                        IPackage package = DownloadNugetPackageV2(key, packageInstallPath);
-                        return new CacheResult(package, false);
-                    }
-                )
-                .ConfigureAwait(false);
-
-            return getAddRes.Result.Value;
-        }
-
-        private IPackage DownloadNugetPackageV2(string packageName, string packageInstallPath)
-        {           
             List<IPackage> packages =
                 _nugetRepo
                 .FindPackagesById(packageName)
@@ -126,7 +159,7 @@ namespace ProjectAdj
 
                 PackageManager packageManager = new PackageManager(_nugetRepo, packageInstallPath);
 
-                packageManager.InstallPackage(packageName, nugetFound.Version, false, true);
+                packageManager.InstallPackage(packageName, nugetFound.Version, true, true);
 
                 Logger.Debug($"{nugetFound.Id} nuget package downloaded");
             }
@@ -137,17 +170,21 @@ namespace ProjectAdj
         private async Task AdjustProjects()
         {
             Solution originalSolution = Solution;
-            foreach (var prjWithComp in _compilations.Values)
+
+            foreach (var projectId in originalSolution.ProjectIds)
             {
-                PrjAdj prjAdj = new PrjAdj(Workspace, this, prjWithComp);
+                var project = originalSolution.GetProject(projectId);
+                var compilation = await project.GetCompilationAsync().ConfigureAwait(false);
+                PrjAdj prjAdj = new PrjAdj(Workspace, this, new ProjectWithCompilation(project, compilation));
                 originalSolution = await prjAdj.Adjust().ConfigureAwait(false);
-                var res = Workspace.TryApplyChanges(originalSolution);
-            }            
+            }
+            var res = Workspace.TryApplyChanges(originalSolution);
         }
 
 
         public void Dispose()
         {
+            Workspace?.CloseSolution();
             Workspace?.Dispose();
         }
     }

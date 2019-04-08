@@ -142,7 +142,7 @@ namespace ProjectAdj
             var allExternalAssemblies =
                 Project
                 .MetadataReferences
-                .Select(x => Path.GetFileName(x.Display))
+                .Select(x => Path.GetFileNameWithoutExtension(x.Display))
                 .ToArray();
 
 
@@ -155,6 +155,7 @@ namespace ProjectAdj
                     x => x,
                     (x, y) => x
                 )
+                .Where(x => !string.IsNullOrEmpty(x.NewAssemblyName))
                 .GroupBy(x => x.NewAssemblyName)
                 .Select(x => x.First())
                 .ToList();
@@ -162,7 +163,7 @@ namespace ProjectAdj
 
         private async Task ReplaceNugetPackages()
         {
-            IEnumerable<CompareTypeResult> missingNugetPackages = GetMissingNugets();
+            CompareTypeResult[] missingNugetPackages = GetMissingNugets().ToArray();
             string rootPath = SolutionFolderPath;
             string packageInstallPath = Path.Combine(rootPath, "packages");
 
@@ -192,13 +193,16 @@ namespace ProjectAdj
                 var packageDownloaded = cacheResult.Package;
                 if (packageDownloaded == null)
                 {
-                    throw new Exception($"Could not download package {packageName}");
+                    throw new Exception($"Could not download package '{packageName}'");
                 }
 
                 UpdatePackagesConfigFile(Path.Combine(ProjectFolderPath, "packages.config"), packageDownloaded, comparation.OriginalAssemblyName);
                 RemoveReferenceFromProject($"{comparation.OriginalAssemblyName}");
                 AddReferenceToProject(packageInstallPath, packageDownloaded);
-                //cacheResult.AlreadyInstalled = true;
+            }
+            else
+            {
+                Logger.Warn($"CacheResult is null while downloading '{packageName}'");
             }
         }
 
@@ -209,12 +213,14 @@ namespace ProjectAdj
             var packageReferenceFile = new PackageReferenceFile(configPath);
 
             // Get the target framework of the current project to add --> targetframework="net452" attribute in the package.config file
-            var currentTargetFw = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(TargetFrameworkAttribute), false);
-            var targetFrameworkAttribute = ((TargetFrameworkAttribute[])currentTargetFw).FirstOrDefault();
-            packageReferenceFile.AddEntry(package.Id, SemanticVersion.Parse(package.Version.ToFullString()), false, new FrameworkName(targetFrameworkAttribute.FrameworkName));
 
-            Logger.Debug($"Removing {originalPackageName} from 'packages.config'");
+            //var currentTargetFw = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(TargetFrameworkAttribute), false);
+            //var targetFrameworkAttribute = ((TargetFrameworkAttribute[])currentTargetFw).FirstOrDefault();
+
+            Logger.Debug($"Removing '{originalPackageName}' from 'packages.config'");
             packageReferenceFile.DeleteEntry(originalPackageName, null);
+
+            packageReferenceFile.AddEntry(package.Id, SemanticVersion.Parse(package.Version.ToFullString()), false, new FrameworkName(".NETFramework,Version=v4.6.1"));
 
             Logger.Debug($"'packages.config' updated");
         }
@@ -229,7 +235,7 @@ namespace ProjectAdj
             var metadataReference = Project.MetadataReferences.FirstOrDefault(x => x.Display.EndsWith($"{referenceName}.dll"));
             if (metadataReference == null)
             {
-                throw new Exception($"No dll reference named {referenceName} found in project {Project.Name}");
+                throw new Exception($"No dll reference named '{referenceName}' found in project '{Project.Name}'");
             }
             var modifiedProject = Project.RemoveMetadataReference(metadataReference);
             ProjectWithCompilationHistory.AddProjectToHistory(ProjectWithCompilationKey.BuildRemoveReferenceKey(referenceName), modifiedProject);
@@ -248,7 +254,6 @@ namespace ProjectAdj
                 {
                     var projModified = Project.AddMetadataReference(reference);
                     ProjectWithCompilationHistory.AddProjectToHistory(ProjectWithCompilationKey.BuildAddReferenceKey(packageDownloaded.Id), projModified);
-
                 }
 
                 Logger.Debug($"{packageDownloaded.Id}.dll successfully added as reference to project {Project.Name}");
@@ -298,7 +303,7 @@ namespace ProjectAdj
             var collapsedData =
                 ListTypeMap
                 .Where(x => x.IsChanged())
-                .GroupBy(x => x.OriginalFullTypeName)
+                .GroupBy(x => x.OriginalType)
                 .ToDictionary(x => x.Key, x => x.ToList());
 
             foreach (var docId in docIds)
@@ -307,7 +312,7 @@ namespace ProjectAdj
                 Logger.Debug($"Processing source file: {doc.FilePath}...");
                 SyntaxTree syntaxTree = await doc.GetSyntaxTreeAsync().ConfigureAwait(false);
                 var root = syntaxTree.GetRoot();
-                var rewriter = new OriginalTypesRewriter(collapsedData);
+                var rewriter = new OriginalTypesRewriter(doc.Name, collapsedData);
                 var newnode = rewriter.Visit(root);
                 var newSolution = Solution.WithDocumentSyntaxRoot(docId, newnode);
                 var newProject = newSolution.GetProject(Project.Id);

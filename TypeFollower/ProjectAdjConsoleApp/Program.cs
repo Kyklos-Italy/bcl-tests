@@ -15,7 +15,10 @@ namespace ProjectAdjConsoleApp
                 new string[]
                 {
                     //@"C:\development\dotnet\GitFashion\KComponents\Dev\KTemplating\KTemplating.Core\KTemplating.Core.csproj",
-                    @"C:\development\dotnet\GitFashion\KComponents\Dev\KTemplating\KTemplating.sln",
+                    //@"C:\development\dotnet\GitFashion\KComponents\Dev\KTemplating\KTemplating.sln",
+                    //@"C:\development\dotnet\GitFashion\KComponents\Dev\KeX\KeX.sln",
+                    //@"C:\development\dotnet\GitFashion\KComponents\Dev\KLicensing\KLicensing.sln",
+                    @"C:\development\dotnet\GitFashion\Kernel\Dev\Kyklos.Kernel.CoreBusiness\Kyklos.Kernel.CoreBusiness.sln",
                     // @"C:\temp\KTemplating\KTemplating.Core\",
                     @"C:\development\Git\bcl-tests\TypeFollower\ProcessingFolder\cmp-results.json"
                 };
@@ -46,9 +49,7 @@ namespace ProjectAdjConsoleApp
             }
             catch (Exception ex)
             {
-                throw;
-                //Console.WriteLine(ex.Message);
-                //Console.ReadKey();
+                Logger.Error("Unrecoverable error", ex);
             }
         }
 
@@ -56,7 +57,7 @@ namespace ProjectAdjConsoleApp
         {
             log4net.Config.XmlConfigurator.Configure();
             ILog Logger = LogManager.GetLogger("ProjectAdjConsoleApp");
-            
+
             try
             {
                 Logger.Debug("Starting app");
