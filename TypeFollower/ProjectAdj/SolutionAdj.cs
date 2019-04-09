@@ -15,11 +15,6 @@ namespace ProjectAdj
 {
     public class SolutionAdj : IDisposable
     {
-        //private enum ProcessingMode
-        //{
-        //    BySolution,
-        //    BySingleProject
-        //}
 
         public string SolutionFilePath { get; }
         public string MapFilePath { get; }
@@ -32,12 +27,10 @@ namespace ProjectAdj
 
         public IList<CompareTypeResult> ListTypeMap { get; private set; }
         public IList<CompareMethodResult> ListMethodMap { get; private set; }
-//        private Dictionary<string, ProjectWithCompilation> _compilations;
         private KCache<string, CacheResult> _cache;
 
         private Dictionary<string, CacheResult> _dictCache;
         private IPackageRepository _nugetRepo;
-       // private ProcessingMode _processingMode;
 
         public SolutionAdj(string solutionFilePath, string mapFilePath, string nugetApiEndpoint)
         {
@@ -49,15 +42,26 @@ namespace ProjectAdj
             _cache = new KCache<string, CacheResult>(timeToLiveInSeconds * 1000, true);
             _nugetRepo = PackageRepositoryFactory.Default.CreateRepository(nugetApiEndpoint);
             _dictCache = new Dictionary<string, CacheResult>();
-            //_compilations = new Dictionary<string, ProjectWithCompilation>();
         }
 
         public async Task Adjust()
         {
-            await LoadData().ConfigureAwait(false);
-            //await CompileSolution().ConfigureAwait(false);
-            //await LoadUsedTypes().ConfigureAwait(false);
-            await AdjustProjects().ConfigureAwait(false);
+            bool withErrors = false;
+            try
+            {
+                Logger.Info($"* * * Trying adjusting '{SolutionFilePath}' * * *");
+                await LoadData().ConfigureAwait(false);
+                await AdjustProjects().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                withErrors = true;
+                Logger.Error($"ERROR", ex);
+            }
+            finally
+            {
+                Logger.Info($"* * * Adjusting '{SolutionFilePath}' completed {(withErrors ? "with errors " : string.Empty)}* * *");
+            }
         }
 
         private async Task LoadData()
@@ -84,7 +88,6 @@ namespace ProjectAdj
 
         private void LoadWorkspace()
         {
-            MSBuildLocator.RegisterDefaults();
             Workspace = MSBuildWorkspace.Create();
             Workspace.WorkspaceFailed += (sender, e) => Logger.Error(e.Diagnostic.Message);
             Workspace.AssociateFileExtensionWithLanguage("fsproj", "FSharp");
@@ -140,7 +143,7 @@ namespace ProjectAdj
                 cacheResult = new CacheResult(package, false);
                 _dictCache.Add(packageName, cacheResult);
             }
-            
+
             return Task.FromResult(cacheResult);
         }
 

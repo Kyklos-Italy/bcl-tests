@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Kyklos.Kernel.Core.KLinq;
+using Kyklos.Kernel.Core.Support;
 
 namespace TypeFollower
 {
@@ -22,9 +23,6 @@ namespace TypeFollower
 
         private IList<TypeFollowResult> _typeFollowResult = new List<TypeFollowResult>();
         private IList<TypeFollowResult> _methodFollowResult = new List<TypeFollowResult>();
-
-        //Dictionary<string, Tuple<string, string>> _typeNameMap = new Dictionary<string, Tuple<string, string>>();
-        //Dictionary<string, Tuple<string, string>> _methodNameMap = new Dictionary<string, Tuple<string, string>>();
 
 
         public TypeFollow(string sourceFolderPath, string sourceListFilePath, string targetFolderPath, string targetListFilePath, string typeNameMapPath)
@@ -54,7 +52,7 @@ namespace TypeFollower
                     //GenerateComparationResultConsole(pathDestination);
                     break;
                 case ComparationResultType.Html:
-                    //GenerateComparationResultHtml(pathDestination);
+                    GenerateComparationResultHtml(pathDestination);
                     break;
                 case ComparationResultType.JSON:
                     GenerateComparationResultJSON(pathDestination);
@@ -76,14 +74,72 @@ namespace TypeFollower
                     x => x.TypeName,
                     (x, y) => new TypeFollowResult(x, y)
                 )
-                .Union(_typeNameMap)
-                .ToList();
+                .Except
+                (
+                    _typeNameMap,
+                    KyklosEqualityComparer
+                    .GetEqualityComparer<TypeFollowResult>
+                    (
+                        (x, y) =>
+                            x.SourceAssemblyObject.IsType
+                            && y.SourceAssemblyObject.IsType
+                            && x.SourceAssemblyObject.TypeName == y.SourceAssemblyObject.TypeName
+                            && x.SourceAssemblyObject.AssemblyName == y.SourceAssemblyObject.AssemblyName
+                            && x.SourceAssemblyObject.TypeNamespace == y.SourceAssemblyObject.TypeNamespace,
+                        x => x.SourceAssemblyObject.GetHashCode()
+                    )
+                )
+                .Union(_typeNameMap);
 
-            return mappedTypes;
+            return ReorderData(mappedTypes, false).ToList();
+        }
+
+        private static IEnumerable<TypeFollowResult> ReorderData(IEnumerable<TypeFollowResult> data, bool isMethod)
+        {
+            var missingTypes =
+                data
+                .Where(x => x.TargetAssemblyObject == null);
+
+            var matchingTypes =
+                data
+                .Where(x => x.TargetAssemblyObject != null);
+
+            return
+                SortTypeFollowResult(missingTypes, isMethod)
+                .Concat(SortTypeFollowResult(matchingTypes, isMethod))
+                .ToList();
+        }
+
+        private static IEnumerable<TypeFollowResult> SortTypeFollowResult(IEnumerable<TypeFollowResult> data, bool isMethod)
+        {
+            if (isMethod)
+            {
+                return
+                    data
+                    .OrderBy(x => x.SourceAssemblyObject.MethodName)
+                    .ThenBy(x => x.SourceAssemblyObject.FullTypeName);
+            }
+            return
+                data
+                .OrderBy(x => x.SourceAssemblyObject.AssemblyName)
+                .ThenBy(x => x.SourceAssemblyObject.FullTypeName);
         }
 
         private IList<TypeFollowResult> CreateMethodFollowResult()
         {
+            var comparer = KyklosEqualityComparer
+                    .GetEqualityComparer<TypeFollowResult>
+                    (
+                        (x, y) =>
+                            x.SourceAssemblyObject.IsMethod
+                            && y.SourceAssemblyObject.IsMethod
+                            && x.SourceAssemblyObject.TypeName == y.SourceAssemblyObject.TypeName
+                            && x.SourceAssemblyObject.AssemblyName == y.SourceAssemblyObject.AssemblyName
+                            && x.SourceAssemblyObject.TypeNamespace == y.SourceAssemblyObject.TypeNamespace
+                            && x.SourceAssemblyObject.MethodName == y.SourceAssemblyObject.MethodName,
+                        x => x.SourceAssemblyObject.GetHashCode()
+                    );
+
             var mappedMethods =
                 _sourceMapping
                 .MethodDefinitions
@@ -93,11 +149,32 @@ namespace TypeFollower
                     x => $"{x.TypeName}.{x.MethodName}",
                     x => $"{x.TypeName}.{x.MethodName}",
                     (x, y) => new TypeFollowResult(x, y)
+                );
+
+            var mappedByNameOnly =
+                mappedMethods
+                .Where(x => x.TargetAssemblyObject == null)
+                .Join
+                (
+                    _targetMapping.MethodDefinitions,
+                    x => $"{x.SourceAssemblyObject.MethodName}",
+                    x => $"{x.MethodName}",
+                    (x, y) => new TypeFollowResult(x.SourceAssemblyObject, y)
+                );
+
+            var data = 
+                mappedMethods
+                .Where(x => x.TargetAssemblyObject != null)
+                .Concat(mappedByNameOnly)
+                .Except
+                (
+                    _methodNameMap,
+                    comparer
                 )
                 .Union(_methodNameMap)
-                .ToList();
+                .ToArray();
 
-            return mappedMethods;
+            return ReorderData(data, true).ToList();
         }
 
         private AssemblyObjectContainer FillTypeMap(string assemblyFolder, string assemblyListFilePath) //, out Dictionary<string, List<AssemblyObject>> typeMap, out Dictionary<string, List<AssemblyObject>> methodMap)
@@ -126,6 +203,7 @@ namespace TypeFollower
                 File
                 .ReadAllLines(path)
                 .Where(x => !string.IsNullOrEmpty(x))
+                .Select(x => x.Trim())
                 .Where(x => x.StartsWith("t"))
                 .Select(x => x.Substring(2));
 
@@ -251,148 +329,97 @@ namespace TypeFollower
             }
         }
 
-        // private void GenerateComparationResultConsole(string pathDestination)
-        // {
-        //     Console.WriteLine(pathDestination);
-        //     foreach (var key in _typeFollowResult.Keys)
-        //     {
-        //         Tuple<List<AssemblyObject>, List<AssemblyObject>> map = _typeFollowResult[key];
-        //         Console.WriteLine($"{key}");
-        //         Console.WriteLine($"\t{string.Join(", ", map.Item1.Select(t => $"{t.TypeNamespace} {t.AssemblyName}"))}");
-        //         Console.WriteLine($"\t\t{string.Join(", ", map.Item2.Select(t => $"{t.TypeNamespace} {t.AssemblyName}"))}");
-        //     }
+        private void GenerateComparationResultHtml(string pathDestination)
+        {            
+            string typesHtml = GetTypeMapTableHtml();            
+            string methodsHtml = GetMethodMapTableHtml();
 
-        //     foreach (var key in _methodFollowResult.Keys)
-        //     {
-        //         Tuple<List<AssemblyObject>, List<AssemblyObject>> map = _methodFollowResult[key];
-        //         Console.WriteLine($"{key}");
-        //         Console.WriteLine($"\t{string.Join(", ", map.Item1.Select(t => $"{t.TypeNamespace} {t.AssemblyName}"))}");
-        //         Console.WriteLine($"\t\t{string.Join(", ", map.Item2.Select(t => $"{t.TypeNamespace} {t.AssemblyName}"))}");
-        //     }
-        // }
+            WriteComparationResultHtml($"{pathDestination}-types.html", typesHtml);
+            WriteComparationResultHtml($"{pathDestination}-methods.html", methodsHtml);
+        }
 
-        // private void GenerateComparationResultHtml(string pathDestination)
-        // {
-        //     List<string> htmlContent = new List<string>();
-        //     htmlContent.Add($"<html><body>");
-        //     htmlContent.Add(GetTypeMapTableHtml());
-        //     htmlContent.Add("<br/>");
-        //     htmlContent.Add(GetMethodMapTableHtml());
-        //     htmlContent.Add($"</body></html>");
-        //     File.WriteAllLines(pathDestination, htmlContent);
-        // }
+        private void WriteComparationResultHtml(string pathDestination, string html)
+        {
+            List<string> htmlContent = new List<string>();
+            htmlContent.Add($"<html><body>");
+            htmlContent.Add(html);
+            htmlContent.Add($"</body></html>");
+            File.WriteAllLines(pathDestination, htmlContent);
+        }
 
-        // private string GetTypeMapTableHtml()
-        // {
-        //     string html = @"<table border=1 cellpadding=""5px;"">
-        //  <tr>
-        //	<th>Type Name</th>
-        //	<th>Original Namespace</th>
-        //	<th>Original Assembly Name</th>
-        //	<th>Final Namespace</th>
-        //	<th>Final Type Name</th>
-        //	<th>Final Assembly Name</th>
-        //</tr>";
-        //     foreach (var key in _typeFollowResult.Keys)
-        //     {
-        //         Tuple<List<AssemblyObject>, List<AssemblyObject>> map = _typeFollowResult[key];
-        //         int newtypeCount = map.Item2.Count;
-        //         int oldtypeCount = map.Item1.Count;
-        //         for (int i = 0; i < map.Item1.Count; i++)
-        //         {
-        //             string tablerowHtml = $@"<tr>
-        //					<td>{map.Item1[i].TypeName}</td>
-        //					<td>{map.Item1[i].TypeNamespace}</td>
-        //					<td>{map.Item1[i].AssemblyName}</td>";
-        //             int j = i;
-        //             if (j >= newtypeCount)
-        //                 j = newtypeCount - 1;
+        private string GetTypeMapTableHtml()
+        {
+            string html = @"<table border=1 cellpadding=""5px;"">
+          <tr>
+        	<th>Original Type Name</th>
+        	<th>Original Namespace</th>
+        	<th>Original Assembly</th>
+            <th>New Type Name</th>        	
+            <th>New Namespace</th>        	
+        	<th>New Assembly</th>
+        </tr>";
 
-        //             tablerowHtml += $@"<td>{(j >= 0 ? map.Item2[j].TypeNamespace : "")}</td>
-        //			<td>{(j >= 0 ? map.Item2[j].TypeName : "")}</td>
-        //			<td>{(j >= 0 ? map.Item2[j].AssemblyName : "")}</td>
-        //			</tr>";
-        //             html += tablerowHtml;
-        //         }
+            List<CompareTypeResult> mapList =
+                _typeFollowResult
+                .Select(x => x.CreateResult())
+                .ToList();
 
-        //         if (newtypeCount > oldtypeCount)
-        //         {
-        //             for (int j = oldtypeCount; j < newtypeCount; j++)
-        //             {
-        //                 string tablerowHtml = $@"<tr>
-        //					<td>{map.Item1[oldtypeCount - 1].TypeName}</td>
-        //					<td>{map.Item1[oldtypeCount - 1].TypeNamespace}</td>
-        //					<td>{map.Item1[oldtypeCount - 1].AssemblyName}</td>
-        //					<td>{map.Item2[j].TypeNamespace}</td>
-        //					<td>{map.Item2[j].TypeName}</td>
-        //					<td>{map.Item2[j].AssemblyName}</td>
-        //				</tr>";
-        //                 html += tablerowHtml;
-        //             }
-        //         }
-        //     }
+            foreach (var map in mapList)
+            {
+                    string tablerowHtml = $@"<tr>
+        					<td>{map.OriginalType}</td>
+        					<td>{map.OriginalNamespace}</td>
+        					<td>{map.OriginalAssemblyName}</td>
+                            <td>{map.NewType}</td>
+        					<td>{map.NewNamespace}</td>
+        					<td>{map.NewAssemblyName}</td>
+        			</tr>";
+                    html += tablerowHtml;
+            }
 
-        //     html += "</table>";
+            html += "</table>";
 
-        //     return html;
-        // }
+            return html;
+        }
 
-        // private string GetMethodMapTableHtml()
-        // {
-        //     string html = @"<table border=1 cellpadding=""5px;"">
-        //<tr>
-        //	<th>Method</th>
-        //	<th>Original Namespace</th>
-        //	<th>Original Type</th>
-        //	<th>Original Assembly Name</th>
-        //	<th>Final Namespace</th>
-        //	<th>Final Type</th>
-        //	<th>Final Assembly Name</th>
-        //</tr>";
-        //     foreach (var key in _methodFollowResult.Keys)
-        //     {
-        //         Tuple<List<AssemblyObject>, List<AssemblyObject>> map = _methodFollowResult[key];
-        //         int newtypeCount = map.Item2.Count;
-        //         int oldtypeCount = map.Item1.Count;
-        //         for (int i = 0; i < map.Item1.Count; i++)
-        //         {
-        //             string tablerowHtml = $@"<tr>
-        //				<td>{key}</td>
-        //				<td>{map.Item1[i].TypeNamespace}</td>
-        //				<td>{map.Item1[i].TypeName}</td>
-        //				<td>{map.Item1[i].AssemblyName}</td>";
-        //             int j = i;
-        //             if (j >= newtypeCount)
-        //                 j = newtypeCount - 1;
+        private string GetMethodMapTableHtml()
+        {
+            string html = @"<table border=1 cellpadding=""5px;"">
+          <tr>
+        	<th>Original Method Name</th>
+            <th>Original Type Name</th>
+        	<th>Original Namespace</th>
+        	<th>Original Assembly</th>
+            <th>New Method Name</th>        	
+            <th>New Type Name</th>        	
+            <th>New Namespace</th>        	
+        	<th>New Assembly</th>
+        </tr>";
 
-        //             tablerowHtml += $@"<td>{(j >= 0 ? map.Item2[j].TypeNamespace : "")}</td>
-        //			<td>{(j >= 0 ? map.Item2[j].TypeName : "")}</td>
-        //			<td>{(j >= 0 ? map.Item2[j].AssemblyName : "")}</td>
-        //			</tr>";
-        //             html += tablerowHtml;
-        //         }
-        //         if (newtypeCount > oldtypeCount)
-        //         {
-        //             for (int j = oldtypeCount; j < newtypeCount; j++)
-        //             {
-        //                 string tablerowHtml = $@"<tr>
-        //					<td>{key}</td>
-        //					<td>{map.Item1[oldtypeCount - 1].TypeNamespace}</td>
-        //					<td>{map.Item1[oldtypeCount - 1].TypeName}</td>
-        //					<td>{map.Item1[oldtypeCount - 1].AssemblyName}</td>
-        //					<td>{map.Item2[j].TypeNamespace}</td>
-        //					<td>{map.Item2[j].TypeName}</td>
-        //					<td>{map.Item2[j].AssemblyName}</td>
-        //				</tr>";
-        //                 html += tablerowHtml;
-        //             }
-        //         }
-        //     }
+            List<CompareMethodResult> mapList =
+                _methodFollowResult
+                .Select(x => x.CreateResult() as CompareMethodResult)
+                .ToList();
 
-        //     html += "</table>";
+            foreach (var map in mapList)
+            {
+                string tablerowHtml = $@"<tr>
+        					<td>{map.OriginalMethodName}</td>
+                            <td>{map.OriginalType}</td>
+        					<td>{map.OriginalNamespace}</td>
+        					<td>{map.OriginalAssemblyName}</td>
+                            <td>{map.NewMethodName}</td>
+                            <td>{map.NewType}</td>
+        					<td>{map.NewNamespace}</td>
+        					<td>{map.NewAssemblyName}</td>
+        			</tr>";
+                html += tablerowHtml;
+            }
 
-        //     return html;
-        // }
+            html += "</table>";
+
+            return html;
+        }
 
         private void GenerateComparationResultJSON(string pathDestination)
         {
@@ -408,50 +435,6 @@ namespace TypeFollower
                 .Select(x => x.CreateResult())
                 .ToList();
 
-            //foreach (var key in _typeFollowResult.Keys)
-            //{
-            //    Tuple<List<AssemblyObject>, List<AssemblyObject>> map = _typeFollowResult[key];
-            //    int newtypeCount = map.Item2.Count;
-            //    int oldtypeCount = map.Item1.Count;
-            //    for (int i = 0; i < map.Item1.Count; i++)
-            //    {
-            //        int j = i;
-            //        if (j >= newtypeCount)
-            //            j = newtypeCount - 1;
-
-            //        mapList
-            //            .Add
-            //            (
-            //                new CompareTypeResult
-            //                {
-            //                    OriginalAssemblyName = map.Item1[i].AssemblyName,
-            //                    OriginalNamespace = map.Item1[i].TypeNamespace,
-            //                    OriginalType = map.Item1[i].TypeName,
-            //                    NewAssemblyName = j >= 0 ? map.Item2[j].AssemblyName : string.Empty,
-            //                    NewNamespace = j >= 0 ? map.Item2[j].TypeNamespace : string.Empty,
-            //                    NewType = j >= 0 ? map.Item2[j].TypeName : string.Empty
-            //                }
-            //            );
-            //    }
-            //    if (newtypeCount > oldtypeCount)
-            //    {
-            //        for (int j = oldtypeCount; j < newtypeCount; j++)
-            //        {
-            //            mapList.Add(
-            //                new CompareTypeResult
-            //                {
-            //                    OriginalAssemblyName = map.Item1[oldtypeCount - 1].AssemblyName,
-            //                    OriginalNamespace = map.Item1[oldtypeCount - 1].TypeNamespace,
-            //                    OriginalType = map.Item1[oldtypeCount - 1].TypeName,
-            //                    NewAssemblyName = map.Item2[j].AssemblyName,
-            //                    NewNamespace = map.Item2[j].TypeNamespace,
-            //                    NewType = map.Item2[j].TypeName
-            //                }
-            //            );
-            //        }
-            //    }
-            //}
-
             string result = Newtonsoft.Json.JsonConvert.SerializeObject(mapList);
             return result;
         }
@@ -462,52 +445,6 @@ namespace TypeFollower
                 _methodFollowResult
                 .Select(x => x.CreateResult() as CompareMethodResult)
                 .ToList();
-
-            //foreach (var key in _methodFollowResult.Keys)
-            //{
-            //    Tuple<List<AssemblyObject>, List<AssemblyObject>> map = _methodFollowResult[key];
-            //    int newtypeCount = map.Item2.Count;
-            //    int oldtypeCount = map.Item1.Count;
-            //    for (int i = 0; i < map.Item1.Count; i++)
-            //    {
-            //        int j = i;
-            //        if (j >= newtypeCount)
-            //            j = newtypeCount - 1;
-
-            //        mapList.Add(
-            //            new CompareMethodResult
-            //            {
-            //                OriginalAssemblyName = map.Item1[i].AssemblyName,
-            //                OriginalNamespace = map.Item1[i].TypeNamespace,
-            //                OriginalType = map.Item1[i].TypeName,
-            //                OriginalMethodName = map.Item1[i].MethodName,
-            //                NewAssemblyName = j >= 0 ? map.Item2[j].AssemblyName : string.Empty,
-            //                NewNamespace = j >= 0 ? map.Item2[j].TypeNamespace : string.Empty,
-            //                NewType = j >= 0 ? map.Item2[j].TypeName : string.Empty,
-            //                NewMethodName = j >= 0 ? map.Item2[j].MethodName : null
-            //            }
-            //        );
-            //    }
-            //    if (newtypeCount > oldtypeCount)
-            //    {
-            //        for (int j = oldtypeCount; j < newtypeCount; j++)
-            //        {
-            //            mapList.Add(
-            //               new CompareMethodResult
-            //               {
-            //                   OriginalAssemblyName = map.Item1[oldtypeCount - 1].AssemblyName,
-            //                   OriginalNamespace = map.Item1[oldtypeCount - 1].TypeNamespace,
-            //                   OriginalType = map.Item1[oldtypeCount - 1].TypeName,
-            //                   OriginalMethodName = map.Item1[oldtypeCount - 1].MethodName,
-            //                   NewAssemblyName = map.Item2[j].AssemblyName,
-            //                   NewNamespace = map.Item2[j].TypeNamespace,
-            //                   NewType = map.Item2[j].TypeName,
-            //                   NewMethodName = map.Item2[j].MethodName
-            //               }
-            //           );
-            //        }
-            //    }
-            //}
 
             string result = Newtonsoft.Json.JsonConvert.SerializeObject(mapList);
             return result;

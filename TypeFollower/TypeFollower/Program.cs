@@ -17,12 +17,13 @@ namespace TypeFollower
                     @"..\..\..\..\TypeFollower\ProcessingFolder\target-dlls.txt",
                     @"..\..\..\..\TypeFollower\ProcessingFolder\types-map.txt",
                     @"..\..\..\..\TypeFollower\ProcessingFolder\cmp-results.json"
+                    //@"..\..\..\..\TypeFollower\ProcessingFolder\html-results"
                 };
 
-            DoWork(args);
+            DoWork(args, ComparationResultType.JSON);
         }
 
-        private static void DoWork(string[] args)
+        private static void DoWork(string[] args, ComparationResultType resultType)
         {
             try
             {
@@ -30,11 +31,10 @@ namespace TypeFollower
                     Console.WriteLine("Wrong number of arguments!");
                 else
                 {
-                    ComparationResultType resultType = ComparationResultType.JSON;
                     string filenameTypeNameMap = args.Count() > 4 ? args[4] : string.Empty;
                     TypeFollow tf = new TypeFollow(args[0], args[1], args[2], args[3], filenameTypeNameMap);
 
-                    string resultFileName = args.Count() > 5 ? args[5] : $"CompareResult.txt";
+                    string resultFileName = args.Count() > 5 ? args[5] : $"CompareResultHtml.html";
                     tf.GenerateComparationResult(resultType, resultFileName);
                     if (resultType == ComparationResultType.Console)
                         Console.ReadKey();
