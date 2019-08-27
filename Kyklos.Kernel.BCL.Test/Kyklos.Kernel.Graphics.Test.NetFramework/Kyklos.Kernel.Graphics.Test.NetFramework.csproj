@@ -35,19 +35,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FluentAssertions, Version=5.6.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentAssertions.5.6.0\lib\net45\FluentAssertions.dll</HintPath>
+    <Reference Include="FluentAssertions, Version=5.7.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentAssertions.5.7.0\lib\net45\FluentAssertions.dll</HintPath>
     </Reference>
-    <Reference Include="Kyklos.Kernel.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Core.1.0.0-beta.23\lib\netstandard2.0\Kyklos.Kernel.Core.dll</HintPath>
+    <Reference Include="Kyklos.Kernel.Core, Version=1.0.6.0, Culture=neutral, PublicKeyToken=d9048bcda31d21ae, processorArchitecture=MSIL">
+      <HintPath>..\packages\Kyklos.Kernel.Core.1.0.6\lib\netstandard2.0\Kyklos.Kernel.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Kyklos.Kernel.Graphics, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Graphics.1.0.0-beta.23\lib\netstandard2.0\Kyklos.Kernel.Graphics.dll</HintPath>
+    <Reference Include="Kyklos.Kernel.Graphics, Version=1.0.6.0, Culture=neutral, PublicKeyToken=d9048bcda31d21ae, processorArchitecture=MSIL">
+      <HintPath>..\packages\Kyklos.Kernel.Graphics.1.0.6\lib\netstandard2.0\Kyklos.Kernel.Graphics.dll</HintPath>
     </Reference>
-    <Reference Include="Magick.NET-Q16-AnyCPU, Version=7.11.0.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=MSIL">
-      <HintPath>..\packages\Magick.NET-Q16-AnyCPU.7.11.0\lib\net40\Magick.NET-Q16-AnyCPU.dll</HintPath>
+    <Reference Include="Magick.NET-Q16-AnyCPU, Version=7.14.0.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=MSIL">
+      <HintPath>..\packages\Magick.NET-Q16-AnyCPU.7.14.0\lib\net40\Magick.NET-Q16-AnyCPU.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Drawing.Common, Version=4.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">

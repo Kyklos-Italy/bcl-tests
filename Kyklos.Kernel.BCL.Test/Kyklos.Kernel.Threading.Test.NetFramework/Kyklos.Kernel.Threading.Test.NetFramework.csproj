@@ -35,11 +35,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Kyklos.Kernel.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Core.1.0.0-beta.23\lib\netstandard2.0\Kyklos.Kernel.Core.dll</HintPath>
+    <Reference Include="Kyklos.Kernel.Core, Version=1.0.6.0, Culture=neutral, PublicKeyToken=d9048bcda31d21ae, processorArchitecture=MSIL">
+      <HintPath>..\packages\Kyklos.Kernel.Core.1.0.6\lib\netstandard2.0\Kyklos.Kernel.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Kyklos.Kernel.Threading, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Threading.1.0.0-beta.23\lib\netstandard2.0\Kyklos.Kernel.Threading.dll</HintPath>
+    <Reference Include="Kyklos.Kernel.Threading, Version=1.0.6.0, Culture=neutral, PublicKeyToken=d9048bcda31d21ae, processorArchitecture=MSIL">
+      <HintPath>..\packages\Kyklos.Kernel.Threading.1.0.6\lib\netstandard2.0\Kyklos.Kernel.Threading.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

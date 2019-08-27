@@ -41,26 +41,26 @@
     <Reference Include="Common.Logging.Core, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.Core.3.4.1\lib\net40\Common.Logging.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Kyklos.Kernel.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Core.1.0.0-beta.23\lib\netstandard2.0\Kyklos.Kernel.Core.dll</HintPath>
+    <Reference Include="Kyklos.Kernel.Core, Version=1.0.6.0, Culture=neutral, PublicKeyToken=d9048bcda31d21ae, processorArchitecture=MSIL">
+      <HintPath>..\packages\Kyklos.Kernel.Core.1.0.6\lib\netstandard2.0\Kyklos.Kernel.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Kyklos.Kernel.Data, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Data.1.0.0-beta.23\lib\netstandard2.0\Kyklos.Kernel.Data.dll</HintPath>
+    <Reference Include="Kyklos.Kernel.Data, Version=1.0.6.0, Culture=neutral, PublicKeyToken=d9048bcda31d21ae, processorArchitecture=MSIL">
+      <HintPath>..\packages\Kyklos.Kernel.Data.1.0.6\lib\netstandard2.0\Kyklos.Kernel.Data.dll</HintPath>
     </Reference>
-    <Reference Include="Kyklos.Kernel.Dynamic, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Dynamic.1.0.0-beta.23\lib\netstandard2.0\Kyklos.Kernel.Dynamic.dll</HintPath>
+    <Reference Include="Kyklos.Kernel.Dynamic, Version=1.0.6.0, Culture=neutral, PublicKeyToken=d9048bcda31d21ae, processorArchitecture=MSIL">
+      <HintPath>..\packages\Kyklos.Kernel.Dynamic.1.0.6\lib\netstandard2.0\Kyklos.Kernel.Dynamic.dll</HintPath>
     </Reference>
-    <Reference Include="Kyklos.Kernel.Ftp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Ftp.1.0.0-beta.23\lib\netstandard2.0\Kyklos.Kernel.Ftp.dll</HintPath>
+    <Reference Include="Kyklos.Kernel.Ftp, Version=1.0.6.0, Culture=neutral, PublicKeyToken=d9048bcda31d21ae, processorArchitecture=MSIL">
+      <HintPath>..\packages\Kyklos.Kernel.Ftp.1.0.6\lib\netstandard2.0\Kyklos.Kernel.Ftp.dll</HintPath>
     </Reference>
-    <Reference Include="Kyklos.Kernel.IO, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.IO.1.0.0-beta.23\lib\netstandard2.0\Kyklos.Kernel.IO.dll</HintPath>
+    <Reference Include="Kyklos.Kernel.IO, Version=1.0.6.0, Culture=neutral, PublicKeyToken=d9048bcda31d21ae, processorArchitecture=MSIL">
+      <HintPath>..\packages\Kyklos.Kernel.IO.1.0.6\lib\netstandard2.0\Kyklos.Kernel.IO.dll</HintPath>
     </Reference>
-    <Reference Include="Kyklos.Kernel.Serialization.Json, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Serialization.Json.1.0.0-beta.23\lib\netstandard2.0\Kyklos.Kernel.Serialization.Json.dll</HintPath>
+    <Reference Include="Kyklos.Kernel.Serialization.Json, Version=1.0.6.0, Culture=neutral, PublicKeyToken=d9048bcda31d21ae, processorArchitecture=MSIL">
+      <HintPath>..\packages\Kyklos.Kernel.Serialization.Json.1.0.6\lib\netstandard2.0\Kyklos.Kernel.Serialization.Json.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Renci.SshNet, Version=2016.1.0.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106, processorArchitecture=MSIL">
       <HintPath>..\packages\SSH.NET.2016.1.0\lib\net40\Renci.SshNet.dll</HintPath>

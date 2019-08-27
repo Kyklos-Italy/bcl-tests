@@ -397,9 +397,9 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetCore
         }
 
         [Fact]
-        public void CountAllResultsAfterFourAreDeletedShouldBe2()
+        public Task CountAllResultsAfterFourAreDeletedShouldBe2()
         {
-            CountAllResultsAfterFourAreDeletedShouldBe1Core();
+            return CountAllResultsAfterFourAreDeletedShouldBe1Core();
         }
 
         [Fact]

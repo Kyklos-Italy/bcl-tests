@@ -35,19 +35,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FluentAssertions, Version=5.6.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentAssertions.5.6.0\lib\net45\FluentAssertions.dll</HintPath>
+    <Reference Include="FluentAssertions, Version=5.7.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentAssertions.5.7.0\lib\net45\FluentAssertions.dll</HintPath>
     </Reference>
-    <Reference Include="Kyklos.Kernel.Compression, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Compression.1.0.0-beta.23\lib\netstandard2.0\Kyklos.Kernel.Compression.dll</HintPath>
+    <Reference Include="Kyklos.Kernel.Compression, Version=1.0.6.0, Culture=neutral, PublicKeyToken=d9048bcda31d21ae, processorArchitecture=MSIL">
+      <HintPath>..\packages\Kyklos.Kernel.Compression.1.0.6\lib\netstandard2.0\Kyklos.Kernel.Compression.dll</HintPath>
     </Reference>
-    <Reference Include="Kyklos.Kernel.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Core.1.0.0-beta.23\lib\netstandard2.0\Kyklos.Kernel.Core.dll</HintPath>
+    <Reference Include="Kyklos.Kernel.Core, Version=1.0.6.0, Culture=neutral, PublicKeyToken=d9048bcda31d21ae, processorArchitecture=MSIL">
+      <HintPath>..\packages\Kyklos.Kernel.Core.1.0.6\lib\netstandard2.0\Kyklos.Kernel.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Kyklos.Kernel.IO.Async, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.IO.Async.1.0.0-beta.23\lib\netstandard2.0\Kyklos.Kernel.IO.Async.dll</HintPath>
+    <Reference Include="Kyklos.Kernel.IO.Async, Version=1.0.6.0, Culture=neutral, PublicKeyToken=d9048bcda31d21ae, processorArchitecture=MSIL">
+      <HintPath>..\packages\Kyklos.Kernel.IO.Async.1.0.6\lib\netstandard2.0\Kyklos.Kernel.IO.Async.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Compression, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IO.Compression.4.3.0\lib\net46\System.IO.Compression.dll</HintPath>

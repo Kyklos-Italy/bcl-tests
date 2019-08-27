@@ -955,8 +955,12 @@ namespace Kyklos.Kernel.Data.Test
             var updateTableBuilder =
                 Dao
                 .NewUpdateTableBuilder<Result>()
+                //.Set(x => x.GoalsVisitorTeam, x => x.GoalsVisitorTeam + 1)
                 .Set(x => x.GoalsHomeTeam, () => n)
                 .Where(x => x.ResultId == "idRes2");
+
+            var sql = updateTableBuilder.BuildSqlTextWithParameters();
+            
 
             await Dao.UpdateTableAsync(updateTableBuilder).ConfigureAwait(false);
             var actualValue = await Dao.GetItemByExampleAsync<Result>(x => x.ResultId == "idRes2").ConfigureAwait(false);
