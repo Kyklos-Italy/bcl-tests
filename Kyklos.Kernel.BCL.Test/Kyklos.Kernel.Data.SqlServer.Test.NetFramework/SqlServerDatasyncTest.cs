@@ -186,11 +186,11 @@ namespace Kyklos.Kernel.Data.SqlServer.Test.NetFramework
 
 
         [Fact]
-        public void FillDayDataTableShouldBe()
+        public  void FillDayDataTableShouldBe()
         {
             string sql = "SELECT d.* FROM DAYS d";
 
-            FillDayDataTableShouldBeCore(sql);
+            FillDayDataTableShouldBeCore(sql).Wait();
         }
 
 
@@ -344,7 +344,7 @@ namespace Kyklos.Kernel.Data.SqlServer.Test.NetFramework
         [Fact]
         public async Task CountAllResultsShouldBe6()
         {
-            await CountAllResultsShouldBeN(6).ConfigureAwait(false);
+            await CountAllResultsShouldBeN(6,Dao).ConfigureAwait(false);
         }
 
         [Fact]
@@ -384,9 +384,9 @@ namespace Kyklos.Kernel.Data.SqlServer.Test.NetFramework
         }
 
         [Fact]
-        public void CountAllResultsAfterFourAreDeletedShouldBe2()
+        public async void CountAllResultsAfterFourAreDeletedShouldBe2()
         {
-            CountAllResultsAfterFourAreDeletedShouldBe1Core();
+            await CountAllResultsAfterFourAreDeletedShouldBe1Core();
         }
 
         [Fact]

@@ -15,9 +15,9 @@ namespace Kyklos.Kernel.Data.Oracle.Test.NetFramework
 {
     public class OracleDatasyncTest : BaseDatasyncTest
     {
-        protected override string Schema => "SCMX_INDUSTRIES_DEV";
+        protected override string Schema => "RMX_MORATO_DEV";
 
-        protected override string ConnectionString => "Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.0.20)(PORT=1521)))(CONNECT_DATA=(SERVER=DEDICATED)(SID=KYKORA)));User Id=SCMX_INDUSTRIES_DEV;Password=SCMX_INDUSTRIES_DEV;";
+        protected override string ConnectionString => ConnectionStringsProvider.GetConnectionStringProviderList("Oracle");
         protected override string ProviderName => "Oracle";
 
 
@@ -44,12 +44,12 @@ namespace Kyklos.Kernel.Data.Oracle.Test.NetFramework
 
         private async Task GenerateScriptsForCreateAndDropSequence()
         {
-            string createSequenceScript = @"CREATE SEQUENCE ""SCMX_INDUSTRIES_DEV"".""my_sequence"" 
+            string createSequenceScript = @"CREATE SEQUENCE ""RMX_MORATO_DEV"".""my_sequence"" 
                                            START WITH 1
                                            INCREMENT BY 1
                                            MINVALUE 1 MAXVALUE 1000";
 
-            string dropSequenceScript = @"DROP SEQUENCE ""SCMX_INDUSTRIES_DEV"".""my_sequence""";
+            string dropSequenceScript = @"DROP SEQUENCE ""RMX_MORATO_DEV"".""my_sequence""";
 
             await PrepareSequence(createSequenceScript, dropSequenceScript).ConfigureAwait(false);
         }
@@ -72,9 +72,9 @@ namespace Kyklos.Kernel.Data.Oracle.Test.NetFramework
         [Fact]
         public void SqlInnerJoinShouldBe()
         {
-            string sqlJoin = "SCMX_INDUSTRIES_DEV.RESULTS r inner join SCMX_INDUSTRIES_DEV.DAYS d on (r.DAY_ID = d.DAY_ID)" +
-                              " inner join SCMX_INDUSTRIES_DEV.TEAMS ht on (r.HOME_TEAM_ID = ht.TEAM_ID)" +
-                              " inner join SCMX_INDUSTRIES_DEV.TEAMS vt on (r.VISITOR_TEAM_ID = vt.TEAM_ID)";
+            string sqlJoin = "RMX_MORATO_DEV.RESULTS r inner join RMX_MORATO_DEV.DAYS d on (r.DAY_ID = d.DAY_ID)" +
+                              " inner join RMX_MORATO_DEV.TEAMS ht on (r.HOME_TEAM_ID = ht.TEAM_ID)" +
+                              " inner join RMX_MORATO_DEV.TEAMS vt on (r.VISITOR_TEAM_ID = vt.TEAM_ID)";
 
             SqlInnerJoinShouldBeCore(sqlJoin);
         }
@@ -83,9 +83,9 @@ namespace Kyklos.Kernel.Data.Oracle.Test.NetFramework
         [Fact]
         public void SqlLeftJoinShouldBe()
         {
-            string sqlJoin = "SCMX_INDUSTRIES_DEV.RESULTS r left join SCMX_INDUSTRIES_DEV.DAYS d on (r.DAY_ID = d.DAY_ID)" +
-                              " left join SCMX_INDUSTRIES_DEV.TEAMS ht on (r.HOME_TEAM_ID = ht.TEAM_ID)" +
-                              " left join SCMX_INDUSTRIES_DEV.TEAMS vt on (r.VISITOR_TEAM_ID = vt.TEAM_ID)";
+            string sqlJoin = "RMX_MORATO_DEV.RESULTS r left join RMX_MORATO_DEV.DAYS d on (r.DAY_ID = d.DAY_ID)" +
+                              " left join RMX_MORATO_DEV.TEAMS ht on (r.HOME_TEAM_ID = ht.TEAM_ID)" +
+                              " left join RMX_MORATO_DEV.TEAMS vt on (r.VISITOR_TEAM_ID = vt.TEAM_ID)";
 
             SqlLeftJoinShouldBeCore(sqlJoin);
         }
@@ -94,9 +94,9 @@ namespace Kyklos.Kernel.Data.Oracle.Test.NetFramework
         [Fact]
         public void SqlRightJoinShouldBe()
         {
-            string sqlJoin = "SCMX_INDUSTRIES_DEV.RESULTS r right join SCMX_INDUSTRIES_DEV.DAYS d on (r.DAY_ID = d.DAY_ID)" +
-                              " right join SCMX_INDUSTRIES_DEV.TEAMS ht on (r.HOME_TEAM_ID = ht.TEAM_ID)" +
-                              " right join SCMX_INDUSTRIES_DEV.TEAMS vt on (r.VISITOR_TEAM_ID = vt.TEAM_ID)";
+            string sqlJoin = "RMX_MORATO_DEV.RESULTS r right join RMX_MORATO_DEV.DAYS d on (r.DAY_ID = d.DAY_ID)" +
+                              " right join RMX_MORATO_DEV.TEAMS ht on (r.HOME_TEAM_ID = ht.TEAM_ID)" +
+                              " right join RMX_MORATO_DEV.TEAMS vt on (r.VISITOR_TEAM_ID = vt.TEAM_ID)";
 
             SqlRightJoinShouldBeCore(sqlJoin);
         }
@@ -105,9 +105,9 @@ namespace Kyklos.Kernel.Data.Oracle.Test.NetFramework
         [Fact]
         public void SqlFullOuterJoinShouldBe()
         {
-            string sqlJoin = "SCMX_INDUSTRIES_DEV.RESULTS r full outer join SCMX_INDUSTRIES_DEV.DAYS d on (r.DAY_ID = d.DAY_ID)" +
-                              " full outer join SCMX_INDUSTRIES_DEV.TEAMS ht on (r.HOME_TEAM_ID = ht.TEAM_ID)" +
-                              " full outer join SCMX_INDUSTRIES_DEV.TEAMS vt on (r.VISITOR_TEAM_ID = vt.TEAM_ID)";
+            string sqlJoin = "RMX_MORATO_DEV.RESULTS r full outer join RMX_MORATO_DEV.DAYS d on (r.DAY_ID = d.DAY_ID)" +
+                              " full outer join RMX_MORATO_DEV.TEAMS ht on (r.HOME_TEAM_ID = ht.TEAM_ID)" +
+                              " full outer join RMX_MORATO_DEV.TEAMS vt on (r.VISITOR_TEAM_ID = vt.TEAM_ID)";
 
             SqlFullOuterJoinShouldBeCore(sqlJoin);
         }
@@ -116,9 +116,9 @@ namespace Kyklos.Kernel.Data.Oracle.Test.NetFramework
         [Fact]
         public void SqlInnerJoinWithEscapeShouldBe()
         {
-            string sqlJoin = @"""SCMX_INDUSTRIES_DEV"".""RESULTS"" r inner join ""SCMX_INDUSTRIES_DEV"".""DAYS"" d on (r.""DAY_ID"" = d.""DAY_ID"")" +
-                              @" inner join ""SCMX_INDUSTRIES_DEV"".""TEAMS"" ht on (r.""HOME_TEAM_ID"" = ht.""TEAM_ID"")" +
-                              @" inner join ""SCMX_INDUSTRIES_DEV"".""TEAMS"" vt on (r.""VISITOR_TEAM_ID"" = vt.""TEAM_ID"")";
+            string sqlJoin = @"""RMX_MORATO_DEV"".""RESULTS"" r inner join ""RMX_MORATO_DEV"".""DAYS"" d on (r.""DAY_ID"" = d.""DAY_ID"")" +
+                              @" inner join ""RMX_MORATO_DEV"".""TEAMS"" ht on (r.""HOME_TEAM_ID"" = ht.""TEAM_ID"")" +
+                              @" inner join ""RMX_MORATO_DEV"".""TEAMS"" vt on (r.""VISITOR_TEAM_ID"" = vt.""TEAM_ID"")";
 
             SqlInnerJoinShouldBeCore(sqlJoin, false);
         }
@@ -127,9 +127,9 @@ namespace Kyklos.Kernel.Data.Oracle.Test.NetFramework
         [Fact]
         public void SqlLeftJoinWithEscapeShouldBe()
         {
-            string sqlJoin = @"""SCMX_INDUSTRIES_DEV"".""RESULTS"" r left join ""SCMX_INDUSTRIES_DEV"".""DAYS"" d on (r.""DAY_ID"" = d.""DAY_ID"")" +
-                              @" left join ""SCMX_INDUSTRIES_DEV"".""TEAMS"" ht on (r.""HOME_TEAM_ID"" = ht.""TEAM_ID"")" +
-                              @" left join ""SCMX_INDUSTRIES_DEV"".""TEAMS"" vt on (r.""VISITOR_TEAM_ID"" = vt.""TEAM_ID"")";
+            string sqlJoin = @"""RMX_MORATO_DEV"".""RESULTS"" r left join ""RMX_MORATO_DEV"".""DAYS"" d on (r.""DAY_ID"" = d.""DAY_ID"")" +
+                              @" left join ""RMX_MORATO_DEV"".""TEAMS"" ht on (r.""HOME_TEAM_ID"" = ht.""TEAM_ID"")" +
+                              @" left join ""RMX_MORATO_DEV"".""TEAMS"" vt on (r.""VISITOR_TEAM_ID"" = vt.""TEAM_ID"")";
 
             SqlLeftJoinShouldBeCore(sqlJoin, false);
         }
@@ -138,9 +138,9 @@ namespace Kyklos.Kernel.Data.Oracle.Test.NetFramework
         [Fact]
         public void SqlRightJoinWithEscapeShouldBeCore()
         {
-            string sqlJoin = @"""SCMX_INDUSTRIES_DEV"".""RESULTS"" r right join ""SCMX_INDUSTRIES_DEV"".""DAYS"" d on (r.""DAY_ID"" = d.""DAY_ID"")" +
-                              @" right join ""SCMX_INDUSTRIES_DEV"".""TEAMS"" ht on (r.""HOME_TEAM_ID"" = ht.""TEAM_ID"")" +
-                              @" right join ""SCMX_INDUSTRIES_DEV"".""TEAMS"" vt on (r.""VISITOR_TEAM_ID"" = vt.""TEAM_ID"")";
+            string sqlJoin = @"""RMX_MORATO_DEV"".""RESULTS"" r right join ""RMX_MORATO_DEV"".""DAYS"" d on (r.""DAY_ID"" = d.""DAY_ID"")" +
+                              @" right join ""RMX_MORATO_DEV"".""TEAMS"" ht on (r.""HOME_TEAM_ID"" = ht.""TEAM_ID"")" +
+                              @" right join ""RMX_MORATO_DEV"".""TEAMS"" vt on (r.""VISITOR_TEAM_ID"" = vt.""TEAM_ID"")";
 
             SqlRightJoinShouldBeCore(sqlJoin, false);
         }
@@ -149,9 +149,9 @@ namespace Kyklos.Kernel.Data.Oracle.Test.NetFramework
         [Fact]
         public void SqlFullOuterJoinWithEscapeShouldBeCore()
         {
-            string sqlJoin = @"""SCMX_INDUSTRIES_DEV"".""RESULTS"" r full outer join ""SCMX_INDUSTRIES_DEV"".""DAYS"" d on (r.""DAY_ID"" = d.""DAY_ID"")" +
-                              @" full outer join ""SCMX_INDUSTRIES_DEV"".""TEAMS"" ht on (r.""HOME_TEAM_ID"" = ht.""TEAM_ID"")" +
-                              @" full outer join ""SCMX_INDUSTRIES_DEV"".""TEAMS"" vt on (r.""VISITOR_TEAM_ID"" = vt.""TEAM_ID"")";
+            string sqlJoin = @"""RMX_MORATO_DEV"".""RESULTS"" r full outer join ""RMX_MORATO_DEV"".""DAYS"" d on (r.""DAY_ID"" = d.""DAY_ID"")" +
+                              @" full outer join ""RMX_MORATO_DEV"".""TEAMS"" ht on (r.""HOME_TEAM_ID"" = ht.""TEAM_ID"")" +
+                              @" full outer join ""RMX_MORATO_DEV"".""TEAMS"" vt on (r.""VISITOR_TEAM_ID"" = vt.""TEAM_ID"")";
 
             SqlFullOuterJoinShouldBeCore(sqlJoin, false);
         }
@@ -197,7 +197,7 @@ namespace Kyklos.Kernel.Data.Oracle.Test.NetFramework
         [Fact]
         public void GetScriptForCreateTableShouldBe()
         {
-            string sql = @"create table ""SCMX_INDUSTRIES_DEV"".""TEAMS"" (""TEAM_ID"" nvarchar2(50) not null, ""NAME"" nvarchar2(200) not null, ""CITY"" nvarchar2(150) not null, ""PRESIDENT"" nvarchar2(120) not null, constraint TEAMS_pk primary key (""TEAM_ID""))";
+            string sql = @"create table ""RMX_MORATO_DEV"".""TEAMS"" (""TEAM_ID"" nvarchar2(50) not null, ""NAME"" nvarchar2(200) not null, ""CITY"" nvarchar2(150) not null, ""PRESIDENT"" nvarchar2(120) not null, constraint TEAMS_pk primary key (""TEAM_ID""))";
 
             GetScriptForCreateTableShouldBeCore(sql, false, typeof(Team));
         }
@@ -206,7 +206,7 @@ namespace Kyklos.Kernel.Data.Oracle.Test.NetFramework
         [Fact]
         public void GetScriptForDropTableShouldBe()
         {
-            string sql = @"drop table ""SCMX_INDUSTRIES_DEV"".""RESULTS""";
+            string sql = @"drop table ""RMX_MORATO_DEV"".""RESULTS""";
 
             GetScriptForDropTableShouldBeCore(sql, "RESULTS");
         }
@@ -217,9 +217,9 @@ namespace Kyklos.Kernel.Data.Oracle.Test.NetFramework
         {
             string[] sql = new string[]
             {
-                @"alter table ""SCMX_INDUSTRIES_DEV"".""RESULTS"" add (constraint ""HOME_TEAM_REF"" foreign key (""HOME_TEAM_ID"") references ""SCMX_INDUSTRIES_DEV"".""TEAMS""(""TEAM_ID""))",
-                @"alter table ""SCMX_INDUSTRIES_DEV"".""RESULTS"" add (constraint ""VIS_TEAM_REF"" foreign key (""VISITOR_TEAM_ID"") references ""SCMX_INDUSTRIES_DEV"".""TEAMS""(""TEAM_ID""))",
-                @"alter table ""SCMX_INDUSTRIES_DEV"".""RESULTS"" add (constraint ""DAY_REF"" foreign key (""DAY_ID"") references ""SCMX_INDUSTRIES_DEV"".""DAYS""(""DAY_ID""))"
+                @"alter table ""RMX_MORATO_DEV"".""RESULTS"" add (constraint ""HOME_TEAM_REF"" foreign key (""HOME_TEAM_ID"") references ""RMX_MORATO_DEV"".""TEAMS""(""TEAM_ID""))",
+                @"alter table ""RMX_MORATO_DEV"".""RESULTS"" add (constraint ""VIS_TEAM_REF"" foreign key (""VISITOR_TEAM_ID"") references ""RMX_MORATO_DEV"".""TEAMS""(""TEAM_ID""))",
+                @"alter table ""RMX_MORATO_DEV"".""RESULTS"" add (constraint ""DAY_REF"" foreign key (""DAY_ID"") references ""RMX_MORATO_DEV"".""DAYS""(""DAY_ID""))"
             };
 
             GetScriptsForForeignKeyShouldBeCore(sql, typeof(Result));
@@ -231,19 +231,19 @@ namespace Kyklos.Kernel.Data.Oracle.Test.NetFramework
         {
             string[] sql = new string[]
             {
-                @"create unique index UNIQUE_DAY on ""SCMX_INDUSTRIES_DEV"".""DAYS"" (""DAY_NUMBER"")"
+                @"create unique index UNIQUE_DAY on ""RMX_MORATO_DEV"".""DAYS"" (""DAY_NUMBER"")"
             };
 
             GetScriptForUniqueConstraintShouldBeCore(sql, typeof(Day));
         }
-
+        
 
         [Fact]
         public void GetScriptForCreateNonUniqueIndexShouldBe()
         {
             string[] sql = new string[]
             {
-                @"create index TEAM_INDEX on ""SCMX_INDUSTRIES_DEV"".""TEAMS"" (""NAME"", ""CITY"")"
+                @"create index TEAM_INDEX on ""RMX_MORATO_DEV"".""TEAMS"" (""NAME"", ""CITY"")"
             };
 
             GetScriptForCreateNonUniqueIndexShouldBeCore(sql, typeof(Team));
@@ -326,8 +326,8 @@ namespace Kyklos.Kernel.Data.Oracle.Test.NetFramework
                             .Field<Day>("d", x => x.DayDate.ToString(dateFormat))
                         .From()
                             .Table<Day>("d")
-                        .OrderBy()
-                            .Field<Day>("d", x => x.DayDate);
+                        .OrderBy<Day>("d",x => x.DayDate);
+                            //.Field<Day>("d", x => x.DayDate);
 
             var actualDatesString = (await Dao.GetItemsAsync<string>(queryBuilder).ConfigureAwait(false)).ToArray();
             Assert.Equal(expectedDatesStrings, actualDatesString);
@@ -388,7 +388,7 @@ namespace Kyklos.Kernel.Data.Oracle.Test.NetFramework
         [Fact]
         public async Task CountAllResultsShouldBe6()
         {
-            await CountAllResultsShouldBeN(6).ConfigureAwait(false);
+            await CountAllResultsShouldBeN(6,Dao).ConfigureAwait(false);
         }
 
         [Fact]

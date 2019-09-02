@@ -35,17 +35,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FluentAssertions, Version=5.7.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentAssertions.5.7.0\lib\net45\FluentAssertions.dll</HintPath>
+    <Reference Include="FluentAssertions, Version=5.8.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentAssertions.5.8.0\lib\net45\FluentAssertions.dll</HintPath>
     </Reference>
-    <Reference Include="Kyklos.Kernel.Core, Version=1.0.6.0, Culture=neutral, PublicKeyToken=d9048bcda31d21ae, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Core.1.0.6\lib\netstandard2.0\Kyklos.Kernel.Core.dll</HintPath>
+    <Reference Include="Kyklos.Kernel.Core, Version=1.0.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Kyklos.Kernel.Core.1.0.9\lib\netstandard2.0\Kyklos.Kernel.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Kyklos.Kernel.Graphics, Version=1.0.6.0, Culture=neutral, PublicKeyToken=d9048bcda31d21ae, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Graphics.1.0.6\lib\netstandard2.0\Kyklos.Kernel.Graphics.dll</HintPath>
+    <Reference Include="Kyklos.Kernel.Graphics, Version=1.0.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Kyklos.Kernel.Graphics.1.0.9\lib\netstandard2.0\Kyklos.Kernel.Graphics.dll</HintPath>
     </Reference>
-    <Reference Include="Magick.NET-Q16-AnyCPU, Version=7.14.0.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=MSIL">
-      <HintPath>..\packages\Magick.NET-Q16-AnyCPU.7.14.0\lib\net40\Magick.NET-Q16-AnyCPU.dll</HintPath>
+    <Reference Include="Magick.NET-Q16-AnyCPU, Version=7.14.3.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=MSIL">
+      <HintPath>..\packages\Magick.NET-Q16-AnyCPU.7.14.3\lib\net40\Magick.NET-Q16-AnyCPU.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />

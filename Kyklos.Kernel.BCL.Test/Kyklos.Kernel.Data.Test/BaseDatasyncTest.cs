@@ -213,29 +213,29 @@ namespace Kyklos.Kernel.Data.Test
 
         public async Task CountAllResultsShouldBe6Core()
         {
-            await CountAllResultsShouldBeN(6).ConfigureAwait(false);
+            await CountAllResultsShouldBeN(6,Dao).ConfigureAwait(false);
         }
 
-        protected async Task CountAllResultsShouldBeN(int n)
+        protected async Task CountAllResultsShouldBeN(int n, IAsyncDao tDao)
         {
             var queryBuilder =
-                Dao
+                tDao
                 .NewQueryBuilder()
                 .Select()
                 .Count<Result>("r", x => x.ResultId)
                 .From()
                 .Table<Result>("r");
 
-            var actualValue = await Dao.ExecuteScalarAsync<int>(queryBuilder).ConfigureAwait(false);
+            var actualValue = await tDao.ExecuteScalarAsync<int>(queryBuilder).ConfigureAwait(false);
             Assert.Equal(n, actualValue);
         }
 
-        protected async Task DeleteFourResults()
+        protected async Task DeleteFourResults(IAsyncDao tDao)
         {
-            await Dao.DeleteEntityAsync(new Result() { ResultId = "idRes1", HomeTeamId = "idFio", VisitorTeamId = "idJuv", GoalsHomeTeam = 1, GoalsVisitorTeam = 3, DayId = "idDay1" }).ConfigureAwait(false);
-            await Dao.DeleteEntityAsync(new Result() { ResultId = "idRes3", HomeTeamId = "idFio", VisitorTeamId = "idMil", GoalsHomeTeam = 4, GoalsVisitorTeam = 3, DayId = "idDay2" }).ConfigureAwait(false);
-            await Dao.DeleteEntityAsync(new Result() { ResultId = "idRes5", HomeTeamId = "idFio", VisitorTeamId = "idInt", GoalsHomeTeam = 0, GoalsVisitorTeam = 2, DayId = "idDay3" }).ConfigureAwait(false);
-            await Dao.DeleteEntityAsync(new Result() { ResultId = "idRes6", HomeTeamId = "idJuv", VisitorTeamId = "idMil", GoalsHomeTeam = 4, GoalsVisitorTeam = 1, DayId = "idDay3" }).ConfigureAwait(false);
+            await tDao.DeleteEntityAsync(new Result() { ResultId = "idRes1", HomeTeamId = "idFio", VisitorTeamId = "idJuv", GoalsHomeTeam = 1, GoalsVisitorTeam = 3, DayId = "idDay1" }).ConfigureAwait(false);
+            await tDao.DeleteEntityAsync(new Result() { ResultId = "idRes3", HomeTeamId = "idFio", VisitorTeamId = "idMil", GoalsHomeTeam = 4, GoalsVisitorTeam = 3, DayId = "idDay2" }).ConfigureAwait(false);
+            await tDao.DeleteEntityAsync(new Result() { ResultId = "idRes5", HomeTeamId = "idFio", VisitorTeamId = "idInt", GoalsHomeTeam = 0, GoalsVisitorTeam = 2, DayId = "idDay3" }).ConfigureAwait(false);
+            await tDao.DeleteEntityAsync(new Result() { ResultId = "idRes6", HomeTeamId = "idJuv", VisitorTeamId = "idMil", GoalsHomeTeam = 4, GoalsVisitorTeam = 1, DayId = "idDay3" }).ConfigureAwait(false);
         }
 
         protected async Task SumOfGoalsHomeTeamShouldBeN(int expectedSum)
@@ -582,8 +582,7 @@ namespace Kyklos.Kernel.Data.Test
                             .Field<Day>("d", x => x.DayDate.ToString(dateFormat))
                         .From()
                             .Table<Day>("d")
-                        .OrderBy()
-                            .Field<Day>("d", x => x.DayDate);
+                        .OrderBy<Day>("d", x => x.DayDate);
 
             var actualDatesString = (await Dao.GetItemsAsync<string>(queryBuilder).ConfigureAwait(false)).ToArray();
             Assert.Equal(expectedDatesStrings, actualDatesString);
@@ -732,7 +731,10 @@ namespace Kyklos.Kernel.Data.Test
                 await Dao.ExecuteNonQueryAsync(dropSequenceScript).ConfigureAwait(false);
                 await Dao.ExecuteNonQueryAsync(createSequenceScript).ConfigureAwait(false);
             }
-            catch (Exception) { }
+            catch (Exception e)
+            {
+                await Dao.ExecuteNonQueryAsync(createSequenceScript).ConfigureAwait(false);
+            }
         }
 
 
@@ -786,8 +788,8 @@ namespace Kyklos.Kernel.Data.Test
                 .Table<Result>("R")
                 .TablesJoin<Result, Team>
                 (
-                    "R", 
-                    InnerJoin<Team>.WithAlias("T"), 
+                    "R",
+                    InnerJoin<Team>.WithAlias("T"),
                     (R, T) => R.VisitorTeamId == T.TeamId
                 )
                 .Where<Result>("R", x => x.GoalsVisitorTeam > 2);
@@ -945,26 +947,51 @@ namespace Kyklos.Kernel.Data.Test
 
         protected async Task CountAllResultsAfterFourAreDeletedShouldBe1Core()
         {
-            await DeleteFourResults();
-            await CountAllResultsShouldBeN(1);
+            await Dao
+            .DoInTransactionAsync
+            (
+                async tDao =>
+                {
+                    await DeleteFourResults(tDao);
+                    await CountAllResultsShouldBeN(2,tDao);
+                    throw new Exception();
+                }
+            )
+            .ConfigureAwait(false);
+
         }
 
         protected async Task UpdateGoalsHomeTeamShouldBe3Core()
         {
             int n = 3;
-            var updateTableBuilder =
-                Dao
-                .NewUpdateTableBuilder<Result>()
-                //.Set(x => x.GoalsVisitorTeam, x => x.GoalsVisitorTeam + 1)
-                .Set(x => x.GoalsHomeTeam, () => n)
-                .Where(x => x.ResultId == "idRes2");
+            await Dao
+            .DoInTransactionAsync
+            (
+                async tDao =>
+                {
+                    var updateTableBuilder =
+                        tDao
+                        .NewUpdateTableBuilder<Result>()
+                        //.Set(x => x.GoalsVisitorTeam, x => x.GoalsVisitorTeam + 1)
+                        .Set(x => x.GoalsHomeTeam, () => n)
+                        .Where(x => x.ResultId == "idRes2");
 
-            var sql = updateTableBuilder.BuildSqlTextWithParameters();
-            
+                    var sql = updateTableBuilder.BuildSqlTextWithParameters();
+                    int affected = await tDao.UpdateTableAsync(updateTableBuilder).ConfigureAwait(false);
 
-            await Dao.UpdateTableAsync(updateTableBuilder).ConfigureAwait(false);
-            var actualValue = await Dao.GetItemByExampleAsync<Result>(x => x.ResultId == "idRes2").ConfigureAwait(false);
-            Assert.Equal(n, actualValue.GoalsHomeTeam);
+                    var actualValue = await 
+                    tDao.GetItemByExampleAsync<Result>(x => x.ResultId == "idRes2").ConfigureAwait(false);
+
+                    Assert.Equal(n, actualValue.GoalsHomeTeam);
+                    throw new Exception();
+                },
+                exc =>
+                {
+                    return Task.CompletedTask;
+                }
+            ).ConfigureAwait(false);
+
+
         }
 
 
@@ -981,11 +1008,20 @@ namespace Kyklos.Kernel.Data.Test
                 }
                 .OrderBy(x => x.TeamId)
                 .ToArray();
+            await Dao.DoInTransactionAsync
+            (
+                async tDao =>
+                {
+                    await Dao.UpsertEntitiesAsync(expectedValues).ConfigureAwait(false);
+                    var actualValues = (await Dao.GetAllItemsArrayAsync<Team>().ConfigureAwait(false)).OrderBy(x => x.TeamId).ToArray();
+                    Assert.Equal(expectedValues, actualValues);
+                    throw new Exception();
+                }
+            ).ConfigureAwait(false);
 
-            await Dao.UpsertEntitiesAsync(expectedValues).ConfigureAwait(false);
 
-            var actualValues = (await Dao.GetAllItemsArrayAsync<Team>().ConfigureAwait(false)).OrderBy(x => x.TeamId).ToArray();
-            Assert.Equal(expectedValues, actualValues);
+
+
         }
 
 
@@ -1679,15 +1715,22 @@ namespace Kyklos.Kernel.Data.Test
         protected async Task DeleteResultByIdShouldBeIdRes4Core()
         {
             string idResult = "idRes4";
-            var expectedTeams =
-                InitialResults
-                .Where(x => x.ResultId != idResult)
-                .OrderBy(x => x.ResultId)
-                .ToArray();
+            await Dao.DoInTransactionAsync
+            (
+               async tDao =>
+               {
+                    var expectedTeams =
+                    InitialResults
+                    .Where(x => x.ResultId != idResult)
+                    .OrderBy(x => x.ResultId)
+                    .ToArray();
+                    await Dao.DeleteByConditionAsync<Result>(x => x.ResultId == idResult).ConfigureAwait(false);
+                    var actualTeams = (await tDao.GetAllItemsArrayAsync<Result>().ConfigureAwait(false)).OrderBy(x => x.ResultId).ToArray();
+                    Assert.Equal(expectedTeams, actualTeams);
+                    throw new Exception();
+                }
+            ).ConfigureAwait(false);
 
-            await Dao.DeleteByConditionAsync<Result>(x => x.ResultId == idResult).ConfigureAwait(false);
-            var actualTeams = (await Dao.GetAllItemsArrayAsync<Result>().ConfigureAwait(false)).OrderBy(x => x.ResultId).ToArray();
-            Assert.Equal(expectedTeams, actualTeams);
         }
 
 
@@ -1761,11 +1804,20 @@ namespace Kyklos.Kernel.Data.Test
         protected async Task InsertAndDeleteAResultInTransactionShouldBeIdRes7Core()
         {
             string newResId = "idRes7";
-            Result newResult = new Result() { ResultId = newResId, HomeTeamId = "idMil", VisitorTeamId = "idInt", GoalsHomeTeam = 1, GoalsVisitorTeam = 3, DayId = "idDay1" };
+            Result newResult =
+                new Result()
+                {
+                    ResultId = newResId,
+                    HomeTeamId = "idMil",
+                    VisitorTeamId = "idInt",
+                    GoalsHomeTeam = 1,
+                    GoalsVisitorTeam = 3,
+                    DayId = "idDay1"
+                };
 
             var expectedDays =
                 InitialResults
-                .Where(x => x.ResultId != "idRes2" && x.ResultId != "idRes4")
+                .Where(x => x.ResultId != "idRes2") // && x.ResultId != "idRes4")
                 .Concat(newResult.AsArray())
                 .OrderBy(x => x.ResultId)
                 .ToArray();
@@ -1788,19 +1840,28 @@ namespace Kyklos.Kernel.Data.Test
                     {
                         await tDao.InsertEntityAsync(newResult).ConfigureAwait(false);
                         await tDao.DeleteByConditionAsync<Result>(x => x.ResultId == "idRes2");
+                        var actualDays =
+                                            tDao
+                                            .GetAllItems<Result>()
+                                            .OrderBy(x => x.ResultId)
+                                            .ToArray();
+
+                        Assert.Equal(expectedDays, actualDays);
+                        throw new Exception();
                     }
                 )
                 .ConfigureAwait(false);
+            Assert.Equal(InitialResults, Dao.GetAllItems<Result>().OrderBy(x => x.ResultId).ToArray());
 
-            var actualDays = (await Dao.GetAllItemsArrayAsync<Result>().ConfigureAwait(false)).OrderBy(x => x.ResultId).ToArray();
 
-            Assert.Equal(expectedDays, actualDays);
+
         }
 
 
         protected async Task InsertDuplicateDayKeyInTransactionWithCorrectionShouldBeIdDay1Core()
         {
-            Day newDay = new Day() { DayId = "idDay1", DayDate = new DateTime(2018, 09, 19), DayNumber = 4 };
+            Day excDay = new Day() { DayId = "idDay1", DayDate = new DateTime(2018, 09, 19), DayNumber = 4 };
+            Day newDay = new Day() { DayId = "idDay4", DayDate = new DateTime(2018, 09, 19), DayNumber = 4 };
 
             await
                 Dao
@@ -1809,38 +1870,41 @@ namespace Kyklos.Kernel.Data.Test
                     async tDao =>
                     {
                         await tDao.InsertEntityAsync(newDay).ConfigureAwait(false);
-                    },
-                    async (ex) =>
-                    {
-                        await ReplaceDuplicateKey(Dao, newDay, "idDay4").ConfigureAwait(false);
+                        bool newDayExist = await tDao.EntityExistsAsync(newDay); 
+                        Assert.True(newDayExist);
+                        await tDao.InsertEntityAsync(excDay).ConfigureAwait(false);
                     }
+
+                        //await ReplaceDuplicateKey(Dao, newDay, "idDay4").ConfigureAwait(false);
+                        //var actualDays = (
+                        //                     await Dao
+                        //                     .GetAllItemsArrayAsync<Day>()
+                        //                     .ConfigureAwait(false)
+                        //                  )
+                        //                 .OrderBy(x => x.DayId)
+                        //                 .ToArray();
+
+                        //Day[] expectedDays = expectedDays = new Day[]
+                        //{
+                        //    new Day() { DayId = "idDay1", DayDate = new DateTime(2018, 09, 16), DayNumber = 1 },
+                        //    new Day() { DayId = "idDay2", DayDate = new DateTime(2018, 09, 17), DayNumber = 2 },
+                        //    new Day() { DayId = "idDay3", DayDate = new DateTime(2018, 09, 18), DayNumber = 3 },
+                        //}
+                        //.OrderBy(x => x.DayId).ToArray();
+                       //Assert.Equal(expectedDays, actualDays);
+                    
                 )
                 .ConfigureAwait(false);
-
-            var actualDays = (await
-                    Dao
-                    .GetAllItemsArrayAsync<Day>()
-                    .ConfigureAwait(false)
-                )
-                .OrderBy(x => x.DayId)
-                .ToArray();
-
-            Day[] expectedDays = expectedDays = new Day[]
-            {
-                new Day() { DayId = "idDay1", DayDate = new DateTime(2018, 09, 16), DayNumber = 1 },
-                new Day() { DayId = "idDay2", DayDate = new DateTime(2018, 09, 17), DayNumber = 2 },
-                new Day() { DayId = "idDay3", DayDate = new DateTime(2018, 09, 18), DayNumber = 3 },
-                newDay
-            }.OrderBy(x => x.DayId).ToArray();
-
-            Assert.Equal(expectedDays, actualDays);
+            bool newDayDontExist = await Dao.EntityExistsAsync(newDay);
+            Assert.False(newDayDontExist);
         }
 
 
         protected async Task InsertTwoDaysInTwoTransactionsShouldBeIdDay4IdDay1Core()
         {
-            //Day day6 = new Day() { DayId = "idDay6", DayDate = new DateTime(2019, 2, 21), DayNumber = 6 };
-            Day day5 = new Day() { DayId = "idDay1", DayDate = new DateTime(2018, 09, 20), DayNumber = 5 };
+            Day newDay = new Day() { DayId = "idDay4", DayDate = new DateTime(2019, 2, 21), DayNumber = 4 };
+            Day excDay = new Day() { DayId = "idDay1", DayDate = new DateTime(2018, 09, 19), DayNumber = 4 };
+            //Day day5 = new Day() { DayId = "idDay1", DayDate = new DateTime(2018, 09, 20), DayNumber = 5 };
 
             await
                 Dao
@@ -1854,30 +1918,66 @@ namespace Kyklos.Kernel.Data.Test
                             .DoInTransactionAsync
                             (
                                 async ttDao =>
-                                    await ttDao.InsertEntityAsync(day5).ConfigureAwait(false),
+                                {
+                                    await ttDao.InsertEntityAsync(newDay).ConfigureAwait(false);
+                                    bool newDayExist = await ttDao.EntityExistsAsync(newDay);
+                                    Assert.True(newDayExist);
+                                },
                                 async ex =>
-                                    await ReplaceDuplicateKey(tDao, day5, "idDay5").ConfigureAwait(false)
+                                {
+                                    //await ReplaceDuplicateKey(tDao, newDay, "idDay4").ConfigureAwait(false);
+                                    bool newDayExist = await tDao.EntityExistsAsync(newDay);
+                                    Assert.False(newDayExist);
+                                }    
+                                
                             );
+                        //var actualDays = (
+                        //await tDao.GetAllItemsArrayAsync<Day>()
+                        //.ConfigureAwait(false)
+                        //)
+                        //.OrderBy(x => x.DayId)
+                        //.ToArray();
+
+                        //Day[] expectedDays =
+                        //    InitialDays
+                        //    .Concat
+                        //    (
+                        //        new Day[]
+                        //        {
+                        //            //new Day() { DayId = "idDay4", DayDate = new DateTime(2018,9,19), DayNumber = 4 },
+                        //            new Day() {
+                        //                        DayId = "idDay4",
+                        //                        DayDate = newDay.DayDate,
+                        //                        DayNumber = newDay.DayNumber
+                        //                       }
+                        //        }
+                        //    )
+                        //    .OrderBy(x => x.DayId)
+                        //    .ToArray();
+
+                        //Assert.Equal(expectedDays, actualDays);
+                        //throw new Exception();
                     }
+
                 )
                 .ConfigureAwait(false);
 
-            var actualDays = (await Dao.GetAllItemsArrayAsync<Day>().ConfigureAwait(false)).OrderBy(x => x.DayId).ToArray();
+            //var actualDays = (await Dao.GetAllItemsArrayAsync<Day>().ConfigureAwait(false)).OrderBy(x => x.DayId).ToArray();
 
-            Day[] expectedDays =
-                InitialDays
-                .Concat
-                (
-                    new Day[]
-                    {
-                        new Day() { DayId = "idDay4", DayDate = new DateTime(2018,9,19), DayNumber = 4 },
-                        new Day() { DayId = "idDay5", DayDate = day5.DayDate, DayNumber = day5.DayNumber }
-                    }
-                )
-                .OrderBy(x => x.DayId)
-                .ToArray();
+            //Day[] expectedDays =
+            //    InitialDays
+            //    .Concat
+            //    (
+            //        new Day[]
+            //        {
+            //            //new Day() { DayId = "idDay4", DayDate = new DateTime(2018,9,19), DayNumber = 4 },
+            //            new Day() { DayId = "idDay4", DayDate = day4.DayDate, DayNumber = day4.DayNumber }
+            //        }
+            //    )
+            //    .OrderBy(x => x.DayId)
+            //    .ToArray();
 
-            Assert.Equal(expectedDays, actualDays);
+            //Assert.Equal(expectedDays, actualDays);
         }
 
 

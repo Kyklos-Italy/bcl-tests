@@ -196,13 +196,7 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetCore
         }
 
 
-        [Fact]
-        public async Task FillDayDataTableShouldBe()
-        {
-            string sql = @"SELECT d.* FROM ""DAYS"" d";
-
-            await FillDayDataTableShouldBeCore(sql);
-        }
+        //FillDayDataTableShouldBe()
 
 
         [Fact]
@@ -357,7 +351,7 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetCore
         [Fact]
         public async Task CountAllResultsShouldBe6()
         {
-            await CountAllResultsShouldBeN(6).ConfigureAwait(false);
+            await CountAllResultsShouldBeN(6,Dao).ConfigureAwait(false);
         }
 
         [Fact]
@@ -396,23 +390,11 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetCore
             await SelectTeamsNameLikeShouldBe3TeamsCore().ConfigureAwait(false);
         }
 
-        [Fact]
-        public Task CountAllResultsAfterFourAreDeletedShouldBe2()
-        {
-            return CountAllResultsAfterFourAreDeletedShouldBe1Core();
-        }
+        //CountAllResultsAfterFourAreDeletedShouldBe2()
 
-        [Fact]
-        public async Task UpdateGoalsHomeTeamShouldBe3()
-        {
-            await UpdateGoalsHomeTeamShouldBe3Core().ConfigureAwait(false);
-        }
+        //UpdateGoalsHomeTeamShouldBe3()
 
-        [Fact]
-        public async Task UpsertTeamsShouldBe5Teams()
-        {
-            await UpsertTeamsShouldBe5TeamsCore().ConfigureAwait(false);
-        }
+        //UpsertTeamsShouldBe5Teams()
 
         [Fact]
         public async Task SelectWithFastInConditionShouldGet2Teams()
@@ -552,11 +534,7 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetCore
             await SelectTeamFromConcatConditionShouldBeIdJuvCore().ConfigureAwait(false);
         }
 
-        [Fact]
-        public async Task DeleteResultByIdShouldBeIdRes4()
-        {
-            await DeleteResultByIdShouldBeIdRes4Core().ConfigureAwait(false);
-        }
+        //DeleteResultByIdShouldBeIdRes4()
 
         [Fact]
         public async Task CheckIfADayExistsShouldBeIdDay1()
@@ -582,23 +560,13 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetCore
             await GetTeamTableMetadataShouldBeFourCore().ConfigureAwait(false);
         }
 
-        [Fact]
-        public async Task InsertAndDeleteAResultInTransactionShouldBeIdRes7()
-        {
-            await InsertAndDeleteAResultInTransactionShouldBeIdRes7Core().ConfigureAwait(false);
-        }
+        //InsertAndDeleteAResultInTransactionShouldBeIdRes7()
 
-        [Fact]
-        public async Task InsertDuplicateDayKeyInTransactionWithCorrectionShouldBeIdDay1()
-        {
-            await InsertDuplicateDayKeyInTransactionWithCorrectionShouldBeIdDay1Core().ConfigureAwait(false);
-        }
+        //InsertDuplicateDayKeyInTransactionWithCorrectionShouldBeIdDay1()
 
-        [Fact]
-        public async Task InsertTwoDaysInTwoTransactionsShouldBeIdDay4IdDay1()
-        {
-            await InsertTwoDaysInTwoTransactionsShouldBeIdDay4IdDay1Core().ConfigureAwait(false);
-        }
+        //InsertTwoDaysInTwoTransactionsShouldBeIdDay4IdDay1()
+
+
 
         [Fact]
         public async Task GetTableColumnNamesShouldBeSixStrings()

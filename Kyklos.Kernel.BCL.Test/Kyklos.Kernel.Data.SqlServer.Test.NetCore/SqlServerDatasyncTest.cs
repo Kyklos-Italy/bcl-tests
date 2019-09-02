@@ -21,7 +21,7 @@ namespace Kyklos.Kernel.Data.SqlServer.Test.NetCore
     public class SqlServerDatsyncTest : BaseDatasyncTest
     {
         protected override string Schema => "dbo";
-        protected override string ConnectionString => @"Data Source=192.168.100.42,9433\DEV2016;Initial Catalog=DeXdemo;Persist Security Info=True;User Id=sa;Password=Sql2016$;";
+        protected override string ConnectionString => ConnectionStringsProvider.GetConnectionStringProviderList("SqlServer");
         protected override string ProviderName => "SqlServer";
 
         private void Setup()
@@ -351,7 +351,7 @@ namespace Kyklos.Kernel.Data.SqlServer.Test.NetCore
         [Fact]
         public async Task CountAllResultsShouldBe6()
         {
-            await CountAllResultsShouldBeN(6).ConfigureAwait(false);
+            await CountAllResultsShouldBeN(6,Dao).ConfigureAwait(false);
         }
 
         [Fact]
@@ -391,9 +391,9 @@ namespace Kyklos.Kernel.Data.SqlServer.Test.NetCore
         }
 
         [Fact]
-        public void CountAllResultsAfterFourAreDeletedShouldBe2()
+        public async Task CountAllResultsAfterFourAreDeletedShouldBe2()
         {
-            CountAllResultsAfterFourAreDeletedShouldBe1Core();
+            await CountAllResultsAfterFourAreDeletedShouldBe1Core();
         }
 
         [Fact]

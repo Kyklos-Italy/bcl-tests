@@ -71,7 +71,7 @@ namespace Kyklos.Kernel.Data.MariaDB.Test.NetCore
         [Fact]
         public async Task CountAllResultsShouldBe6()
         {
-            await CountAllResultsShouldBeN(6).ConfigureAwait(false);
+            await CountAllResultsShouldBeN(6,Dao).ConfigureAwait(false);
         }
 
         [Fact]

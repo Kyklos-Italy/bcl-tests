@@ -14,9 +14,9 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework
     public class PostgreSQLDatasyncTest : BaseDatasyncTest
     {
         protected override string Schema => "public";
-        protected override string ConnectionString => "PostgreSQLCS";
+        protected override string ConnectionString =>ConnectionStringsProvider.GetConnectionStringProviderList("PostgreSql");
 
-        protected override string ProviderName => throw new NotImplementedException();
+        protected override string ProviderName => "PostgreSQL";
 
         private void Setup()
         {
@@ -348,7 +348,7 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework
         [Fact]
         public async Task CountAllResultsShouldBe6()
         {
-            await CountAllResultsShouldBeN(6).ConfigureAwait(false);
+            await CountAllResultsShouldBeN(6,Dao).ConfigureAwait(false);
         }
 
         [Fact]

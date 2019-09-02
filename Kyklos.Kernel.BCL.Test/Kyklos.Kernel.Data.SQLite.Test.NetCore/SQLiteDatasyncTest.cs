@@ -10,6 +10,7 @@ using Kyklos.Kernel.Data.Entities;
 using Kyklos.Kernel.Data.Test;
 using Kyklos.Kernel.Data.Test.Entities;
 using Xunit;
+using Xunit.Sdk;
 
 namespace Kyklos.Kernel.Data.SQLite.Test.NetCore
 {
@@ -18,7 +19,7 @@ namespace Kyklos.Kernel.Data.SQLite.Test.NetCore
         protected override string Schema => null;
 
         protected override string ConnectionString => 
-            "Data Source={$ExecutionPath}..\\..\\SQLite\\KykDB.db;Version=3;FailIfMissing=false;Foreign Keys=True"
+            "Data Source={$ExecutionPath}\\..\\..\\..\\SQLite\\KykDB.db;Version=3;FailIfMissing=false;Foreign Keys=True"
             .Replace("{$ExecutionPath}", NetPlatform.BinFolder);
 
         protected override string ProviderName => "SQLite";
@@ -351,7 +352,7 @@ namespace Kyklos.Kernel.Data.SQLite.Test.NetCore
         public async Task SelectDayDatesAsStringsWithIncorrectFormatShouldBe()
         {
             await Assert
-               .ThrowsAsync<TaskCanceledException>
+               .ThrowsAsync<EqualException>
                (
                async () =>
                {
@@ -401,7 +402,7 @@ namespace Kyklos.Kernel.Data.SQLite.Test.NetCore
         [Fact]
         public async Task CountAllResultsShouldBe6()
         {
-            await CountAllResultsShouldBeN(6).ConfigureAwait(false);
+            await CountAllResultsShouldBeN(6,Dao).ConfigureAwait(false);
         }
 
         [Fact]
