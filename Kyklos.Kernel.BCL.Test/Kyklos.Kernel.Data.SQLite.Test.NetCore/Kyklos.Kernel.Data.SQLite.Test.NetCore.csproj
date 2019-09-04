@@ -23,7 +23,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="SQLite\" />
+    <None Update="SQLite\testdb.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

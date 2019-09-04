@@ -590,9 +590,9 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetCore
         }
 
         [Fact]
-        public void CheckIfPKIndexIsAlsoUniqueShouldBeResults()
+        public async Task CheckIfPKIndexIsAlsoUniqueShouldBeResults()
         {
-            CheckIfPKIndexIsAlsoUniqueShouldBeResultsCore();
+            await CheckIfPKIndexIsAlsoUniqueShouldBeResultsCore();
         }
 
         [Fact]
@@ -642,7 +642,22 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetCore
                 ReasonId = 4,
                 Hours = 3,
             };
-            await UpdateHoursByJobTimeInJOB_TIMESshouldBeInt(4, jobTimeToUpdate);
+            await UpdateHoursByJobTimeInJOB_TIMEShouldBeInt(4, jobTimeToUpdate);
+        }
+        [Fact]
+        public async Task SelectJobTimesOfTheDayByDateOfWorkAndId218ShuoldBeTwoJobTimesOfTheDay()
+        {
+            await SelectJobTimesOfTheDayByDateOfWorkAndId218ShuoldBe();
+        }
+        [Fact]
+        public async Task SumHoursOfJobTimeAggregateByMemberIdAndDateOfWorkShuoldBe6()
+        {
+            await SumHoursOfJobTimeAggregateByMemberIdAndDateOfWorkShuoldBeCore();
+        }
+        [Fact]
+        public async Task CheckJobTimeExistShuoldTrue()
+        {
+            await CheckJobTimeExistShuoldBeCore();
         }
     }
 }

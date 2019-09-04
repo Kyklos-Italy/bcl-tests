@@ -1272,7 +1272,7 @@ namespace Kyklos.Kernel.Data.Test
                         .Where(x => x.ResultId == "idRes2");
 
                     var sql = updateTableBuilder.BuildSqlTextWithParameters();
-                    int affected = await tDao.UpdateTableAsync(updateTableBuilder).ConfigureAwait(false);
+                    int affected = await tDao.UpdateTableAsync(updateTableBuilder);
 
                     var actualValue = await
                     tDao.GetItemByExampleAsync<Result>(x => x.ResultId == "idRes2").ConfigureAwait(false);
@@ -2014,29 +2014,16 @@ namespace Kyklos.Kernel.Data.Test
             (
                async tDao =>
                {
-<<<<<<< HEAD
                     var expectedTeams =
                     InitialResults
                     .Where(x => x.ResultId != idResult)
                     .OrderBy(x => x.ResultId)
                     .ToArray();
-                    await tDao.DeleteByConditionAsync<Result>(x => x.ResultId == idResult).ConfigureAwait(false);
+                    int i = await tDao.DeleteByConditionAsync<Result>(x => x.ResultId == idResult);
                     var actualTeams = (await tDao.GetAllItemsArrayAsync<Result>().ConfigureAwait(false)).OrderBy(x => x.ResultId).ToArray();
                     Assert.Equal(expectedTeams, actualTeams);
                     throw new Exception();
                 }
-=======
-                   var expectedTeams =
-                   InitialResults
-                   .Where(x => x.ResultId != idResult)
-                   .OrderBy(x => x.ResultId)
-                   .ToArray();
-                   await Dao.DeleteByConditionAsync<Result>(x => x.ResultId == idResult).ConfigureAwait(false);
-                   var actualTeams = (await tDao.GetAllItemsArrayAsync<Result>().ConfigureAwait(false)).OrderBy(x => x.ResultId).ToArray();
-                   Assert.Equal(expectedTeams, actualTeams);
-                   throw new Exception();
-               }
->>>>>>> refs/remotes/origin/master
             ).ConfigureAwait(false);
 
         }
@@ -2326,7 +2313,7 @@ namespace Kyklos.Kernel.Data.Test
         }
 
 
-        protected void CheckIfPKIndexIsAlsoUniqueShouldBeResultsCore()
+        protected async Task CheckIfPKIndexIsAlsoUniqueShouldBeResultsCore()
         {
             string table = "RESULTS";
             string schema = Schema;
@@ -2550,7 +2537,7 @@ namespace Kyklos.Kernel.Data.Test
             Member actualMember = await Dao.GetItemByExampleAsync<Member>(x => (x.MemberName == username && x.Password == password));
             Assert.Equal(expectedMember.MemberId, actualMember.MemberId);
         }
-        protected async Task UpdateHoursByJobTimeInJOB_TIMESshouldBeInt(int hours, JobTime jobTime)
+        protected async Task UpdateHoursByJobTimeInJOB_TIMEShouldBeInt(int hours, JobTime jobTime)
         {
             decimal? expectedHours = jobTime.Hours + hours;
             await Dao.DoInTransactionAsync
@@ -2566,7 +2553,7 @@ namespace Kyklos.Kernel.Data.Test
                             && x.JobId == jobTime.JobId
                             && x.DateOfWork == jobTime.DateOfWork
                          );
-                    tDao.UpdateTableAsync(updateBuilder);
+                    tDao.UpdateTableAsync(updateBuilder).ConfigureAwait(false);
                     decimal? actualHours =
                         (
                             await tDao.GetItemByExampleAsync<JobTime>
@@ -2575,7 +2562,7 @@ namespace Kyklos.Kernel.Data.Test
                                 && x.MemberId == jobTime.MemberId
                                 && x.JobId == jobTime.JobId
                                 && x.DateOfWork == jobTime.DateOfWork
-                            )
+                            ).ConfigureAwait(false)
                         ).Hours;
                     Assert.Equal(actualHours,expectedHours);
                     throw new Exception();
@@ -2584,14 +2571,44 @@ namespace Kyklos.Kernel.Data.Test
             .ConfigureAwait(false);
         }
 
-        protected async Task SelectJobTimesOfTheDayByDateOfWorkShuoldBe(long memberId, DateTime dateOfWork)
+        protected async Task SelectJobTimesOfTheDayByDateOfWorkAndId218ShuoldBe()
         {
+            JobTimesOfTheDay[] expectedJobTimesOfTheDay =
+                new JobTimesOfTheDay[]
+                {
+                    new JobTimesOfTheDay
+                    {
+                        JobId = 3,
+                        Hours = 3,
+                        Dateofwork = new DateTime(),
+                        ReasonId = 6,
+                        MemberId = 218,
+                        Job = "DTCO as Product"
+                    },
+                    new JobTimesOfTheDay
+                    {
+                        JobId = 4,
+                        Hours = 3,
+                        Dateofwork = new DateTime(),
+                        ReasonId = 7,
+                        MemberId = 218,
+                        Job = "NausSys for La MDS Yacht Ser"
+                    }
+                };
             var query = Dao
             .NewQueryBuilder()
             .Select()
-            .Field<JobTime>("JT", x => x.Hours)
+            .Field<JobTime>("JT", x => x.Hours, "hours")
             .Comma()
-            .Field<Reason>("R", x => x.ReasonDesc)
+            .Field<Job>("J", x => x.JobName, "job")
+            .Comma()
+            .Field<JobTime>("JT", x => x.DateOfWork, "dateOfWork")
+            .Comma()
+            .Field<Job>("J", x => x.JobId, "jobId")
+            .Comma()
+            .Field<Reason>("R", x => x.ReasonId, "reasonId")
+            .Comma()
+            .Field<JobTime>("JT", x => x.MemberId, "memberId")
             .From()
             .Tables
             (
@@ -2599,10 +2616,43 @@ namespace Kyklos.Kernel.Data.Test
                 InnerJoin<Reason>.WithAlias("R"), (JT, R) => JT.ReasonId == R.ReasonId,
                 InnerJoin<Job>.WithAlias("J"), (JT, R, J) => JT.JobId == J.JobId
             )
-            .Where<JobTime>("JT", JT => JT.MemberId == memberId && JT.DateOfWork == dateOfWork)
+            .Where<JobTime>("JT", JT => JT.MemberId == 218 && JT.DateOfWork == new DateTime())
             .OrderBy<JobTime>("JT", JT => JT.Hours, OrderByDirection.Descending);
             IEnumerable<JobTimesOfTheDay> result = await Dao.GetItemsAsync<JobTimesOfTheDay>(query);
+            Assert.Equal(result, expectedJobTimesOfTheDay);
         }
+
+        protected async Task SumHoursOfJobTimeAggregateByMemberIdAndDateOfWorkShuoldBeCore()
+        {
+            int expectedHours= 6;
+            var query = Dao
+            .NewQueryBuilder()
+            .Select()
+            .Sum<JobTime>("JT", x => x.Hours)
+            .From()
+            .Table<JobTime>("JT")
+            .Where<JobTime>("JT", x => x.MemberId == 218 && x.DateOfWork == new DateTime());
+            int result = await Dao.ExecuteScalarAsync<int>(query);
+            Assert.Equal(expectedHours, result);
+        }
+        protected async Task CheckJobTimeExistShuoldBeCore()
+        {
+            bool expectedBoolean = true;
+            JobTime jobTime = new JobTime
+            {
+                JobId = 1,
+                MemberId = 213,
+                DateOfWork = new DateTime(),
+                AmountTimeToInvoice = null,
+                FreeAmountTime = null,
+                TimeNote = null,
+                ReasonId = 3,
+                Hours = 3,
+            };
+            bool result= await Dao.EntityExistsAsync(jobTime);
+            Assert.Equal(result, expectedBoolean);
+        }
+
     }
 
 }

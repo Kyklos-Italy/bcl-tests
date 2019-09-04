@@ -21,7 +21,7 @@ namespace Kyklos.Kernel.Data.SQLite.Test.NetCore
         protected override string ConnectionString => 
             base
             .ConnectionString
-            .Replace("{$ExecutionPath}", NetPlatform.BinFolder);
+            .Replace("{$ExecutionPath}", NetPlatform.BinFolder+"\\..");
 
         protected override string ProviderName => "SQLite";
 
@@ -54,8 +54,7 @@ namespace Kyklos.Kernel.Data.SQLite.Test.NetCore
         private async Task GenerateScriptsForDropAndUpdateSequence()
         {
             string dropSequenceScript = "DELETE FROM test_sequence";
-            string updateSequenceScript = "UPDATE sqlite_sequence SET seq = 0 WHERE name = 'test_sequence'";
-
+            string updateSequenceScript = @"UPDATE sqlite_sequence SET seq = 0 WHERE name = 'test_sequence'";
             await PrepareSequence(updateSequenceScript, dropSequenceScript).ConfigureAwait(false);
         }
 

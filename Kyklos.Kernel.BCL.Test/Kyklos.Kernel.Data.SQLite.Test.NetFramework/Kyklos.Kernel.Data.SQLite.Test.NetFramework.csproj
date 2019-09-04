@@ -123,9 +123,6 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="SQLite\KykDB.db">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="SQLite\testdb.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

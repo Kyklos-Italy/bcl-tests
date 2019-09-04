@@ -18,7 +18,8 @@ namespace Kyklos.Kernel.Data.SQLite.Test.NetFramework
     {
         protected override string Schema => null;
 
-        protected override string ConnectionString => base.ConnectionString.Replace("{$ExecutionPath}", NetPlatform.BinFolder);
+        protected override string ConnectionString => //"Data Source=C:\\Development\\dotnet\\bcl-tests\\Kyklos.Kernel.BCL.Test\\Kyklos.Kernel.Data.SQLite.Test.Framework\\bin\\Debug\\netcoreapp2.1\\..\\..\\..\\SQLite\\testdb.db;Version=3;FailIfMissing=false;Foreign Keys = True";
+            base.ConnectionString.Replace("{$ExecutionPath}", NetPlatform.BinFolder);
 
         protected override string ProviderName => "SQLite";
 
