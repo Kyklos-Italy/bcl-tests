@@ -14,8 +14,6 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework
     public class PostgreSQLDatasyncTest : BaseDatasyncTest
     {
         protected override string Schema => "public";
-        protected override string ConnectionString =>ConnectionStringsProvider.GetConnectionStringProviderList("PostgreSql");
-
         protected override string ProviderName => "PostgreSQL";
 
         private void Setup()

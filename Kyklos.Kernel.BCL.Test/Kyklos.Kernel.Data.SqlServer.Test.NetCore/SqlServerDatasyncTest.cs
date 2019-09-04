@@ -21,7 +21,6 @@ namespace Kyklos.Kernel.Data.SqlServer.Test.NetCore
     public class SqlServerDatsyncTest : BaseDatasyncTest
     {
         protected override string Schema => "dbo";
-        protected override string ConnectionString => ConnectionStringsProvider.GetConnectionStringProviderList("SqlServer");
         protected override string ProviderName => "SqlServer";
 
         private void Setup()

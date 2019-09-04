@@ -16,8 +16,6 @@ namespace Kyklos.Kernel.Data.Oracle.Test.NetCore
     public class OracleDatasyncTest : BaseDatasyncTest
     {
         protected override string Schema => "RMX_MORATO_DEV";
-
-        protected override string ConnectionString => ConnectionStringsProvider.GetConnectionStringProviderList("Oracle");
         protected override string ProviderName => "Oracle";
 
 
