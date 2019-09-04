@@ -44,6 +44,10 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetCore
             await AddTeams().ConfigureAwait(false);
             await AddDays().ConfigureAwait(false);
             await AddResults().ConfigureAwait(false);
+            await AddMembers().ConfigureAwait(false);
+            await AddJobs().ConfigureAwait(false);
+            await AddReasons().ConfigureAwait(false);
+            await AddJobTimes().ConfigureAwait(false);
         }
 
         private async Task ReplaceDuplicateKey(IAsyncDao tDao, Day newDay, string newKey)
@@ -616,6 +620,30 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetCore
             await SelectDoubleFirstDayShouldBeDay1Core().ConfigureAwait(false);
         }
 
+        [Fact]
+        public async Task SelectMemberByIdAndPasswordShouldBe218()
+        {
+            string memberName = "LCasini";
+            string password = "202cb962ac59075b964b07152d234b70";
+            await SelectMemberByIdAndPasswordShouldBeOneMember(memberName, password);
+        }
 
+        [Fact]
+        public async Task UpdateHoursByJobTimeInJOB_TIMESshouldBe7()
+        {
+            JobTime jobTimeToUpdate = 
+            new JobTime
+            {
+                JobId = 2,
+                MemberId = 213,
+                DateOfWork = new DateTime(),
+                AmountTimeToInvoice = null,
+                FreeAmountTime = null,
+                TimeNote = null,
+                ReasonId = 4,
+                Hours = 3,
+            };
+            await UpdateHoursByJobTimeInJOB_TIMESshouldBeInt(4, jobTimeToUpdate);
+        }
     }
 }

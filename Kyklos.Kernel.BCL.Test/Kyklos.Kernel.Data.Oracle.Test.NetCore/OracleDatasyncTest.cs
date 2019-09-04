@@ -556,6 +556,8 @@ namespace Kyklos.Kernel.Data.Oracle.Test.NetCore
             await SelectTheLastTwoResultsShouldBeIdRes5IdRes6Core().ConfigureAwait(false);
         }
 
+
+
         [Fact]
         public async Task SelectResultsWithMaxSumOfGoalsShouldBeIdRes3()
         {

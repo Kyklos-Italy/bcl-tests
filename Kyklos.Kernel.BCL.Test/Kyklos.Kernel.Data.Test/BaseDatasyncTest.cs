@@ -150,6 +150,278 @@ namespace Kyklos.Kernel.Data.Test
                 new Day() { DayId = "idDay3", DayDate = new DateTime(2018, 09, 18), DayNumber = 3 }
             };
 
+        private Member[] InitialMembers =
+            new Member[]
+            {
+                new Member()
+                {
+                    MemberId = 213,
+                    MemberName = "SFiordi",
+                    MemberDescription = "Stefano Fiordi",
+                    MemberShortCode = "SFI",
+                    IsMemberActive = true,
+                    ProfileId = 2,
+                    CompanyId = 1,
+                    MemberNote = null,
+                    CanBeOwner = false,
+                    Password = "202cb962ac59075b964b07152d234b70",
+                    AnalyticCost = (decimal)19.7,
+                    ToBeTraced = true,
+                    DailyHours = 8,
+                    ReconcileValuationTypeId = 11
+                },
+                new Member()
+                {
+                    MemberId = 224,
+                    MemberName = "TCostanzo",
+                    MemberDescription = "Tommaso Costanzo",
+                    MemberShortCode = "TCO",
+                    IsMemberActive = true,
+                    ProfileId = 2,
+                    CompanyId = 1,
+                    MemberNote = null,
+                    CanBeOwner = false,
+                    Password = "5f4dcc3b5aa765d61d8327deb882cf99",
+                    AnalyticCost = (decimal)19.7,
+                    ToBeTraced = true,
+                    DailyHours = 8,
+                    ReconcileValuationTypeId = 11
+                },
+                new Member()
+                {
+                    MemberId = 218,
+                    MemberName = "LCasini",
+                    MemberDescription = "Leonardo Casini",
+                    MemberShortCode = "LCA",
+                    IsMemberActive = true,
+                    ProfileId = 2,
+                    CompanyId = 1,
+                    MemberNote = null,
+                    CanBeOwner = false,
+                    Password = "202cb962ac59075b964b07152d234b70",
+                    AnalyticCost = (decimal)19.7,
+                    ToBeTraced = true,
+                    DailyHours = 8,
+                    ReconcileValuationTypeId = 9
+                }
+            };
+
+        private Job[] InitialJobs =
+            new Job[]
+            {
+                new Job
+                {
+                    JobId = 1,
+                    JobName = "AutoReceiving",
+                    ShortDesc = "Auto Receiving suite",
+                    LongDesc = "Auto Receiving suite",
+                    IsJobActive = false,
+                    CustomerId = 2,
+                    StateId = 1,
+                    DivisionId = 1,
+                    CategoryId = 1,
+                    OwnerId = 14,
+                    ExpectedReleaseDate = new DateTime(),
+                    ConfirmedReleaseDate = new DateTime(),
+                    JobNote = "",
+                    CustomerOrderRef = "",
+                    InternalOfferCode = "028GVO2008",
+                    IdFather = null,
+                    ProductId = 20,
+                    BusinessTeamId = 11,
+                    InvCompanyId = 1,
+                    TipologyId = 1,
+                    SubTipologyId = 15,
+                    ProgressPerc = null
+                },
+                new Job
+                {
+                    JobId = 2,
+                    JobName = "DTCO for Guess",
+                    ShortDesc = "DTCO for Guess",
+                    LongDesc = "Implementation of DTCO for Guess",
+                    IsJobActive = false,
+                    CustomerId = 3,
+                    StateId = 1,
+                    DivisionId = 1,
+                    CategoryId = 1,
+                    OwnerId = 14,
+                    ExpectedReleaseDate = new DateTime(),
+                    ConfirmedReleaseDate = new DateTime(),
+                    JobNote = "",
+                    CustomerOrderRef = "",
+                    InternalOfferCode = "03FDE2008",
+                    IdFather = null,
+                    ProductId = 20,
+                    BusinessTeamId = 11,
+                    InvCompanyId = 1,
+                    TipologyId = 1,
+                    SubTipologyId = 15,
+                    ProgressPerc = null
+                },
+                new Job
+                {
+                    JobId = 3,
+                    JobName = "DTCO as Product",
+                    ShortDesc = "Develop DTCO as Kyklos Group product",
+                    LongDesc = "Develop DTCO as Kyklos Group product",
+                    IsJobActive = false,
+                    CustomerId = 8,
+                    StateId = 6,
+                    DivisionId = 1,
+                    CategoryId = 10,
+                    OwnerId = 14,
+                    ExpectedReleaseDate = new DateTime(),
+                    ConfirmedReleaseDate = new DateTime(),
+                    JobNote = "",
+                    CustomerOrderRef = "",
+                    InternalOfferCode = "",
+                    IdFather = null,
+                    ProductId = 20,
+                    BusinessTeamId = 11,
+                    InvCompanyId = 1,
+                    TipologyId = 1,
+                    SubTipologyId = 15,
+                    ProgressPerc = null
+                },
+                                new Job
+                {
+                    JobId = 4,
+                    JobName = "NausSys for La MDS Yacht Ser",
+                    ShortDesc = "NausSys for La MDS Yacht Ser",
+                    LongDesc = "NausSys for La MDS Yacht Ser",
+                    IsJobActive = false,
+                    CustomerId = 20,
+                    StateId = 1,
+                    DivisionId = 1,
+                    CategoryId = 10,
+                    OwnerId = 52,
+                    ExpectedReleaseDate = new DateTime(),
+                    ConfirmedReleaseDate = new DateTime(),
+                    JobNote = "",
+                    CustomerOrderRef = "",
+                    InternalOfferCode = "01FDE07REVDEF",
+                    IdFather = null,
+                    ProductId = 20,
+                    BusinessTeamId = 11,
+                    InvCompanyId = 1,
+                    TipologyId = 1,
+                    SubTipologyId = 15,
+                    ProgressPerc = null
+                },
+
+            };
+
+        private Reason[] InitialReasons =
+            new Reason[]
+            {
+                new Reason
+                {
+                    ReasonCode = "DEV",
+                    ReasonDesc = "Development",
+                    ReasonId = 3,
+                    ReconcileValuationTypeId = 11
+                },
+                new Reason
+                {
+                    ReasonCode = "OFF",
+                    ReasonDesc = "Offer definition",
+                    ReasonId = 4,
+                    ReconcileValuationTypeId = 9
+                },
+                new Reason
+                {
+                    ReasonCode = "PJM",
+                    ReasonDesc = "Project Management",
+                    ReasonId = 6,
+                    ReconcileValuationTypeId = 9
+                },
+                new Reason
+                {
+                    ReasonCode = "ARC",
+                    ReasonDesc = "Architecture",
+                    ReasonId = 7,
+                    ReconcileValuationTypeId = 10
+                },
+                new Reason
+                {
+                    ReasonCode = "LEA",
+                    ReasonDesc = "Learning Free",
+                    ReasonId = 8,
+                    ReconcileValuationTypeId = 9
+                },
+            };
+
+        private JobTime[] InitialJobTimes =
+            new JobTime[]
+            {
+                new JobTime
+                {
+                    JobId = 1,
+                    MemberId = 213,
+                    DateOfWork = new DateTime(),
+                    AmountTimeToInvoice = null,
+                    FreeAmountTime = null,
+                    TimeNote = null,
+                    ReasonId = 3,
+                    Hours = 3,
+                },
+                new JobTime
+                {
+                    JobId = 2,
+                    MemberId = 213,
+                    DateOfWork = new DateTime(),
+                    AmountTimeToInvoice = null,
+                    FreeAmountTime = null,
+                    TimeNote = null,
+                    ReasonId = 4,
+                    Hours = 3,
+                },
+                new JobTime
+                {
+                    JobId = 3,
+                    MemberId = 218,
+                    DateOfWork = new DateTime(),
+                    AmountTimeToInvoice = null,
+                    FreeAmountTime = null,
+                    TimeNote = null,
+                    ReasonId = 6,
+                    Hours = 3,
+                },
+                new JobTime
+                {
+                    JobId = 4,
+                    MemberId = 218,
+                    DateOfWork = new DateTime(),
+                    AmountTimeToInvoice = null,
+                    FreeAmountTime = null,
+                    TimeNote = null,
+                    ReasonId = 7,
+                    Hours = 3,
+                },
+                new JobTime
+                {
+                    JobId = 1,
+                    MemberId = 224,
+                    DateOfWork = new DateTime(),
+                    AmountTimeToInvoice = null,
+                    FreeAmountTime = null,
+                    TimeNote = null,
+                    ReasonId = 8,
+                    Hours = 3,
+                },
+                                new JobTime
+                {
+                    JobId = 4,
+                    MemberId = 224,
+                    DateOfWork = new DateTime(),
+                    AmountTimeToInvoice = null,
+                    FreeAmountTime = null,
+                    TimeNote = null,
+                    ReasonId = 3,
+                    Hours = 3,
+                },
+            };
         protected virtual IAsyncDao CreateAsyncDao(string connectionString, string providerName, string schema, bool ignoreEscape = false)
         {
             //return AsyncDaoFactory.CreateAsyncDaoFromConnectionStringName(connectionString, schema, ignoreEscape: ignoreEscape);
@@ -179,8 +451,22 @@ namespace Kyklos.Kernel.Data.Test
         {
             await Dao.WriteToServerAsync(InitialResults).ConfigureAwait(false);
         }
-
-
+        protected virtual async Task AddMembers()
+        {
+            await Dao.WriteToServerAsync(InitialMembers).ConfigureAwait(false);
+        }
+        protected virtual async Task AddReasons()
+        {
+            await Dao.WriteToServerAsync(InitialReasons).ConfigureAwait(false);
+        }
+        protected virtual async Task AddJobs()
+        {
+            await Dao.WriteToServerAsync(InitialJobs).ConfigureAwait(false);
+        }
+        protected virtual async Task AddJobTimes()
+        {
+            await Dao.WriteToServerAsync(InitialJobTimes).ConfigureAwait(false);
+        }
         protected async Task CountAllTeamsShouldBe4Core()
         {
             int n = 4;
@@ -704,6 +990,10 @@ namespace Kyklos.Kernel.Data.Test
             await Dao.DropTableAsync<Result>(ignoreError: true).ConfigureAwait(false);
             await Dao.DropTableAsync<Team>(ignoreError: true).ConfigureAwait(false);
             await Dao.DropTableAsync<Day>(ignoreError: true).ConfigureAwait(false);
+            await Dao.DropTableAsync<Member>(ignoreError: true).ConfigureAwait(false);
+            await Dao.DropTableAsync<Job>(ignoreError: true).ConfigureAwait(false);
+            await Dao.DropTableAsync<Reason>(ignoreError: true).ConfigureAwait(false);
+            await Dao.DropTableAsync<JobTime>(ignoreError: true).ConfigureAwait(false);
         }
 
         private async Task CreateTables()
@@ -717,6 +1007,10 @@ namespace Kyklos.Kernel.Data.Test
                             typeof(Day),
                             typeof(Team),
                             typeof(Result),
+                            typeof(Member),
+                            typeof(Job),
+                            typeof(Reason),
+                            typeof(JobTime),
                             typeof(Tbl4FastInFilter),
                             typeof(Tbl4FastInStringFilter)
                         }
@@ -1724,7 +2018,7 @@ namespace Kyklos.Kernel.Data.Test
                     .Where(x => x.ResultId != idResult)
                     .OrderBy(x => x.ResultId)
                     .ToArray();
-                    await Dao.DeleteByConditionAsync<Result>(x => x.ResultId == idResult).ConfigureAwait(false);
+                    await tDao.DeleteByConditionAsync<Result>(x => x.ResultId == idResult).ConfigureAwait(false);
                     var actualTeams = (await tDao.GetAllItemsArrayAsync<Result>().ConfigureAwait(false)).OrderBy(x => x.ResultId).ToArray();
                     Assert.Equal(expectedTeams, actualTeams);
                     throw new Exception();
@@ -2233,5 +2527,68 @@ namespace Kyklos.Kernel.Data.Test
 
             //Assert.Contains("coalesce", sqlActualJoin, StringComparison.InvariantCultureIgnoreCase);
         }
+        protected async Task SelectMemberByIdAndPasswordShouldBeOneMember(string username, string password)
+        {
+            Member expectedMember =
+                InitialMembers
+                .Where<Member>(x => x.MemberName == username && x.Password == password)
+                .First();
+            Member actualMember = await Dao.GetItemByExampleAsync<Member>(x => (x.MemberName == username && x.Password == password));
+            Assert.Equal(expectedMember.MemberId, actualMember.MemberId);
+        }
+        protected async Task UpdateHoursByJobTimeInJOB_TIMESshouldBeInt(int hours, JobTime jobTime)
+        {
+            decimal? expectedHours = jobTime.Hours + hours;
+            await Dao.DoInTransactionAsync
+            (
+                async tDao =>
+                {
+                    var updateBuilder = tDao.NewUpdateTableBuilder<JobTime>().
+                    Set(x => x.Hours, x => x.Hours + hours)
+                        .Where
+                        (
+                            x => x.ReasonId == jobTime.ReasonId
+                            && x.MemberId == jobTime.MemberId
+                            && x.JobId == jobTime.JobId
+                            && x.DateOfWork == jobTime.DateOfWork
+                         );
+                    tDao.UpdateTableAsync(updateBuilder);
+                    decimal? actualHours =
+                        (
+                            await tDao.GetItemByExampleAsync<JobTime>
+                            (
+                                x => x.ReasonId == jobTime.ReasonId
+                                && x.MemberId == jobTime.MemberId
+                                && x.JobId == jobTime.JobId
+                                && x.DateOfWork == jobTime.DateOfWork
+                            )
+                        ).Hours;
+                    Assert.Equal(actualHours,expectedHours);
+                    throw new Exception();
+                }
+            )
+            .ConfigureAwait(false);
+        }
+
+        protected async Task SelectJobTimesOfTheDayByDateOfWorkShuoldBe(long memberId, DateTime dateOfWork)
+        {
+            var query = Dao
+            .NewQueryBuilder()
+            .Select()
+            .Field<JobTime>("JT", x => x.Hours)
+            .Comma()
+            .Field<Reason>("R", x => x.ReasonDesc)
+            .From()
+            .Tables
+            (
+                FlatTable<JobTime>.WithAlias("JT"),
+                InnerJoin<Reason>.WithAlias("R"), (JT, R) => JT.ReasonId == R.ReasonId,
+                InnerJoin<Job>.WithAlias("J"), (JT, R, J) => JT.JobId == J.JobId
+            )
+            .Where<JobTime>("JT", JT => JT.MemberId == memberId && JT.DateOfWork == dateOfWork)
+            .OrderBy<JobTime>("JT", JT => JT.Hours, OrderByDirection.Descending);
+            IEnumerable<JobTimesOfTheDay> result = await Dao.GetItemsAsync<JobTimesOfTheDay>(query);
+        }
     }
+
 }

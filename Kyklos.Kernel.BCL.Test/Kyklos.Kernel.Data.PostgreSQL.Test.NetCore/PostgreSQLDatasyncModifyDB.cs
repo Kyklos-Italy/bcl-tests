@@ -44,6 +44,10 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetCore
             await AddTeams().ConfigureAwait(false);
             await AddDays().ConfigureAwait(false);
             await AddResults().ConfigureAwait(false);
+            await AddMembers().ConfigureAwait(false);
+            await AddJobs().ConfigureAwait(false);
+            await AddReasons().ConfigureAwait(false);
+            await AddJobTimes().ConfigureAwait(false);
         }
 
         private async Task ReplaceDuplicateKey(IAsyncDao tDao, Day newDay, string newKey)
