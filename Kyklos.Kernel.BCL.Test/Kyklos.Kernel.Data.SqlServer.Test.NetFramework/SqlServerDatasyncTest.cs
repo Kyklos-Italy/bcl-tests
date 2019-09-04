@@ -14,7 +14,6 @@ namespace Kyklos.Kernel.Data.SqlServer.Test.NetFramework
     public class SqlServerDatsyncTest : BaseDatasyncTest
     {
         protected override string Schema => "dbo";
-        protected override string ConnectionString => @"Data Source=192.168.100.42,9433\DEV2016;Initial Catalog=DeXdemo;Persist Security Info=True;User Id=sa;Password=Sql2016$;";
         protected override string ProviderName => "SqlServer";
 
         private void Setup()

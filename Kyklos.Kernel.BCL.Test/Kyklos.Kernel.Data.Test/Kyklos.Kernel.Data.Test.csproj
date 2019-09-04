@@ -5,9 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Nuova cartella\**" />
+    <EmbeddedResource Remove="Nuova cartella\**" />
+    <None Remove="Nuova cartella\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Kyklos.Kernel.Core" Version="1.0.9" />
-    <PackageReference Include="Kyklos.Kernel.Data" Version="1.0.9" />
-    <PackageReference Include="Kyklos.Kernel.Data.Async" Version="1.0.9" />
+    <PackageReference Include="Kyklos.Kernel.Data" Version="1.0.10-beta1" />
+    <PackageReference Include="Kyklos.Kernel.Data.Async" Version="1.0.10-beta3" />
     <PackageReference Include="Kyklos.Kernel.Data.Async.Support" Version="1.0.9" />
     <PackageReference Include="xunit" Version="2.4.1" />
   </ItemGroup>
@@ -17,7 +23,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Nuova cartella\" />
+    <None Update="ConnString.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="xunit.runner.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

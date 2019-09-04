@@ -41,11 +41,11 @@
     <Reference Include="Kyklos.Kernel.Core, Version=1.0.9.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Kyklos.Kernel.Core.1.0.9\lib\netstandard2.0\Kyklos.Kernel.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Kyklos.Kernel.Data, Version=1.0.9.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Data.1.0.9\lib\netstandard2.0\Kyklos.Kernel.Data.dll</HintPath>
+    <Reference Include="Kyklos.Kernel.Data, Version=1.0.10.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Kyklos.Kernel.Data.1.0.10-beta1\lib\netstandard2.0\Kyklos.Kernel.Data.dll</HintPath>
     </Reference>
-    <Reference Include="Kyklos.Kernel.Data.Async, Version=1.0.9.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Data.Async.1.0.9\lib\netstandard2.0\Kyklos.Kernel.Data.Async.dll</HintPath>
+    <Reference Include="Kyklos.Kernel.Data.Async, Version=1.0.10.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Kyklos.Kernel.Data.Async.1.0.10-beta3\lib\netstandard2.0\Kyklos.Kernel.Data.Async.dll</HintPath>
     </Reference>
     <Reference Include="Kyklos.Kernel.Data.Async.SQLite, Version=1.0.9.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Kyklos.Kernel.Data.Async.SQLite.1.0.9\lib\netstandard2.0\Kyklos.Kernel.Data.Async.SQLite.dll</HintPath>

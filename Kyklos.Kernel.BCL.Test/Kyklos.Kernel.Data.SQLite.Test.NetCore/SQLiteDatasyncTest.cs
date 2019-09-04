@@ -19,7 +19,8 @@ namespace Kyklos.Kernel.Data.SQLite.Test.NetCore
         protected override string Schema => null;
 
         protected override string ConnectionString => 
-            "Data Source={$ExecutionPath}\\..\\..\\..\\SQLite\\KykDB.db;Version=3;FailIfMissing=false;Foreign Keys=True"
+            base
+            .ConnectionString
             .Replace("{$ExecutionPath}", NetPlatform.BinFolder);
 
         protected override string ProviderName => "SQLite";

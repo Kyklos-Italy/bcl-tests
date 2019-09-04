@@ -16,8 +16,6 @@ namespace Kyklos.Kernel.Data.Oracle.Test.NetFramework
     public class OracleDatasyncTest : BaseDatasyncTest
     {
         protected override string Schema => "RMX_MORATO_DEV";
-
-        protected override string ConnectionString => ConnectionStringsProvider.GetConnectionStringProviderList("Oracle");
         protected override string ProviderName => "Oracle";
 
 
@@ -263,24 +261,24 @@ namespace Kyklos.Kernel.Data.Oracle.Test.NetFramework
         public async Task CancellationOfGetCompleteResultShouldBe()
         {
             await Assert
-               .ThrowsAsync<OracleException>
+               .ThrowsAsync<TaskCanceledException>
                (
-               async () =>
-               {
-                   try
+                   async () =>
                    {
-                       using (CancellationTokenSource tokenSource = new CancellationTokenSource(100))
+                       try
                        {
-                           await CancellationOfGetCompleteResultShouldBeCore(20, tokenSource.Token).ConfigureAwait(false);
+                           using (CancellationTokenSource tokenSource = new CancellationTokenSource(100))
+                           {
+                               await CancellationOfGetCompleteResultShouldBeCore(20, tokenSource.Token).ConfigureAwait(false);
+                           }
+                       }
+                       catch (Exception ex)
+                       {
+                           throw ex.UnwrapAggregateException();
                        }
                    }
-                   catch (Exception ex)
-                   {
-                       throw ex.UnwrapAggregateException();
-                   }
-               }
-           )
-           .ConfigureAwait(false);
+               )
+            .ConfigureAwait(false);
         }
 
         [Fact]

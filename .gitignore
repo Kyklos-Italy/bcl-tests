@@ -116,6 +116,4 @@ Products/Dev/WmX/Mobile/.idea/
 Fashion-Customers/PA/Dev/Wmx.PAIEWeb/Wmx.PAIEWeb/log.txt
 *.dll
 !/Kernel/\Dev/RequiredPackages/*.dll
-Products/Dev/QualityX/Mobile/QualityXApp/QualityXApp/QualityXApp.UWP/project.lock.json
-KComponents/Dev/KBizEventStore/KBizEventStore.UI.Controls/Build/BuildTimestamp.cs
-Fashion-Customers/Morato/FXS
+Kyklos.Kernel.BCL.Test/Kyklos.Kernel.Data.Test/ConnString.txt

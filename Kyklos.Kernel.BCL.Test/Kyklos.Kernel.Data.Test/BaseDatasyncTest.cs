@@ -119,8 +119,9 @@ namespace Kyklos.Kernel.Data.Test
             Dao = CreateAsyncDao(ConnectionString, ProviderName, Schema);
         }
 
-        protected abstract string ConnectionString { get; }
         protected abstract string ProviderName { get; }
+
+        protected virtual string ConnectionString => ConnectionStringsProvider.GetConnectionString(ProviderName);
 
         private Result[] InitialResults =
             new Result[]
@@ -487,19 +488,19 @@ namespace Kyklos.Kernel.Data.Test
             int n = 3;
             var queryBuilder =
                 Dao
-                    .NewQueryBuilder()
-                        .Select()
-                            .Count<Day>("d", x => x.DayId)
-                        .From()
-                            .Table<Day>("d");
+                .NewQueryBuilder()
+                .Select()
+                .Count<Day>("d", x => x.DayId)
+                .From()
+                .Table<Day>("d");
 
             var actualValue = (await Dao.GetItemsAsync<int>(queryBuilder).ConfigureAwait(false)).FirstOrDefault();
             Assert.Equal(n, actualValue);
         }
 
-        public async Task CountAllResultsShouldBe6Core()
+        public Task CountAllResultsShouldBe6Core()
         {
-            await CountAllResultsShouldBeN(6,Dao).ConfigureAwait(false);
+            return CountAllResultsShouldBeN(6, Dao);
         }
 
         protected async Task CountAllResultsShouldBeN(int n, IAsyncDao tDao)
@@ -733,7 +734,7 @@ namespace Kyklos.Kernel.Data.Test
         {
             DataTable dayTable = new DataTable();
 
-            await Dao.FillDataTableAsync(dayTable, sql);
+            await Dao.FillDataTableAsync(dayTable, sql).ConfigureAwait(false);
 
             var dataRows = dayTable.Select("DAY_ID = 'idDay1' OR DAY_ID = 'idDay2' OR DAY_ID = 'idDay3'");
 
@@ -1104,18 +1105,18 @@ namespace Kyklos.Kernel.Data.Test
             }.OrderBy(x => x.Item1).ToArray();
 
             var queryBuilder =
-                    Dao
-                        .NewQueryBuilder()
-                            .Select()
-                                .Field<Team>("T", x => x.Name)
-                                .Comma()
-                                .Sum<Result>("R", x => x.GoalsHomeTeam)
-                            .From()
-                                .Table<Result>("R")
-                                    .TablesJoin<Result, Team>("R", InnerJoin<Team>.WithAlias("T"), (R, T) => R.HomeTeamId == T.TeamId)
-                            .GroupBy()
-                                .Fields<Team>("T", x => x.TeamId, x => x.Name)
-                            .OrderBy<Team>("T", x => x.Name, OrderByDirection.Descending);
+                Dao
+                .NewQueryBuilder()
+                .Select()
+                .Field<Team>("T", x => x.Name)
+                .Comma()
+                .Sum<Result>("R", x => x.GoalsHomeTeam)
+                .From()
+                .Table<Result>("R")
+                .TablesJoin<Result, Team>("R", InnerJoin<Team>.WithAlias("T"), (R, T) => R.HomeTeamId == T.TeamId)
+                .GroupBy()
+                .Fields<Team>("T", x => x.TeamId, x => x.Name)
+                .OrderBy<Team>("T", x => x.Name, OrderByDirection.Descending);
 
             var actualValue = (await Dao.GetItemsAsync<Tuple<string, int>>(queryBuilder).ConfigureAwait(false)).OrderBy(x => x.Item1).ToArray();
             Assert.Equal(expectedValue, actualValue);
@@ -1247,7 +1248,7 @@ namespace Kyklos.Kernel.Data.Test
                 async tDao =>
                 {
                     await DeleteFourResults(tDao);
-                    await CountAllResultsShouldBeN(2,tDao);
+                    await CountAllResultsShouldBeN(2, tDao);
                     throw new Exception();
                 }
             )
@@ -1273,7 +1274,7 @@ namespace Kyklos.Kernel.Data.Test
                     var sql = updateTableBuilder.BuildSqlTextWithParameters();
                     int affected = await tDao.UpdateTableAsync(updateTableBuilder).ConfigureAwait(false);
 
-                    var actualValue = await 
+                    var actualValue = await
                     tDao.GetItemByExampleAsync<Result>(x => x.ResultId == "idRes2").ConfigureAwait(false);
 
                     Assert.Equal(n, actualValue.GoalsHomeTeam);
@@ -2013,6 +2014,7 @@ namespace Kyklos.Kernel.Data.Test
             (
                async tDao =>
                {
+<<<<<<< HEAD
                     var expectedTeams =
                     InitialResults
                     .Where(x => x.ResultId != idResult)
@@ -2023,6 +2025,18 @@ namespace Kyklos.Kernel.Data.Test
                     Assert.Equal(expectedTeams, actualTeams);
                     throw new Exception();
                 }
+=======
+                   var expectedTeams =
+                   InitialResults
+                   .Where(x => x.ResultId != idResult)
+                   .OrderBy(x => x.ResultId)
+                   .ToArray();
+                   await Dao.DeleteByConditionAsync<Result>(x => x.ResultId == idResult).ConfigureAwait(false);
+                   var actualTeams = (await tDao.GetAllItemsArrayAsync<Result>().ConfigureAwait(false)).OrderBy(x => x.ResultId).ToArray();
+                   Assert.Equal(expectedTeams, actualTeams);
+                   throw new Exception();
+               }
+>>>>>>> refs/remotes/origin/master
             ).ConfigureAwait(false);
 
         }
@@ -2164,29 +2178,29 @@ namespace Kyklos.Kernel.Data.Test
                     async tDao =>
                     {
                         await tDao.InsertEntityAsync(newDay).ConfigureAwait(false);
-                        bool newDayExist = await tDao.EntityExistsAsync(newDay); 
+                        bool newDayExist = await tDao.EntityExistsAsync(newDay);
                         Assert.True(newDayExist);
                         await tDao.InsertEntityAsync(excDay).ConfigureAwait(false);
                     }
 
-                        //await ReplaceDuplicateKey(Dao, newDay, "idDay4").ConfigureAwait(false);
-                        //var actualDays = (
-                        //                     await Dao
-                        //                     .GetAllItemsArrayAsync<Day>()
-                        //                     .ConfigureAwait(false)
-                        //                  )
-                        //                 .OrderBy(x => x.DayId)
-                        //                 .ToArray();
+                //await ReplaceDuplicateKey(Dao, newDay, "idDay4").ConfigureAwait(false);
+                //var actualDays = (
+                //                     await Dao
+                //                     .GetAllItemsArrayAsync<Day>()
+                //                     .ConfigureAwait(false)
+                //                  )
+                //                 .OrderBy(x => x.DayId)
+                //                 .ToArray();
 
-                        //Day[] expectedDays = expectedDays = new Day[]
-                        //{
-                        //    new Day() { DayId = "idDay1", DayDate = new DateTime(2018, 09, 16), DayNumber = 1 },
-                        //    new Day() { DayId = "idDay2", DayDate = new DateTime(2018, 09, 17), DayNumber = 2 },
-                        //    new Day() { DayId = "idDay3", DayDate = new DateTime(2018, 09, 18), DayNumber = 3 },
-                        //}
-                        //.OrderBy(x => x.DayId).ToArray();
-                       //Assert.Equal(expectedDays, actualDays);
-                    
+                //Day[] expectedDays = expectedDays = new Day[]
+                //{
+                //    new Day() { DayId = "idDay1", DayDate = new DateTime(2018, 09, 16), DayNumber = 1 },
+                //    new Day() { DayId = "idDay2", DayDate = new DateTime(2018, 09, 17), DayNumber = 2 },
+                //    new Day() { DayId = "idDay3", DayDate = new DateTime(2018, 09, 18), DayNumber = 3 },
+                //}
+                //.OrderBy(x => x.DayId).ToArray();
+                //Assert.Equal(expectedDays, actualDays);
+
                 )
                 .ConfigureAwait(false);
             bool newDayDontExist = await Dao.EntityExistsAsync(newDay);
@@ -2222,8 +2236,8 @@ namespace Kyklos.Kernel.Data.Test
                                     //await ReplaceDuplicateKey(tDao, newDay, "idDay4").ConfigureAwait(false);
                                     bool newDayExist = await tDao.EntityExistsAsync(newDay);
                                     Assert.False(newDayExist);
-                                }    
-                                
+                                }
+
                             );
                         //var actualDays = (
                         //await tDao.GetAllItemsArrayAsync<Day>()

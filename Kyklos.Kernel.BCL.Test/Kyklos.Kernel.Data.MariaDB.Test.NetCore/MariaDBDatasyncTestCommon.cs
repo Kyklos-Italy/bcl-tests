@@ -10,7 +10,6 @@ namespace Kyklos.Kernel.Data.MariaDB.Test.NetCore
         private static bool isInitialized = false;
 
         protected override string Schema => "testdb";
-        protected override string ConnectionString => ConnectionStringsProvider.GetConnectionStringProviderList("MariaDb");
         protected override string ProviderName => "MariaDB";
 
         protected MariaDBDatasyncTestCommon() : base(NetPlatformType.NETCORE)
