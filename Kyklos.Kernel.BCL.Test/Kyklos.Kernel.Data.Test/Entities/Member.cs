@@ -1,6 +1,5 @@
 using Kyklos.Kernel.Data.Attributes;
 using Kyklos.Kernel.Data.Entities;
-using System.Collections.Generic;
 
 namespace Kyklos.Kernel.Data.Test.Entities
 {
@@ -28,7 +27,7 @@ namespace Kyklos.Kernel.Data.Test.Entities
         [EntityPropertyInfo(ColumnName = "CompanyID", DbType = PropertyDbType.Long, IsNullable = false, ColumnOrder = 70)]
         public virtual long CompanyId { get; set; }
 
-        [EntityPropertyInfo(ColumnName = "MemberNote", DbType = PropertyDbType.String, IsNullable = true, MaxLength = 8000, ColumnOrder = 80)]
+        [EntityPropertyInfo(ColumnName = "MemberNote", DbType = PropertyDbType.Clob, IsNullable = true, ColumnOrder = 80)]
         public virtual string MemberNote { get; set; }
 
         [EntityPropertyInfo(ColumnName = "CanBeOwner", DbType = PropertyDbType.Boolean, IsNullable = false, ColumnOrder = 90)]

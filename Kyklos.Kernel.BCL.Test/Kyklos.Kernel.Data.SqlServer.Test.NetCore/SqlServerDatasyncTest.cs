@@ -25,25 +25,12 @@ namespace Kyklos.Kernel.Data.SqlServer.Test.NetCore
 
         private void Setup()
         {
-            SetupCore().Wait();
+            SetupCoreAsync().Wait();
         }
 
         public SqlServerDatsyncTest() : base(XUnitTestSupport.NetPlatformType.NETCORE)
         {
             Setup();
-        }
-
-        private async Task SetupCore()
-        {
-            await PrepareDB().ConfigureAwait(false);
-            await GenerateScriptsForCreateAndDropSequence().ConfigureAwait(false);
-            await AddTeams().ConfigureAwait(false);
-            await AddDays().ConfigureAwait(false);
-            await AddResults().ConfigureAwait(false);
-            await AddMembers().ConfigureAwait(false);
-            await AddJobs().ConfigureAwait(false);
-            await AddReasons().ConfigureAwait(false);
-            await AddJobTimes().ConfigureAwait(false);
         }
 
         private async Task ReplaceDuplicateKey(IAsyncDao tDao, Day newDay, string newKey)
@@ -52,7 +39,7 @@ namespace Kyklos.Kernel.Data.SqlServer.Test.NetCore
             await tDao.InsertEntityAsync(newDay).ConfigureAwait(false);
         }
 
-        private async Task GenerateScriptsForCreateAndDropSequence()
+        protected override async Task GenerateScriptsForCreateAndDropSequence()
         {
             string createSequenceScript = @"CREATE SEQUENCE [dbo].[my_sequence]
                                            INCREMENT BY 1

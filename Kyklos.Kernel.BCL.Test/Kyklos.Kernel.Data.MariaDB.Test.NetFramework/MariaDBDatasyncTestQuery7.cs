@@ -78,20 +78,23 @@ namespace Kyklos.Kernel.Data.MariaDB.Test.NetFramework
             };
             await UpdateHoursByJobTimeInJOB_TIMEShouldBeInt(4, jobTimeToUpdate).ConfigureAwait(false);
         }
+
         [Fact]
-        public async Task SelectJobTimesOfTheDayByDateOfWorkAndId218ShuoldBeTwoJobTimesOfTheDay()
+        public Task SelectJobTimesOfTheDayByDateOfWorkAndId218ShuoldBeTwoJobTimesOfTheDay()
         {
-            await SelectJobTimesOfTheDayByDateOfWorkAndId218ShuoldBe().ConfigureAwait(false);
+            return SelectJobTimesOfTheDayByDateOfWorkAndId218ShuoldBe();
         }
+
         [Fact]
-        public async Task SumHoursOfJobTimeAggregateByMemberIdAndDateOfWorkShuoldBe6()
+        public Task SumHoursOfJobTimeAggregateByMemberIdAndDateOfWorkShuoldBe6()
         {
-            await SumHoursOfJobTimeAggregateByMemberIdAndDateOfWorkShuoldBeCore().ConfigureAwait(false);
+            return SumHoursOfJobTimeAggregateByMemberIdAndDateOfWorkShuoldBeCore();
         }
+
         [Fact]
-        public async Task CheckJobTimeExistShuoldTrue()
+        public Task CheckJobTimeExistShuoldTrue()
         {
-            await CheckJobTimeExistShuoldBeCore().ConfigureAwait(false);
+            return CheckJobTimeExistShuoldBeCore();
         }
         #endregion
     }

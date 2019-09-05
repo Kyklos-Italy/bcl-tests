@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Kyklos.Kernel.Core" Version="1.0.9" />
+    <PackageReference Include="Kyklos.Kernel.Data.Async" Version="1.0.10-beta3" />
     <PackageReference Include="Kyklos.Kernel.Data.Async.SQLite" Version="1.0.9" />
     <PackageReference Include="Kyklos.Kernel.Data.Async.Support" Version="1.0.9" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
