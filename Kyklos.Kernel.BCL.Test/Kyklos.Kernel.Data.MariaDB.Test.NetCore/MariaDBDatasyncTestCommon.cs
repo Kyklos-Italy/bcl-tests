@@ -34,6 +34,10 @@ namespace Kyklos.Kernel.Data.MariaDB.Test.NetCore
             await AddTeams();
             await AddDays();
             await AddResults();
+            await AddMembers().ConfigureAwait(false);
+            await AddJobs().ConfigureAwait(false);
+            await AddReasons().ConfigureAwait(false);
+            await AddJobTimes().ConfigureAwait(false);
         }
 
         private async Task GenerateScriptsForCreateAndDropSequence()

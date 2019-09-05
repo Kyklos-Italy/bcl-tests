@@ -592,7 +592,7 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetCore
         [Fact]
         public async Task CheckIfPKIndexIsAlsoUniqueShouldBeResults()
         {
-            await CheckIfPKIndexIsAlsoUniqueShouldBeResultsCore();
+            await CheckIfPKIndexIsAlsoUniqueShouldBeResultsCore().ConfigureAwait(false);
         }
 
         [Fact]
@@ -624,40 +624,40 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetCore
         {
             string memberName = "LCasini";
             string password = "202cb962ac59075b964b07152d234b70";
-            await SelectMemberByIdAndPasswordShouldBeOneMember(memberName, password);
+            await SelectMemberByIdAndPasswordShouldBeOneMember(memberName, password).ConfigureAwait(false);
         }
 
         [Fact]
         public async Task UpdateHoursByJobTimeInJOB_TIMESshouldBe7()
         {
-            JobTime jobTimeToUpdate = 
+            JobTime jobTimeToUpdate =
             new JobTime
             {
                 JobId = 2,
                 MemberId = 213,
-                DateOfWork = new DateTime(),
+                DateOfWork = PrefixDate,
                 AmountTimeToInvoice = null,
                 FreeAmountTime = null,
                 TimeNote = null,
                 ReasonId = 4,
                 Hours = 3,
             };
-            await UpdateHoursByJobTimeInJOB_TIMEShouldBeInt(4, jobTimeToUpdate);
+            await UpdateHoursByJobTimeInJOB_TIMEShouldBeInt(4, jobTimeToUpdate).ConfigureAwait(false);
         }
         [Fact]
         public async Task SelectJobTimesOfTheDayByDateOfWorkAndId218ShuoldBeTwoJobTimesOfTheDay()
         {
-            await SelectJobTimesOfTheDayByDateOfWorkAndId218ShuoldBe();
+            await SelectJobTimesOfTheDayByDateOfWorkAndId218ShuoldBe().ConfigureAwait(false);
         }
         [Fact]
         public async Task SumHoursOfJobTimeAggregateByMemberIdAndDateOfWorkShuoldBe6()
         {
-            await SumHoursOfJobTimeAggregateByMemberIdAndDateOfWorkShuoldBeCore();
+            await SumHoursOfJobTimeAggregateByMemberIdAndDateOfWorkShuoldBeCore().ConfigureAwait(false);
         }
         [Fact]
         public async Task CheckJobTimeExistShuoldTrue()
         {
-            await CheckJobTimeExistShuoldBeCore();
+            await CheckJobTimeExistShuoldBeCore().ConfigureAwait(false);
         }
     }
 }

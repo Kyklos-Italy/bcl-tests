@@ -150,7 +150,7 @@ namespace Kyklos.Kernel.Data.Test
                 new Day() { DayId = "idDay2", DayDate = new DateTime(2018, 09, 17), DayNumber = 2 },
                 new Day() { DayId = "idDay3", DayDate = new DateTime(2018, 09, 18), DayNumber = 3 }
             };
-
+        protected static DateTime PrefixDate = new DateTime(2019,6,18);
         private Member[] InitialMembers =
             new Member[]
             {
@@ -360,7 +360,7 @@ namespace Kyklos.Kernel.Data.Test
                 {
                     JobId = 1,
                     MemberId = 213,
-                    DateOfWork = new DateTime(),
+                    DateOfWork = PrefixDate,
                     AmountTimeToInvoice = null,
                     FreeAmountTime = null,
                     TimeNote = null,
@@ -371,7 +371,7 @@ namespace Kyklos.Kernel.Data.Test
                 {
                     JobId = 2,
                     MemberId = 213,
-                    DateOfWork = new DateTime(),
+                    DateOfWork = PrefixDate,
                     AmountTimeToInvoice = null,
                     FreeAmountTime = null,
                     TimeNote = null,
@@ -382,7 +382,7 @@ namespace Kyklos.Kernel.Data.Test
                 {
                     JobId = 3,
                     MemberId = 218,
-                    DateOfWork = new DateTime(),
+                    DateOfWork = PrefixDate,
                     AmountTimeToInvoice = null,
                     FreeAmountTime = null,
                     TimeNote = null,
@@ -393,7 +393,7 @@ namespace Kyklos.Kernel.Data.Test
                 {
                     JobId = 4,
                     MemberId = 218,
-                    DateOfWork = new DateTime(),
+                    DateOfWork = PrefixDate,
                     AmountTimeToInvoice = null,
                     FreeAmountTime = null,
                     TimeNote = null,
@@ -404,7 +404,7 @@ namespace Kyklos.Kernel.Data.Test
                 {
                     JobId = 1,
                     MemberId = 224,
-                    DateOfWork = new DateTime(),
+                    DateOfWork = PrefixDate,
                     AmountTimeToInvoice = null,
                     FreeAmountTime = null,
                     TimeNote = null,
@@ -415,7 +415,7 @@ namespace Kyklos.Kernel.Data.Test
                 {
                     JobId = 4,
                     MemberId = 224,
-                    DateOfWork = new DateTime(),
+                    DateOfWork = PrefixDate,
                     AmountTimeToInvoice = null,
                     FreeAmountTime = null,
                     TimeNote = null,
@@ -2014,16 +2014,16 @@ namespace Kyklos.Kernel.Data.Test
             (
                async tDao =>
                {
-                    var expectedTeams =
-                    InitialResults
-                    .Where(x => x.ResultId != idResult)
-                    .OrderBy(x => x.ResultId)
-                    .ToArray();
-                    int i = await tDao.DeleteByConditionAsync<Result>(x => x.ResultId == idResult);
-                    var actualTeams = (await tDao.GetAllItemsArrayAsync<Result>().ConfigureAwait(false)).OrderBy(x => x.ResultId).ToArray();
-                    Assert.Equal(expectedTeams, actualTeams);
-                    throw new Exception();
-                }
+                   var expectedTeams =
+                   InitialResults
+                   .Where(x => x.ResultId != idResult)
+                   .OrderBy(x => x.ResultId)
+                   .ToArray();
+                   int i = await tDao.DeleteByConditionAsync<Result>(x => x.ResultId == idResult);
+                   var actualTeams = (await tDao.GetAllItemsArrayAsync<Result>().ConfigureAwait(false)).OrderBy(x => x.ResultId).ToArray();
+                   Assert.Equal(expectedTeams, actualTeams);
+                   throw new Exception();
+               }
             ).ConfigureAwait(false);
 
         }
@@ -2553,7 +2553,8 @@ namespace Kyklos.Kernel.Data.Test
                             && x.JobId == jobTime.JobId
                             && x.DateOfWork == jobTime.DateOfWork
                          );
-                    tDao.UpdateTableAsync(updateBuilder).ConfigureAwait(false);
+                    int affected = await tDao.UpdateTableAsync(updateBuilder).ConfigureAwait(false);
+                    Assert.Equal(1,affected);
                     decimal? actualHours =
                         (
                             await tDao.GetItemByExampleAsync<JobTime>
@@ -2563,8 +2564,8 @@ namespace Kyklos.Kernel.Data.Test
                                 && x.JobId == jobTime.JobId
                                 && x.DateOfWork == jobTime.DateOfWork
                             ).ConfigureAwait(false)
-                        ).Hours;
-                    Assert.Equal(actualHours,expectedHours);
+                        )?.Hours;
+                    Assert.Equal(expectedHours, actualHours);
                     throw new Exception();
                 }
             )
@@ -2573,6 +2574,7 @@ namespace Kyklos.Kernel.Data.Test
 
         protected async Task SelectJobTimesOfTheDayByDateOfWorkAndId218ShuoldBe()
         {
+            var dt = new DateTime();
             JobTimesOfTheDay[] expectedJobTimesOfTheDay =
                 new JobTimesOfTheDay[]
                 {
@@ -2580,7 +2582,7 @@ namespace Kyklos.Kernel.Data.Test
                     {
                         JobId = 3,
                         Hours = 3,
-                        Dateofwork = new DateTime(),
+                        Dateofwork = PrefixDate,
                         ReasonId = 6,
                         MemberId = 218,
                         Job = "DTCO as Product"
@@ -2589,7 +2591,7 @@ namespace Kyklos.Kernel.Data.Test
                     {
                         JobId = 4,
                         Hours = 3,
-                        Dateofwork = new DateTime(),
+                        Dateofwork = PrefixDate,
                         ReasonId = 7,
                         MemberId = 218,
                         Job = "NausSys for La MDS Yacht Ser"
@@ -2598,7 +2600,7 @@ namespace Kyklos.Kernel.Data.Test
             var query = Dao
             .NewQueryBuilder()
             .Select()
-            .Field<JobTime>("JT", x => x.Hours, "hours")
+            .Field<JobTime>("JT", x => x.Hours, expectedJobTimesOfTheDay[0].GetFieldName(x => x.Hours))
             .Comma()
             .Field<Job>("J", x => x.JobName, "job")
             .Comma()
@@ -2616,22 +2618,24 @@ namespace Kyklos.Kernel.Data.Test
                 InnerJoin<Reason>.WithAlias("R"), (JT, R) => JT.ReasonId == R.ReasonId,
                 InnerJoin<Job>.WithAlias("J"), (JT, R, J) => JT.JobId == J.JobId
             )
-            .Where<JobTime>("JT", JT => JT.MemberId == 218 && JT.DateOfWork == new DateTime())
+            .Where<JobTime>("JT", JT => JT.MemberId == 218 && JT.DateOfWork == new DateTime(2019,6,18))
+            //.And<JobTime>("JT", x => x.DateOfWork, WhereOperator.EqualTo, new DateTime())
             .OrderBy<JobTime>("JT", JT => JT.Hours, OrderByDirection.Descending);
-            IEnumerable<JobTimesOfTheDay> result = await Dao.GetItemsAsync<JobTimesOfTheDay>(query);
+            JobTimesOfTheDay[] result = await Dao.GetItemsArrayAsync<JobTimesOfTheDay>(query);
             Assert.Equal(result, expectedJobTimesOfTheDay);
         }
 
         protected async Task SumHoursOfJobTimeAggregateByMemberIdAndDateOfWorkShuoldBeCore()
         {
-            int expectedHours= 6;
+            int expectedHours = 6;
             var query = Dao
             .NewQueryBuilder()
             .Select()
             .Sum<JobTime>("JT", x => x.Hours)
             .From()
             .Table<JobTime>("JT")
-            .Where<JobTime>("JT", x => x.MemberId == 218 && x.DateOfWork == new DateTime());
+            .Where<JobTime>("JT", x => x.MemberId == 218)
+            .And<JobTime>("JT", x => x.DateOfWork, WhereOperator.EqualTo, PrefixDate);
             int result = await Dao.ExecuteScalarAsync<int>(query);
             Assert.Equal(expectedHours, result);
         }
@@ -2642,14 +2646,14 @@ namespace Kyklos.Kernel.Data.Test
             {
                 JobId = 1,
                 MemberId = 213,
-                DateOfWork = new DateTime(),
+                DateOfWork = PrefixDate,
                 AmountTimeToInvoice = null,
                 FreeAmountTime = null,
                 TimeNote = null,
                 ReasonId = 3,
                 Hours = 3,
             };
-            bool result= await Dao.EntityExistsAsync(jobTime);
+            bool result = await Dao.EntityExistsAsync(jobTime);
             Assert.Equal(result, expectedBoolean);
         }
 
