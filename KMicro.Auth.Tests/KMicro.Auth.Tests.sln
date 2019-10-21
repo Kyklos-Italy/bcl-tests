@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.645
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KMicro.Auth.User.Tests", "AuthService.Test\KMicro.Auth.User.Tests.csproj", "{E0701C1F-6F54-4511-B62C-EE46EAAEC07F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KMicro.Auth.Tests", "AuthService.Test\KMicro.Auth.Tests.csproj", "{E0701C1F-6F54-4511-B62C-EE46EAAEC07F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

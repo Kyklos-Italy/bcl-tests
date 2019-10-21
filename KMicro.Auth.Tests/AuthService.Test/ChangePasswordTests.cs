@@ -1,9 +1,9 @@
-﻿using Xunit;
+﻿using System.Threading.Tasks;
+using Xunit;
 using Flurl.Http;
 using KMicro.Auth.Models.Rest.User;
-using System.Threading.Tasks;
 
-namespace KMicro.Auth.User.Tests.ChangePassword
+namespace KMicro.Auth.Tests.ChangePassword
 {
     public class ChangePasswordTests
     {

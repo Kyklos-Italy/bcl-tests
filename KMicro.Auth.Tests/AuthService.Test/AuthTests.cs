@@ -2,7 +2,7 @@ using Xunit;
 using Flurl.Http;
 using KMicro.Auth.Models.Rest.User;
 
-namespace KMicro.Auth.User.Tests.Auth
+namespace KMicro.Auth.Tests.Authenticate
 {
     public class AuthTests
     {
