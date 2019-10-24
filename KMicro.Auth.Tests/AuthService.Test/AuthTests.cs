@@ -115,7 +115,7 @@ namespace KMicro.Auth.Tests.Authenticate
         [Fact]
         public async Task UserLocksAfterTooManyAuthAttempts()
         {
-            await LockUser(NeverExpiresUser.Username, NeverExpiresUser.Domain, NeverExpiresUser.Application);
+            await CommonUtils.LockUser(NeverExpiresUser.Username, NeverExpiresUser.Domain, NeverExpiresUser.Application);
             var response = await CommonUtils.AuthenticateUser(NeverExpiresUser.Username, 
                                                               NeverExpiresUser.Password, 
                                                               NeverExpiresUser.Domain, 
@@ -129,7 +129,7 @@ namespace KMicro.Auth.Tests.Authenticate
         {
             List<Task> tasksToRun = new List<Task>();
 
-            tasksToRun.Add(DoWrongAuthenticationAttempt(NeverExpiresUser.Username, NeverExpiresUser.Domain, NeverExpiresUser.Application));
+            tasksToRun.Add(CommonUtils.DoWrongAuthenticationAttempt(NeverExpiresUser.Username, NeverExpiresUser.Domain, NeverExpiresUser.Application));
             await Task.WhenAll(tasksToRun);
 
             var response = await CommonUtils.AuthenticateUser(NeverExpiresUser.Username, NeverExpiresUser.Password, NeverExpiresUser.Domain, NeverExpiresUser.Application);
@@ -138,7 +138,7 @@ namespace KMicro.Auth.Tests.Authenticate
             tasksToRun.Clear();
 
             for (int i = 0; i < 10; i++)
-                tasksToRun.Add(DoWrongAuthenticationAttempt(NeverExpiresUser.Username, NeverExpiresUser.Domain, NeverExpiresUser.Application));
+                tasksToRun.Add(CommonUtils.DoWrongAuthenticationAttempt(NeverExpiresUser.Username, NeverExpiresUser.Domain, NeverExpiresUser.Application));
 
             await Task.WhenAll(tasksToRun);
 
@@ -151,7 +151,7 @@ namespace KMicro.Auth.Tests.Authenticate
         [Fact]
         public async Task CorrectCredentialsAfterUserLockTimeoutExpiresSucceeds()
         {
-            await LockUser(NeverExpiresUser.Username, NeverExpiresUser.Domain, NeverExpiresUser.Application);
+            await CommonUtils.LockUser(NeverExpiresUser.Username, NeverExpiresUser.Domain, NeverExpiresUser.Application);
             await Task.Delay(100000);
             var response = await CommonUtils.AuthenticateUser(NeverExpiresUser.Username, 
                                                               NeverExpiresUser.Password,
@@ -160,24 +160,6 @@ namespace KMicro.Auth.Tests.Authenticate
             Assert.True(response.IsAuthenticated);
         }
 
-
-
-        private async Task LockUser(string user,string domain, string app)
-        {
-            List<Task> tasksToRun = new List<Task>();
-
-            for (int i = 0; i < 30; i++)
-                tasksToRun.Add(DoWrongAuthenticationAttempt(user, domain, app));
-
-            await Task.WhenAll(tasksToRun);
-        }
-
-        private async Task DoWrongAuthenticationAttempt(string user, string domain, string app)
-        {
-            AuthenticationRequest request = AuthenticationRequest.FromUsernamePasswordDomainAndApp(user, IncorrectData.Password, domain, app);
-            AuthenticationResponse response = await APIs.AuthenticateUserUrl.PostJsonAsync(request).ReceiveJson<AuthenticationResponse>();
-            Assert.False(response.IsAuthenticated);
-        }
     }
 
 }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿
 namespace KMicro.Auth.Tests.TestAPI
 {
     public class APIs
