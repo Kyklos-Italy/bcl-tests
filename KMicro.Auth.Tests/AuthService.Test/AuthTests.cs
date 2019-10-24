@@ -1,93 +1,183 @@
+using System.Linq;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 using Xunit;
 using Flurl.Http;
 using KMicro.Auth.Models.Rest.User;
+using KMicro.Auth.Tests.TestUsers;
+using KMicro.Auth.Tests.Utils;
+using KMicro.Auth.Tests.TestAPI;
 
 namespace KMicro.Auth.Tests.Authenticate
 {
     public class AuthTests
     {
-        // TODO duplicated fields. Should be put in a base class or in a dedicated static class
-        private static int Port { get; } = 27685;
-        private static string ServerIp { get; } = "172.16.100.32";
+        [Fact]
+        public async Task ChangePasswordOnFirstAccessEnabledReturnsJwt()
+        {
+            // TODO we currently don't have a way to reset  first access flag.
+            Assert.True(false);
+            //AuthenticationRequest request = AuthenticationRequest.FromUsernamePasswordDomainAndApp(CorrectUsername, CorrectPassword, CorrectDomain, CorrectApplicationName);
+            //AuthenticationResponse response = await AuthenticateUserUrl.PostJsonAsync(request).ReceiveJson<AuthenticationResponse>();
+            //Assert.False(response.IsAuthenticated);
+            //Assert.NotEqual(response.Jwt, string.Empty);
 
-        public static string AuthenticateUserUrl { get; } = $"http://{ServerIp}:{Port}/api/user/v1/authenticate";
-        public static string AdminUrl { get; } = $"http://{ServerIp}:{Port}/api/admin/v1/";
-        public static string ChangePasswordUserUrl { get; } = $"http://{ServerIp}:{Port}/api/user/v1/changePassword";
 
-        private const string IncorrectUsername = "madeUpUser";
-        private const string IncorrectPassword = "madeUpPassword";
-        private const string IncorrectDomain = "madeUpDomain";
-        private const string IncorrectApp = "madeUpApp";
-
-        private const string CorrectUsername = "pippo";
-        private const string CorrectPassword = "Maialino818!";
-        private const string CorrectDomain = "KyklosTest";
-        private const string CorrectApplicationName = "QualityX";
+            //string jwt = await CommonUtils.AuthenticateUser(NeverExpiresUser.Username,
+            //                                   NeverExpiresUser.Password,
+            //                                   NeverExpiresUser.Domain,
+            //                                   NeverExpiresUser.Application);
+            //Assert.NotEqual(jwt, string.Empty);
+        }
 
         [Fact]
-        public async void AllCorrectCredentialsAuthSucceeds()
+        public async Task MultipleAsyncAuthsAllSucceed()
         {
-            AuthenticationRequest request = AuthenticationRequest.FromUsernamePasswordDomainAndApp(CorrectUsername, CorrectPassword, CorrectDomain, CorrectApplicationName);
-            AuthenticationResponse response = await AuthenticateUserUrl.PostJsonAsync(request).ReceiveJson<AuthenticationResponse>();
+            List<Task<AuthenticationResponse>> authRequestsAttemps = new List<Task<AuthenticationResponse>>();
+
+            for (int i = 0; i < 10; i++)
+                authRequestsAttemps.Add(CommonUtils.AuthenticateUser(NeverLocksUser.Username,
+                                                                     NeverLocksUser.Password,
+                                                                     NeverLocksUser.Domain,
+                                                                     NeverLocksUser.Application));
+            
+            var responses = await Task.WhenAll(authRequestsAttemps);
+            bool atLeastOneFailed = responses.Any(s => s.IsAuthenticated == false);
+            Assert.False(atLeastOneFailed);
+        }
+
+        [Fact]
+        public async Task AllCorrectCredentialsAuthSucceeds()
+        {
+            var authResponse = await CommonUtils.AuthenticateUser(NeverLocksUser.Username,
+                                                                  NeverLocksUser.Password,
+                                                                  NeverLocksUser.Domain,
+                                                                  NeverLocksUser.Application);
+            Assert.True(authResponse.IsAuthenticated, authResponse.ResponseMessage);
+            Assert.NotEqual(authResponse.Jwt, string.Empty);
+        }
+
+        [Fact]
+        public async Task AllIncorrectCredentialAuthFails()
+        {
+            var authResponse = await CommonUtils.AuthenticateUser(IncorrectData.Username,
+                                                                  IncorrectData.Password,
+                                                                  IncorrectData.Domain,
+                                                                  IncorrectData.Application);
+            Assert.False(authResponse.IsAuthenticated);
+        }
+
+        [Fact]
+        public async Task IncorrectUsernameAuthFails()
+        {
+            var authResponse = await CommonUtils.AuthenticateUser(IncorrectData.Username,
+                                                                  NeverLocksUser.Password,
+                                                                  NeverLocksUser.Domain,
+                                                                  NeverLocksUser.Application);
+            Assert.Equal("KS-E101", authResponse.ResponseCode);
+            Assert.False(authResponse.IsAuthenticated);
+        }
+
+        [Fact]
+        public async Task IncorrectPasswordAuthFails()
+        {
+            var authResponse = await CommonUtils.AuthenticateUser(NeverLocksUser.Username,
+                                                                  IncorrectData.Password,
+                                                                  NeverLocksUser.Domain,
+                                                                  NeverLocksUser.Application);
+            Assert.Equal("KS-E102", authResponse.ResponseCode);
+            Assert.False(authResponse.IsAuthenticated);
+        }
+
+        [Fact]
+        public async Task IncorrectDomainAuthFails()
+        {
+            var authResponse = await CommonUtils.AuthenticateUser(NeverLocksUser.Username,
+                                                      NeverLocksUser.Password,
+                                                      IncorrectData.Domain,
+                                                      NeverLocksUser.Application);
+
+            Assert.Equal("KS-E103", authResponse.ResponseCode);
+            Assert.False(authResponse.IsAuthenticated);
+        }
+
+        [Fact]
+        public async Task IncorrectAppAuthFails()
+        {
+            var authResponse = await CommonUtils.AuthenticateUser(NeverLocksUser.Username,
+                                                                  NeverLocksUser.Password,
+                                                                  NeverLocksUser.Domain,
+                                                                  IncorrectData.Application);
+            Assert.False(authResponse.IsAuthenticated);
+            Assert.Equal("KS-E104", authResponse.ResponseCode);
+        }
+
+        [Fact]
+        public async Task UserLocksAfterTooManyAuthAttempts()
+        {
+            await LockUser(NeverExpiresUser.Username, NeverExpiresUser.Domain, NeverExpiresUser.Application);
+            var response = await CommonUtils.AuthenticateUser(NeverExpiresUser.Username, 
+                                                              NeverExpiresUser.Password, 
+                                                              NeverExpiresUser.Domain, 
+                                                              NeverExpiresUser.Application);
+            Assert.False(response.IsAuthenticated);           
+            Assert.Equal("KS-E108", response.ResponseCode);
+        }
+
+        [Fact]
+        public async Task UserLocksAfterTooManyNonSequentialFailedAttempts()
+        {
+            List<Task> tasksToRun = new List<Task>();
+
+            tasksToRun.Add(DoWrongAuthenticationAttempt(NeverExpiresUser.Username, NeverExpiresUser.Domain, NeverExpiresUser.Application));
+            await Task.WhenAll(tasksToRun);
+
+            var response = await CommonUtils.AuthenticateUser(NeverExpiresUser.Username, NeverExpiresUser.Password, NeverExpiresUser.Domain, NeverExpiresUser.Application);
+            Assert.True(response.IsAuthenticated, "Could not authenticate " + response.ResponseMessage);
+
+            tasksToRun.Clear();
+
+            for (int i = 0; i < 10; i++)
+                tasksToRun.Add(DoWrongAuthenticationAttempt(NeverExpiresUser.Username, NeverExpiresUser.Domain, NeverExpiresUser.Application));
+
+            await Task.WhenAll(tasksToRun);
+
+            response = await CommonUtils.AuthenticateUser(NeverExpiresUser.Username, NeverExpiresUser.Password, NeverExpiresUser.Domain, NeverExpiresUser.Application);
+
+            Assert.False(response.IsAuthenticated, "Should be locked after many failed authentications");
+            Assert.Equal("KS-E108", response.ResponseCode);
+        }
+
+        [Fact]
+        public async Task CorrectCredentialsAfterUserLockTimeoutExpiresSucceeds()
+        {
+            await LockUser(NeverExpiresUser.Username, NeverExpiresUser.Domain, NeverExpiresUser.Application);
+            await Task.Delay(100000);
+            var response = await CommonUtils.AuthenticateUser(NeverExpiresUser.Username, 
+                                                              NeverExpiresUser.Password,
+                                                              NeverExpiresUser.Domain, 
+                                                              NeverExpiresUser.Application);
             Assert.True(response.IsAuthenticated);
         }
 
-        [Fact]
-        public async void AllIncorrectCredentialAuthFails()
+
+
+        private async Task LockUser(string user,string domain, string app)
         {
-            AuthenticationRequest request = AuthenticationRequest.FromUsernamePasswordDomainAndApp(IncorrectUsername, IncorrectPassword, IncorrectDomain, IncorrectApp);
-            AuthenticationResponse response = await AuthenticateUserUrl.PostJsonAsync(request).ReceiveJson<AuthenticationResponse>();
-            Assert.False(response.IsAuthenticated);
+            List<Task> tasksToRun = new List<Task>();
+
+            for (int i = 0; i < 30; i++)
+                tasksToRun.Add(DoWrongAuthenticationAttempt(user, domain, app));
+
+            await Task.WhenAll(tasksToRun);
         }
 
-        [Fact]
-        public async void IncorrectUsernameAuthFails()
+        private async Task DoWrongAuthenticationAttempt(string user, string domain, string app)
         {
-            AuthenticationRequest request = AuthenticationRequest.FromUsernamePasswordDomainAndApp(IncorrectUsername, CorrectPassword, CorrectDomain, CorrectApplicationName);
-            AuthenticationResponse response = await AuthenticateUserUrl.PostJsonAsync(request).ReceiveJson<AuthenticationResponse>();
+            AuthenticationRequest request = AuthenticationRequest.FromUsernamePasswordDomainAndApp(user, IncorrectData.Password, domain, app);
+            AuthenticationResponse response = await APIs.AuthenticateUserUrl.PostJsonAsync(request).ReceiveJson<AuthenticationResponse>();
             Assert.False(response.IsAuthenticated);
         }
-
-        [Fact]
-        public async void IncorrectPasswordAuthFails()
-        {
-            AuthenticationRequest request = AuthenticationRequest.FromUsernamePasswordDomainAndApp(CorrectUsername, IncorrectPassword, CorrectDomain, CorrectApplicationName);
-            AuthenticationResponse response = await AuthenticateUserUrl.PostJsonAsync(request).ReceiveJson<AuthenticationResponse>();
-            Assert.False(response.IsAuthenticated);
-        }
-
-        [Fact]
-        public async void IncorrectDomainAuthFails()
-        {
-            AuthenticationRequest request = AuthenticationRequest.FromUsernamePasswordDomainAndApp(CorrectUsername, CorrectPassword, IncorrectDomain, CorrectApplicationName);
-            AuthenticationResponse response = await AuthenticateUserUrl.PostJsonAsync(request).ReceiveJson<AuthenticationResponse>();
-            Assert.False(response.IsAuthenticated);
-        }
-
-        [Fact]
-        public async void IncorrectAppAuthFails()
-        {
-            AuthenticationRequest request = AuthenticationRequest.FromUsernamePasswordDomainAndApp(CorrectUsername, CorrectPassword, CorrectDomain, IncorrectApp);
-            AuthenticationResponse response = await AuthenticateUserUrl.PostJsonAsync(request).ReceiveJson<AuthenticationResponse>();
-            Assert.False(response.IsAuthenticated);
-        }
-
-        // TODO we should update tets db with an approproiate user to test this case
-        //[Fact]
-        //public async void DifferentDomainCorrectCredentialsAuthFails()
-        //{
-        //    AuthenticationRequest request = AuthenticationRequest.FromUsernamePasswordDomainAndApp("pippo", "Maialino818!", "KyklosTest", );
-        //    AuthenticationResponse response = await AuthenticateUserUrl.PostJsonAsync(request).ReceiveJson<AuthenticationResponse>();
-        //    Assert.False(response.IsAuthenticated);
-        //}
-
-        [Fact]
-        public async void DifferentAppCorrectCredentialsAuthFails()
-        {
-            AuthenticationRequest request = AuthenticationRequest.FromUsernamePasswordDomainAndApp("pippo", "Maialino818!", "KyklosTest", IncorrectApp);
-            AuthenticationResponse response = await AuthenticateUserUrl.PostJsonAsync(request).ReceiveJson<AuthenticationResponse>();
-            Assert.False(response.IsAuthenticated);
-        }
-
     }
+
 }

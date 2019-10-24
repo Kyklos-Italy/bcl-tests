@@ -1,162 +1,237 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Xunit;
 using Flurl.Http;
 using KMicro.Auth.Models.Rest.User;
+using KMicro.Auth.Tests.TestUsers;
+using KMicro.Auth.Tests.Utils;
+using KMicro.Auth.Tests.TestAPI;
 
 namespace KMicro.Auth.Tests.ChangePassword
 {
     public class ChangePasswordTests
     {
-        // TODO duplicated fields. Should be put in a base class or in a dedicated static class
-        private static int Port { get; } = 27685;
-        private static string ServerIp { get; } = "172.16.100.32";
-
-        public static string AuthenticateUserUrl { get; } = $"http://{ServerIp}:{Port}/api/user/v1/authenticate";
-        public static string ChangePasswordUserUrl { get; } = $"http://{ServerIp}:{Port}/api/user/v1/changePassword";
-
-        private static string CriteriaCompliantPassword = "Fu!fa81";
-
-
-        private async Task<string> AuthenticateUser(string username, string password, string domain, string app)
-        {
-            AuthenticationRequest authRequest = AuthenticationRequest.FromUsernamePasswordDomainAndApp(username, password, domain, app);
-            AuthenticationResponse authResponse = await AuthenticateUserUrl.PostJsonAsync(authRequest).ReceiveJson<AuthenticationResponse>();
-            Assert.True(authResponse.IsAuthenticated, "Authentication failed. Could not proceed to change password");
-            return authResponse.Jwt;
-        }
-
-
         [Fact]
-        public async void CriteriaCompliantPasswordSucceeds()
+        public async Task CriteriaCompliantPasswordSucceeds()
         {
-            // TODO remove magic strings
-            string jwt = await AuthenticateUser("pippo", "Maialino818!", "KyklosTest", "QualityX");
+            string newPassword = "POR8888li717?";
 
-            ChangePasswordRequest changePasswordRequest = ChangePasswordRequest.New("pippo", "KyklosTest", "QualityX", jwt, CriteriaCompliantPassword);
-            ChangePasswordResponse changePasswordResponse = await ChangePasswordUserUrl.PostJsonAsync(changePasswordRequest).ReceiveJson<ChangePasswordResponse>();
-            Assert.True(changePasswordResponse.Succeded);
+            ChangePasswordResponse changePasswordResponse =  await ChangePassword(NeverExpiresUser.Username, 
+                                                                                  NeverExpiresUser.Password,
+                                                                                  newPassword, 
+                                                                                  NeverExpiresUser.Domain,
+                                                                                  NeverExpiresUser.Application);
+
+            ChangePasswordResponse resetPasswordResponse = await ChangePassword(NeverExpiresUser.Username,
+                                                                                newPassword,
+                                                                                NeverExpiresUser.Password,
+                                                                                NeverExpiresUser.Domain,                                   
+                                                                                NeverExpiresUser.Application);                                    
+                                                                   
+            Assert.True(resetPasswordResponse.Succeded, "[WARNING]Could not reset original password after test");
+            Assert.True(changePasswordResponse.Succeded, "Could not change password: " + changePasswordResponse.ResponseMessage + ", details: " + changePasswordResponse.CustomDataJson);
         }
 
         [Fact]
-        public async void TooShortPasswordFails()
+        public async Task TooShortPasswordFails()
         {
-            string jwt = await AuthenticateUser("pippo", "Maialino818!", "KyklosTest", "QualityX");
-
-            ChangePasswordRequest changePasswordRequest = ChangePasswordRequest.New("user01", "kyklos", "qx", jwt, "F4f!");
-            ChangePasswordResponse changePasswordResponse = await ChangePasswordUserUrl.PostJsonAsync(changePasswordRequest).ReceiveJson<ChangePasswordResponse>();
+            ChangePasswordResponse changePasswordResponse = await ChangePassword(NeverExpiresUser.Username,
+                                                                                 NeverLocksUser.Password,
+                                                                                 "F4f!",
+                                                                                 NeverExpiresUser.Domain,
+                                                                                 NeverExpiresUser.Application);           
             Assert.False(changePasswordResponse.Succeded);
         }
 
         [Fact]
-        public async void PasswordContainingUserFails()
+        public async Task PasswordContainingUserFails()
         {
-            string jwt = await AuthenticateUser("pippo", "Maialino818!", "KyklosTest", "QualityX");
-
-            ChangePasswordRequest changePasswordRequest = ChangePasswordRequest.New("user01", "kyklos", "qx", jwt, CriteriaCompliantPassword + "pippo");
-            ChangePasswordResponse changePasswordResponse = await ChangePasswordUserUrl.PostJsonAsync(changePasswordRequest).ReceiveJson<ChangePasswordResponse>();
+            ChangePasswordResponse changePasswordResponse = await ChangePassword(NeverExpiresUser.Username,
+                                                                                 NeverLocksUser.Password,
+                                                                                 "83579r!" + NeverExpiresUser.Username,
+                                                                                 NeverExpiresUser.Domain,
+                                                                                 NeverExpiresUser.Application);
             Assert.False(changePasswordResponse.Succeded);
         }
 
         [Fact]
-        public async void InvalidPatternPasswordFails()
+        public async Task InvalidPatternPasswordFails()
         {
-            string jwt = await AuthenticateUser("pippo", "Maialino818!", "KyklosTest", "QualityX");
-
-            ChangePasswordRequest changePasswordRequest = ChangePasswordRequest.New("user01", "MonclerTest", "qx", jwt, "Moncler?81");
-            ChangePasswordResponse changePasswordResponse = await ChangePasswordUserUrl.PostJsonAsync(changePasswordRequest).ReceiveJson<ChangePasswordResponse>();
+            ChangePasswordResponse changePasswordResponse = await ChangePassword(NeverExpiresUser.Username,
+                                                                                 NeverLocksUser.Password,
+                                                                                 "KYKlos19pippo!",
+                                                                                 NeverExpiresUser.Domain,
+                                                                                 NeverExpiresUser.Application);
             Assert.False(changePasswordResponse.Succeded);
         }
 
         [Fact]
-        public async void NoNumericCharacterPasswordFails()
+        public async Task NoNumericCharacterPasswordFails()
         {
-            string jwt = await AuthenticateUser("pippo", "Maialino818!", "KyklosTest", "QualityX");
-
-            ChangePasswordRequest changePasswordRequest = ChangePasswordRequest.New("user01", "MonclerTest", "qx", jwt, "KIKKs?");
-            ChangePasswordResponse changePasswordResponse = await ChangePasswordUserUrl.PostJsonAsync(changePasswordRequest).ReceiveJson<ChangePasswordResponse>();
+            ChangePasswordResponse changePasswordResponse = await ChangePassword(NeverExpiresUser.Username,
+                                                                                 NeverLocksUser.Password,
+                                                                                 "KIKKs?",
+                                                                                 NeverExpiresUser.Domain,
+                                                                                 NeverExpiresUser.Application);
             Assert.False(changePasswordResponse.Succeded);
         }
 
         [Fact]
-        public async void NoLowercaseCharacterPasswordFails()
+        public async Task NoLowercaseCharacterPasswordFails()
         {
-            string jwt = await AuthenticateUser("pippo", "Maialino818!", "KyklosTest", "QualityX");
-
-            ChangePasswordRequest changePasswordRequest = ChangePasswordRequest.New("user01", "MonclerTest", "qx", jwt, "KIKK4?");
-            ChangePasswordResponse changePasswordResponse = await ChangePasswordUserUrl.PostJsonAsync(changePasswordRequest).ReceiveJson<ChangePasswordResponse>();
+            ChangePasswordResponse changePasswordResponse = await ChangePassword(NeverExpiresUser.Username,
+                                                                                 NeverLocksUser.Password,
+                                                                                 "KIKK4?",
+                                                                                 NeverExpiresUser.Domain,
+                                                                                 NeverExpiresUser.Application);
             Assert.False(changePasswordResponse.Succeded);
         }
 
         [Fact]
-        public async void NoSpecialCharacterPasswordFails()
+        public async Task NoSpecialCharacterPasswordFails()
         {
-            string jwt = await AuthenticateUser("pippo", "Maialino818!", "KyklosTest", "QualityX");
-
-            ChangePasswordRequest changePasswordRequest = ChangePasswordRequest.New("user01", "MonclerTest", "qx", jwt, "KIKKa5");
-            ChangePasswordResponse changePasswordResponse = await ChangePasswordUserUrl.PostJsonAsync(changePasswordRequest).ReceiveJson<ChangePasswordResponse>();
+            ChangePasswordResponse changePasswordResponse = await ChangePassword(NeverExpiresUser.Username,
+                                                                                 NeverLocksUser.Password,
+                                                                                 "KIKKa5",
+                                                                                 NeverExpiresUser.Domain,
+                                                                                 NeverExpiresUser.Application);
             Assert.False(changePasswordResponse.Succeded);
         }
 
         [Fact]
-        public async void TooManyConsecutiveEqualCharactersPasswordFails()
+        public async Task TooManyConsecutiveEqualCharactersPasswordFails()
         {
-            string jwt = await AuthenticateUser("pippo", "Maialino818!", "KyklosTest", "QualityX");
-
-            ChangePasswordRequest changePasswordRequest = ChangePasswordRequest.New("user01", "MonclerTest", "qx", jwt, "KkKKka5?");
-            ChangePasswordResponse changePasswordResponse = await ChangePasswordUserUrl.PostJsonAsync(changePasswordRequest).ReceiveJson<ChangePasswordResponse>();
+            ChangePasswordResponse changePasswordResponse = await ChangePassword(NeverExpiresUser.Username,
+                                                                                 NeverLocksUser.Password,
+                                                                                 "KkKKka5?",
+                                                                                 NeverExpiresUser.Domain,
+                                                                                 NeverExpiresUser.Application);
             Assert.False(changePasswordResponse.Succeded);
         }
 
         [Fact]
-        public async void TooLongPasswordFails()
+        public async Task TooLongPasswordFails()
         {
-            string jwt = await AuthenticateUser("pippo", "Maialino818!", "KyklosTest", "QualityX");
-
-            ChangePasswordRequest changePasswordRequest = ChangePasswordRequest.New("user01", "MonclerTest", "qx", jwt, "M41alinoMaialoso?");
-            ChangePasswordResponse changePasswordResponse = await ChangePasswordUserUrl.PostJsonAsync(changePasswordRequest).ReceiveJson<ChangePasswordResponse>();
+            ChangePasswordResponse changePasswordResponse = await ChangePassword(NeverExpiresUser.Username,
+                                                                                 NeverLocksUser.Password,
+                                                                                 "M41alinoMaialoso?",
+                                                                                 NeverExpiresUser.Domain,
+                                                                                 NeverExpiresUser.Application);
             Assert.False(changePasswordResponse.Succeded);
         }
 
         [Fact]
         public async void TooManyNumricCharactersPasswordFails()
         {
-            string jwt = await AuthenticateUser("pippo", "Maialino818!", "KyklosTest", "QualityX");
-
-            ChangePasswordRequest changePasswordRequest = ChangePasswordRequest.New("user01", "MonclerTest", "qx", jwt, "M414l1n081?");
-            ChangePasswordResponse changePasswordResponse = await ChangePasswordUserUrl.PostJsonAsync(changePasswordRequest).ReceiveJson<ChangePasswordResponse>();
+            ChangePasswordResponse changePasswordResponse = await ChangePassword(NeverExpiresUser.Username,
+                                                                                 NeverLocksUser.Password,
+                                                                                 "M414l1n0811?",
+                                                                                 NeverExpiresUser.Domain,
+                                                                                 NeverExpiresUser.Application);
             Assert.False(changePasswordResponse.Succeded);
         }
 
         [Fact]
-        public async void TooManySpecialCharactersPasswordFails()
+        public async Task TooManySpecialCharactersPasswordFails()
         {
-            string jwt = await AuthenticateUser("pippo", "Maialino818!", "KyklosTest", "QualityX");
-
-            ChangePasswordRequest changePasswordRequest = ChangePasswordRequest.New("user01", "MonclerTest", "qx", jwt, "M?&%?!$$81?");
-            ChangePasswordResponse changePasswordResponse = await ChangePasswordUserUrl.PostJsonAsync(changePasswordRequest).ReceiveJson<ChangePasswordResponse>();
+            ChangePasswordResponse changePasswordResponse = await ChangePassword(NeverExpiresUser.Username,
+                                                                                 NeverLocksUser.Password,
+                                                                                 "M?&%?!$$81?",
+                                                                                 NeverExpiresUser.Domain,
+                                                                                 NeverExpiresUser.Application);
             Assert.False(changePasswordResponse.Succeded);
         }
 
         [Fact]
-        public async void TooManyLowercaseCharactersPasswordFails()
+        public async Task TooManyLowercaseCharactersPasswordFails()
         {
-            string jwt = await AuthenticateUser("pippo", "Maialino818!", "KyklosTest", "QualityX");
-
-            ChangePasswordRequest changePasswordRequest = ChangePasswordRequest.New("user01", "MonclerTest", "qx", jwt, "Maialino?73");
-            ChangePasswordResponse changePasswordResponse = await ChangePasswordUserUrl.PostJsonAsync(changePasswordRequest).ReceiveJson<ChangePasswordResponse>();
+            ChangePasswordResponse changePasswordResponse = await ChangePassword(NeverExpiresUser.Username,
+                                                                                 NeverLocksUser.Password,
+                                                                                 "Maialino?73",
+                                                                                 NeverExpiresUser.Domain,
+                                                                                 NeverExpiresUser.Application);
             Assert.False(changePasswordResponse.Succeded);
         }
 
         [Fact]
-        public async void TooManyUppercaseCharactersPasswordFails()
+        public async Task TooManyUppercaseCharactersPasswordFails()
         {
-            string jwt = await AuthenticateUser("pippo", "Maialino818!", "KyklosTest", "QualityX");
-
-            ChangePasswordRequest changePasswordRequest = ChangePasswordRequest.New("user01", "MonclerTest", "qx", jwt, "MAIALIno?73");
-            ChangePasswordResponse changePasswordResponse = await ChangePasswordUserUrl.PostJsonAsync(changePasswordRequest).ReceiveJson<ChangePasswordResponse>();
+            ChangePasswordResponse changePasswordResponse = await ChangePassword(NeverExpiresUser.Username,
+                                                                                 NeverLocksUser.Password,
+                                                                                 "MAIALIno?73",
+                                                                                 NeverExpiresUser.Domain,
+                                                                                 NeverExpiresUser.Application);
             Assert.False(changePasswordResponse.Succeded);
         }
 
+        [Fact]
+        public async Task ChangePasswordWithJwtAfterPasswordExpiredSucceds()
+        {
+           
+            var authResponse = await CommonUtils.AuthenticateUser(PasswordExpiredUser.Username,
+                                                                  "prceLLINO616!", 
+                                                                  PasswordExpiredUser.Domain, 
+                                                                  PasswordExpiredUser.Application);
+            Assert.False(authResponse.IsAuthenticated);
+            Assert.NotEqual(authResponse.Jwt, string.Empty);
+
+
+            ChangePasswordRequest changePasswordRequest = ChangePasswordRequest.New(PasswordExpiredUser.Username, 
+                                                                                    PasswordExpiredUser.Domain, 
+                                                                                    PasswordExpiredUser.Application, 
+                                                                                    authResponse.Jwt,
+                                                                                    "prceLLINO616!");
+
+            ChangePasswordResponse changePasswordResponse = await APIs.ChangePasswordUserUrl.PostJsonAsync(changePasswordRequest).ReceiveJson<ChangePasswordResponse>();
+
+            Assert.True(changePasswordResponse.Succeded, changePasswordResponse.ResponseMessage);
+        }
+
+        [Fact]
+        public async Task NewPasswordIsInLastNPasswordsFails()
+        {
+            string username = NeverExpiresUser.Username;
+            string password = NeverExpiresUser.Password;
+            string domain = NeverExpiresUser.Domain;
+            string application = NeverExpiresUser.Application;
+            AuthenticationResponse authResponse;
+            var randomNumberGenerator = new Random();
+
+            for (int i = 0; i < 4; i++)
+            {
+                authResponse =  await CommonUtils.AuthenticateUser(username, password, domain, application);
+                password += randomNumberGenerator.Next(1, 99).ToString(); 
+                         
+                ChangePasswordRequest changePasswordRequest = ChangePasswordRequest.New(username, domain, application, authResponse.Jwt, password);
+                ChangePasswordResponse changePasswordResponse = await APIs.ChangePasswordUserUrl.PostJsonAsync(changePasswordRequest).ReceiveJson<ChangePasswordResponse>();
+                Assert.True(changePasswordResponse.Succeded);
+
+            }
+
+            authResponse = await CommonUtils.AuthenticateUser(username, password, domain, application);
+            ChangePasswordRequest lastChangePasswordRequest = ChangePasswordRequest.New(username,
+                                                          domain,
+                                                          application,
+                                                          authResponse.Jwt,
+                                                          NeverExpiresUser.Password);
+
+            ChangePasswordResponse lastChangePasswordResponse = await APIs.ChangePasswordUserUrl.PostJsonAsync(lastChangePasswordRequest).ReceiveJson<ChangePasswordResponse>();
+            Assert.False(lastChangePasswordResponse.Succeded);
+
+        }
+
+        private async Task<ChangePasswordResponse> ChangePassword(string user, string oldPassword, string newPassword, string domain, string app)
+        {
+            var authResponse = await CommonUtils.AuthenticateUser(user, oldPassword, domain, app);
+            ChangePasswordRequest changePasswordRequest = ChangePasswordRequest.New(NeverExpiresUser.Username,
+                                                                                    NeverExpiresUser.Domain,
+                                                                                    NeverExpiresUser.Application,
+                                                                                    authResponse.Jwt,
+                                                                                    newPassword);
+
+            ChangePasswordResponse changePasswordResponse = await APIs.ChangePasswordUserUrl.PostJsonAsync(changePasswordRequest).ReceiveJson<ChangePasswordResponse>();
+            return changePasswordResponse;
+        }
     }
 }
 
