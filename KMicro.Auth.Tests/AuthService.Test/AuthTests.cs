@@ -2,11 +2,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Xunit;
-using Flurl.Http;
 using KMicro.Auth.Models.Rest.User;
 using KMicro.Auth.Tests.TestUsers;
 using KMicro.Auth.Tests.Utils;
-using KMicro.Auth.Tests.TestAPI;
 
 namespace KMicro.Auth.Tests.Authenticate
 {
@@ -131,19 +129,15 @@ namespace KMicro.Auth.Tests.Authenticate
 
             tasksToRun.Add(CommonUtils.DoWrongAuthenticationAttempt(NeverExpiresUser.Username, NeverExpiresUser.Domain, NeverExpiresUser.Application));
             await Task.WhenAll(tasksToRun);
-
             var response = await CommonUtils.AuthenticateUser(NeverExpiresUser.Username, NeverExpiresUser.Password, NeverExpiresUser.Domain, NeverExpiresUser.Application);
             Assert.True(response.IsAuthenticated, "Could not authenticate " + response.ResponseMessage);
-
             tasksToRun.Clear();
 
             for (int i = 0; i < 10; i++)
                 tasksToRun.Add(CommonUtils.DoWrongAuthenticationAttempt(NeverExpiresUser.Username, NeverExpiresUser.Domain, NeverExpiresUser.Application));
 
             await Task.WhenAll(tasksToRun);
-
             response = await CommonUtils.AuthenticateUser(NeverExpiresUser.Username, NeverExpiresUser.Password, NeverExpiresUser.Domain, NeverExpiresUser.Application);
-
             Assert.False(response.IsAuthenticated, "Should be locked after many failed authentications");
             Assert.Equal("KS-E108", response.ResponseCode);
         }

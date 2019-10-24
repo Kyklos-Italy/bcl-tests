@@ -210,10 +210,10 @@ namespace KMicro.Auth.Tests.ChangePassword
 
             authResponse = await CommonUtils.AuthenticateUser(username, password, domain, application);
             ChangePasswordRequest lastChangePasswordRequest = ChangePasswordRequest.New(username,
-                                                          domain,
-                                                          application,
-                                                          authResponse.Jwt,
-                                                          NeverExpiresUser.Password);
+                                                                                        domain,
+                                                                                        application,
+                                                                                        authResponse.Jwt,
+                                                                                        NeverExpiresUser.Password);
 
             ChangePasswordResponse lastChangePasswordResponse = await APIs.ChangePasswordUserUrl.PostJsonAsync(lastChangePasswordRequest).ReceiveJson<ChangePasswordResponse>();
             Assert.False(lastChangePasswordResponse.Succeded);
