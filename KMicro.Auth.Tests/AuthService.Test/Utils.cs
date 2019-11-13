@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.IO;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 using Flurl.Http;
@@ -20,9 +22,9 @@ namespace KMicro.Auth.Tests.Utils
         public static async Task<ChangePasswordResponse> ChangePassword(string user, string oldPassword, string newPassword, string domain, string app)
         {
             var authResponse = await CommonUtils.AuthenticateUser(user, oldPassword, domain, app);
-            ChangePasswordRequest changePasswordRequest = ChangePasswordRequest.New(NeverExpiresUser.Username,
-                                                                                    NeverExpiresUser.Domain,
-                                                                                    NeverExpiresUser.Application,
+            ChangePasswordRequest changePasswordRequest = ChangePasswordRequest.New(user,
+                                                                                    domain,
+                                                                                    app,
                                                                                     authResponse.Jwt,
                                                                                     newPassword);
 
@@ -44,6 +46,26 @@ namespace KMicro.Auth.Tests.Utils
                 tasksToRun.Add(CommonUtils.DoWrongAuthenticationAttempt(user, domain, app));
 
             await Task.WhenAll(tasksToRun);
+        }
+
+        public static async Task<string> ResetDbData()
+        {
+           return await $"{APIs.AdminUrl}restoredata".WithHeader("AUTH-X-API-KEY", _GetAPIKey()).PutJsonAsync("nocare").ReceiveString();
+        }
+
+        private static string _GetAPIKey()
+        {
+            string APIkeyFilename = "api_key.txt";
+
+            try
+            {
+                return File.ReadAllText(APIkeyFilename);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine($"Could not read admin APIs key from {APIkeyFilename}: {exception.Message}");
+                return string.Empty;
+            }
         }
     }
 }

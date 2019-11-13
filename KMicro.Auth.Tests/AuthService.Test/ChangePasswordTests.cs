@@ -16,27 +16,22 @@ namespace KMicro.Auth.Tests.ChangePassword
         {
             string newPassword = "POR8888li717?";
 
-            ChangePasswordResponse changePasswordResponse =  await CommonUtils.ChangePassword(NeverExpiresUser.Username, 
-                                                                                              NeverExpiresUser.Password,
-                                                                                              newPassword, 
-                                                                                              NeverExpiresUser.Domain,
-                                                                                              NeverExpiresUser.Application);
+            ChangePasswordResponse changePasswordResponse =  await CommonUtils.ChangePassword(AllowOldPasswordsUser.Username,
+                                                                                              AllowOldPasswordsUser.Password,
+                                                                                              newPassword,
+                                                                                              AllowOldPasswordsUser.Domain,
+                                                                                              AllowOldPasswordsUser.Application);
 
-            ChangePasswordResponse resetPasswordResponse = await CommonUtils.ChangePassword(NeverExpiresUser.Username,
-                                                                                            newPassword,
-                                                                                            NeverExpiresUser.Password,
-                                                                                            NeverExpiresUser.Domain,                                   
-                                                                                            NeverExpiresUser.Application);                                    
-                                                                   
-            Assert.True(resetPasswordResponse.Succeded, "[WARNING]Could not reset original password after test");
             Assert.True(changePasswordResponse.Succeded, "Could not change password: " + changePasswordResponse.ResponseMessage + ", details: " + changePasswordResponse.CustomDataJson);
+            string resetDbResponse = await CommonUtils.ResetDbData();
+            Assert.Equal(APIResponses.ResetDBOkResponse, resetDbResponse);
         }
 
         [Fact]
         public async Task TooShortPasswordFails()
         {
             ChangePasswordResponse changePasswordResponse = await CommonUtils.ChangePassword(NeverExpiresUser.Username,
-                                                                                             NeverLocksUser.Password,
+                                                                                             NeverExpiresUser.Password,
                                                                                              "F4f!",
                                                                                              NeverExpiresUser.Domain,
                                                                                              NeverExpiresUser.Application);           
@@ -47,7 +42,7 @@ namespace KMicro.Auth.Tests.ChangePassword
         public async Task PasswordContainingUserFails()
         {
             ChangePasswordResponse changePasswordResponse = await CommonUtils.ChangePassword(NeverExpiresUser.Username,
-                                                                                             NeverLocksUser.Password,
+                                                                                             NeverExpiresUser.Password,
                                                                                              "83579r!" + NeverExpiresUser.Username,
                                                                                              NeverExpiresUser.Domain,
                                                                                              NeverExpiresUser.Application);
@@ -58,7 +53,7 @@ namespace KMicro.Auth.Tests.ChangePassword
         public async Task InvalidPatternPasswordFails()
         {
             ChangePasswordResponse changePasswordResponse = await CommonUtils.ChangePassword(NeverExpiresUser.Username,
-                                                                                             NeverLocksUser.Password,
+                                                                                             NeverExpiresUser.Password,
                                                                                              "KYKlos19pippo!",
                                                                                              NeverExpiresUser.Domain,
                                                                                              NeverExpiresUser.Application);
@@ -69,7 +64,7 @@ namespace KMicro.Auth.Tests.ChangePassword
         public async Task NoNumericCharacterPasswordFails()
         {
             ChangePasswordResponse changePasswordResponse = await CommonUtils.ChangePassword(NeverExpiresUser.Username,
-                                                                                             NeverLocksUser.Password,
+                                                                                             NeverExpiresUser.Password,
                                                                                              "KIKKs?",
                                                                                              NeverExpiresUser.Domain,
                                                                                              NeverExpiresUser.Application);
@@ -80,7 +75,7 @@ namespace KMicro.Auth.Tests.ChangePassword
         public async Task NoLowercaseCharacterPasswordFails()
         {
             ChangePasswordResponse changePasswordResponse = await CommonUtils.ChangePassword(NeverExpiresUser.Username,
-                                                                                             NeverLocksUser.Password,
+                                                                                             NeverExpiresUser.Password,
                                                                                              "KIKK4?",
                                                                                              NeverExpiresUser.Domain,
                                                                                              NeverExpiresUser.Application);
@@ -91,7 +86,7 @@ namespace KMicro.Auth.Tests.ChangePassword
         public async Task NoSpecialCharacterPasswordFails()
         {
             ChangePasswordResponse changePasswordResponse = await CommonUtils.ChangePassword(NeverExpiresUser.Username,
-                                                                                             NeverLocksUser.Password,
+                                                                                             NeverExpiresUser.Password,
                                                                                              "KIKKa5",
                                                                                              NeverExpiresUser.Domain,
                                                                                              NeverExpiresUser.Application);
@@ -102,8 +97,8 @@ namespace KMicro.Auth.Tests.ChangePassword
         public async Task TooManyConsecutiveEqualCharactersPasswordFails()
         {
             ChangePasswordResponse changePasswordResponse = await CommonUtils.ChangePassword(NeverExpiresUser.Username,
-                                                                                             NeverLocksUser.Password,
-                                                                                             "KkKKka5?",
+                                                                                             NeverExpiresUser.Password,
+                                                                                             "aaaaaaaabA1?",
                                                                                              NeverExpiresUser.Domain,
                                                                                              NeverExpiresUser.Application);
             Assert.False(changePasswordResponse.Succeded);
@@ -113,8 +108,8 @@ namespace KMicro.Auth.Tests.ChangePassword
         public async Task TooLongPasswordFails()
         {
             ChangePasswordResponse changePasswordResponse = await CommonUtils.ChangePassword(NeverExpiresUser.Username,
-                                                                                             NeverLocksUser.Password,
-                                                                                             "M41alinoMaialoso?",
+                                                                                             NeverExpiresUser.Password,
+                                                                                             "1234567890ABCDEabcdefghi??!!!",
                                                                                              NeverExpiresUser.Domain,
                                                                                              NeverExpiresUser.Application);
             Assert.False(changePasswordResponse.Succeded);
@@ -124,8 +119,8 @@ namespace KMicro.Auth.Tests.ChangePassword
         public async void TooManyNumricCharactersPasswordFails()
         {
             ChangePasswordResponse changePasswordResponse = await CommonUtils.ChangePassword(NeverExpiresUser.Username,
-                                                                                             NeverLocksUser.Password,
-                                                                                             "M414l1n0811?",
+                                                                                             NeverExpiresUser.Password,
+                                                                                             "1234567891011Aa!",
                                                                                              NeverExpiresUser.Domain,
                                                                                              NeverExpiresUser.Application);
             Assert.False(changePasswordResponse.Succeded);
@@ -135,7 +130,7 @@ namespace KMicro.Auth.Tests.ChangePassword
         public async Task TooManySpecialCharactersPasswordFails()
         {
             ChangePasswordResponse changePasswordResponse = await CommonUtils.ChangePassword(NeverExpiresUser.Username,
-                                                                                             NeverLocksUser.Password,
+                                                                                             NeverExpiresUser.Password,
                                                                                              "M?&%?!$$81?",
                                                                                              NeverExpiresUser.Domain,
                                                                                              NeverExpiresUser.Application);
@@ -146,8 +141,8 @@ namespace KMicro.Auth.Tests.ChangePassword
         public async Task TooManyLowercaseCharactersPasswordFails()
         {
             ChangePasswordResponse changePasswordResponse = await CommonUtils.ChangePassword(NeverExpiresUser.Username,
-                                                                                             NeverLocksUser.Password,
-                                                                                             "Maialino?73",
+                                                                                             NeverExpiresUser.Password,
+                                                                                             "abcdefghijklmn?73",
                                                                                              NeverExpiresUser.Domain,
                                                                                              NeverExpiresUser.Application);
             Assert.False(changePasswordResponse.Succeded);
@@ -157,7 +152,7 @@ namespace KMicro.Auth.Tests.ChangePassword
         public async Task TooManyUppercaseCharactersPasswordFails()
         {
             ChangePasswordResponse changePasswordResponse = await CommonUtils.ChangePassword(NeverExpiresUser.Username,
-                                                                                             NeverLocksUser.Password,
+                                                                                             NeverExpiresUser.Password,
                                                                                              "MAIALIno?73",
                                                                                              NeverExpiresUser.Domain,
                                                                                              NeverExpiresUser.Application);
@@ -169,7 +164,7 @@ namespace KMicro.Auth.Tests.ChangePassword
         {
            
             var authResponse = await CommonUtils.AuthenticateUser(PasswordExpiredUser.Username,
-                                                                  "prceLLINO616!", 
+                                                                  PasswordExpiredUser.Password, 
                                                                   PasswordExpiredUser.Domain, 
                                                                   PasswordExpiredUser.Application);
             Assert.False(authResponse.IsAuthenticated);
@@ -200,7 +195,7 @@ namespace KMicro.Auth.Tests.ChangePassword
             for (int i = 0; i < 4; i++)
             {
                 authResponse =  await CommonUtils.AuthenticateUser(username, password, domain, application);
-                password += randomNumberGenerator.Next(1, 99).ToString(); 
+                password += randomNumberGenerator.Next(1, 9).ToString(); 
                          
                 ChangePasswordRequest changePasswordRequest = ChangePasswordRequest.New(username, domain, application, authResponse.Jwt, password);
                 ChangePasswordResponse changePasswordResponse = await APIs.ChangePasswordUserUrl.PostJsonAsync(changePasswordRequest).ReceiveJson<ChangePasswordResponse>();
@@ -218,6 +213,8 @@ namespace KMicro.Auth.Tests.ChangePassword
             ChangePasswordResponse lastChangePasswordResponse = await APIs.ChangePasswordUserUrl.PostJsonAsync(lastChangePasswordRequest).ReceiveJson<ChangePasswordResponse>();
             Assert.False(lastChangePasswordResponse.Succeded);
 
+            string resetDbResponse = await CommonUtils.ResetDbData();
+            Assert.Equal(APIResponses.ResetDBOkResponse, resetDbResponse);
         }
     }
 }

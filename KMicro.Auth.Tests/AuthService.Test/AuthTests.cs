@@ -5,29 +5,12 @@ using Xunit;
 using KMicro.Auth.Models.Rest.User;
 using KMicro.Auth.Tests.TestUsers;
 using KMicro.Auth.Tests.Utils;
+using KMicro.Auth.Tests.TestAPI;
 
 namespace KMicro.Auth.Tests.Authenticate
 {
     public class AuthTests
     {
-        [Fact]
-        public async Task ChangePasswordOnFirstAccessEnabledReturnsJwt()
-        {
-            // TODO we currently don't have a way to reset  first access flag.
-            Assert.True(false);
-            //AuthenticationRequest request = AuthenticationRequest.FromUsernamePasswordDomainAndApp(CorrectUsername, CorrectPassword, CorrectDomain, CorrectApplicationName);
-            //AuthenticationResponse response = await AuthenticateUserUrl.PostJsonAsync(request).ReceiveJson<AuthenticationResponse>();
-            //Assert.False(response.IsAuthenticated);
-            //Assert.NotEqual(response.Jwt, string.Empty);
-
-
-            //string jwt = await CommonUtils.AuthenticateUser(NeverExpiresUser.Username,
-            //                                   NeverExpiresUser.Password,
-            //                                   NeverExpiresUser.Domain,
-            //                                   NeverExpiresUser.Application);
-            //Assert.NotEqual(jwt, string.Empty);
-        }
-
         [Fact]
         public async Task MultipleAsyncAuthsAllSucceed()
         {
@@ -38,7 +21,7 @@ namespace KMicro.Auth.Tests.Authenticate
                                                                      NeverLocksUser.Password,
                                                                      NeverLocksUser.Domain,
                                                                      NeverLocksUser.Application));
-            
+
             var responses = await Task.WhenAll(authRequestsAttemps);
             bool atLeastOneFailed = responses.Any(s => s.IsAuthenticated == false);
             Assert.False(atLeastOneFailed);
@@ -95,7 +78,7 @@ namespace KMicro.Auth.Tests.Authenticate
                                                       IncorrectData.Domain,
                                                       NeverLocksUser.Application);
 
-            Assert.Equal("KS-E103", authResponse.ResponseCode);
+            Assert.Equal("KS-E101", authResponse.ResponseCode);
             Assert.False(authResponse.IsAuthenticated);
         }
 
@@ -107,18 +90,21 @@ namespace KMicro.Auth.Tests.Authenticate
                                                                   NeverLocksUser.Domain,
                                                                   IncorrectData.Application);
             Assert.False(authResponse.IsAuthenticated);
-            Assert.Equal("KS-E104", authResponse.ResponseCode);
+            Assert.Equal("KS-E101", authResponse.ResponseCode);
         }
 
         [Fact]
         public async Task UserLocksAfterTooManyAuthAttempts()
         {
             await CommonUtils.LockUser(NeverExpiresUser.Username, NeverExpiresUser.Domain, NeverExpiresUser.Application);
-            var response = await CommonUtils.AuthenticateUser(NeverExpiresUser.Username, 
-                                                              NeverExpiresUser.Password, 
-                                                              NeverExpiresUser.Domain, 
+            var response = await CommonUtils.AuthenticateUser(NeverExpiresUser.Username,
+                                                              NeverExpiresUser.Password,
+                                                              NeverExpiresUser.Domain,
                                                               NeverExpiresUser.Application);
-            Assert.False(response.IsAuthenticated);           
+            string resetDbResponse = await CommonUtils.ResetDbData();
+
+            Assert.Equal(APIResponses.ResetDBOkResponse, resetDbResponse);
+            Assert.False(response.IsAuthenticated);
             Assert.Equal("KS-E108", response.ResponseCode);
         }
 
@@ -147,13 +133,38 @@ namespace KMicro.Auth.Tests.Authenticate
         {
             await CommonUtils.LockUser(NeverExpiresUser.Username, NeverExpiresUser.Domain, NeverExpiresUser.Application);
             await Task.Delay(100000);
-            var response = await CommonUtils.AuthenticateUser(NeverExpiresUser.Username, 
+            var response = await CommonUtils.AuthenticateUser(NeverExpiresUser.Username,
                                                               NeverExpiresUser.Password,
-                                                              NeverExpiresUser.Domain, 
+                                                              NeverExpiresUser.Domain,
                                                               NeverExpiresUser.Application);
             Assert.True(response.IsAuthenticated);
         }
 
-    }
+        [Fact]
+        public async Task MultipleAsyncAuthenticationsAreProcessedCorrectly()
+        {
+            List<Task<AuthenticationResponse>> correctAuthentications = new List<Task<AuthenticationResponse>>();
+            List<Task<AuthenticationResponse>> wrongAuthentications = new List<Task<AuthenticationResponse>>();
 
+            for (int i = 0; i < 10; i++)
+            {
+                correctAuthentications.Add(CommonUtils.AuthenticateUser(NeverLocksUser.Username,
+                                                                        NeverLocksUser.Password,
+                                                                        NeverLocksUser.Domain,
+                                                                        NeverLocksUser.Application));
+
+                wrongAuthentications.Add(CommonUtils.AuthenticateUser(IncorrectData.Username,
+                                                                      IncorrectData.Password,
+                                                                      IncorrectData.Domain,
+                                                                      IncorrectData.Application));
+            }
+
+            var correctResponses =  await Task.WhenAll(correctAuthentications);
+            var wrongResponses = await Task.WhenAll(wrongAuthentications);
+
+            Assert.True(correctResponses.All(a => a.IsAuthenticated == true));
+            Assert.True(wrongResponses.All(a => a.IsAuthenticated == false));
+        }
+    }
 }
+

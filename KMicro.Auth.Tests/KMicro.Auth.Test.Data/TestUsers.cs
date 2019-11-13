@@ -28,10 +28,17 @@ namespace KMicro.Auth.Tests.TestUsers
     public class PasswordExpiredUser
     {
         public const string Username = "pwdexpireduser";
-        public const string Password = "prceLLINO616!";
+        public const string Password = "Prosciutto313!";
         public const string Domain = "KyklosTest";
         public const string Application = "QualityX";
     }
 
+    public class AllowOldPasswordsUser
+    {
+        public const string Username = "neverxpuser";
+        public const string Password = "Maialino818!";
+        public const string Domain = "AllowOldPwdsDomain";
+        public const string Application = "ScmX";
+    }
 
 }
