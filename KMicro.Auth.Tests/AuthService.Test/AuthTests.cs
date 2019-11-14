@@ -12,7 +12,7 @@ namespace KMicro.Auth.Tests.Authenticate
     public class AuthTests
     {
         [Fact]
-        public async Task MultipleAsyncAuthsAllSucceed()
+        public async Task MultipleCorrectAsyncAuthsAllSucceed()
         {
             List<Task<AuthenticationResponse>> authRequestsAttemps = new List<Task<AuthenticationResponse>>();
 

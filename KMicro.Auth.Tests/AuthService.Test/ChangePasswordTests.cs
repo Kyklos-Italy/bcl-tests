@@ -32,7 +32,7 @@ namespace KMicro.Auth.Tests.ChangePassword
         {
             ChangePasswordResponse changePasswordResponse = await CommonUtils.ChangePassword(NeverExpiresUser.Username,
                                                                                              NeverExpiresUser.Password,
-                                                                                             "F4f!",
+                                                                                             "Ab1!",
                                                                                              NeverExpiresUser.Domain,
                                                                                              NeverExpiresUser.Application);           
             Assert.False(changePasswordResponse.Succeded);
