@@ -1938,7 +1938,7 @@ namespace Kyklos.Kernel.Data.Test
                 .From()
                 .Table<Team>("t")
                 .Where()
-                .Condition<Team>("t", x => SqlAsyncUtils.StrConcat(SqlAsyncUtils.StrConcat(x.Name, " - "), x.City) == "Juventus - Turin");
+                .Condition<Team>("t", x => SqlFunctions.StrConcat(x.Name, " - ", x.City) == "Juventus - Turin");
 
             var actualTeam = (await Dao.GetItemsAsync<Team>(queryBuilder).ConfigureAwait(false)).FirstOrDefault();
             Assert.Equal(expectedTeam, actualTeam);
@@ -2434,6 +2434,50 @@ namespace Kyklos.Kernel.Data.Test
             Assert.True(actualDays.Item1 == actualDays.Item2);
         }
 
+        protected async Task SearchByDynamicCriteriaCore()
+        {
+            try
+            {
+                var queryBuilder =
+                    Dao
+                    .NewQueryBuilder()
+                    .Select()
+                    .AllFields<Day>("D")
+                    .From()
+                    .Table<Day>("D")
+                    .Where()
+                    .True()
+                    .AndConditionsForCriteria<Day>("D", new { DayId = "2", NonExistingProp = 5, DAY_DATE = DateTime.Today }, true, "DAY_DATE");
+
+                var twp = queryBuilder.BuildSqlTextWithParameters();
+                var xx = twp.ReplaceParametersInSqlStringForImmediateExecute();
+
+                var actualDays = (await Dao.GetItemsArrayAsync<Day>(queryBuilder).ConfigureAwait(false));
+
+
+                queryBuilder =
+                    Dao
+                    .NewQueryBuilder()
+                    .Select()
+                    .AllFields<Day>("D")
+                    .From()
+                    .Table<Day>("D")
+                    .Where()
+                    .True()
+                    .AndConditionsForCriteria<Day, Day>("D", new Day { DayNumber = 1 }, true, x => x.DayDate);
+
+                twp = queryBuilder.BuildSqlTextWithParameters();
+
+
+                //Assert.True(actualDays.Item1 == actualDays.Item2);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
         protected void TestForNullShouldProduceIsNullOperatorCore()
         {
             var queryBuilder =
@@ -2443,11 +2487,21 @@ namespace Kyklos.Kernel.Data.Test
                 .Star("r")
                 .From()
                 .Table<Result>("r")
-                .Where<Result>("r", r => SqlAsyncUtils.IsNull(r.VisitorTeamId));
+                .Where<Result>("r", r => SqlFunctions.IsNull(r.VisitorTeamId) && (r.DayId == "1" || r.DayId == "2"));
 
-            var sqlActualJoin = queryBuilder.BuildSqlTextWithParameters().SqlText;
+            var swp = queryBuilder.BuildSqlTextWithParameters();
+            try
+            {
+                var ss = swp.ReplaceParametersInSqlStringForImmediateExecute();
 
-            Assert.Contains("is null", sqlActualJoin, StringComparison.InvariantCultureIgnoreCase);
+                Assert.Contains("is null", ss, StringComparison.InvariantCultureIgnoreCase);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
         }
 
         protected void TestForCoalesceCore()
@@ -2471,8 +2525,9 @@ namespace Kyklos.Kernel.Data.Test
         {
             Member expectedMember =
                 InitialMembers
-                .Where<Member>(x => x.MemberName == username && x.Password == password)
+                .Where(x => x.MemberName == username && x.Password == password)
                 .First();
+
             Member actualMember = await Dao.GetItemByExampleAsync<Member>(x => (x.MemberName == username && x.Password == password));
             Assert.Equal(expectedMember.MemberId, actualMember.MemberId);
         }
@@ -2492,6 +2547,7 @@ namespace Kyklos.Kernel.Data.Test
                             && x.MemberId == jobTime.MemberId
                             && x.JobId == jobTime.JobId
                             && x.DateOfWork == jobTime.DateOfWork
+                            && SqlFunctions.IsNull("")
                          );
                     int affected = await tDao.UpdateTableAsync(updateBuilder).ConfigureAwait(false);
                     Assert.Equal(1, affected);
@@ -2583,6 +2639,7 @@ namespace Kyklos.Kernel.Data.Test
             int result = await Dao.ExecuteScalarAsync<int>(query);
             Assert.Equal(expectedHours, result);
         }
+
         protected async Task CheckJobTimeExistShuoldBeCore()
         {
             bool expectedBoolean = true;

@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using System.Threading.Tasks;
+using Xunit;
 
 namespace Kyklos.Kernel.Data.MariaDB.Test.NetCore
 {
@@ -110,6 +111,12 @@ namespace Kyklos.Kernel.Data.MariaDB.Test.NetCore
         public void TestForNullShouldProduceIsNullOperator()
         {
             TestForNullShouldProduceIsNullOperatorCore();
+        }
+
+        [Fact]
+        public Task SearchByDynamicCriteria()
+        {
+            return SearchByDynamicCriteriaCore();
         }
 
         #endregion
