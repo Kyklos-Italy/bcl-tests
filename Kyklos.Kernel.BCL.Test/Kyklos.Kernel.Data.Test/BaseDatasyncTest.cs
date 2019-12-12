@@ -2576,6 +2576,7 @@ namespace Kyklos.Kernel.Data.Test
         {
             var dt = new DateTime();
             JobTimesOfTheDay[] expectedJobTimesOfTheDay =
+
                 new JobTimesOfTheDay[]
                 {
                     new JobTimesOfTheDay
@@ -2597,7 +2598,7 @@ namespace Kyklos.Kernel.Data.Test
                         Job = "NausSys for La MDS Yacht Ser"
                     }
                 };
-            var query = Dao
+        var query = Dao
             .NewQueryBuilder()
             .Select()
             .Field<JobTime>("JT", x => x.Hours, expectedJobTimesOfTheDay[0].GetFieldName(x => x.Hours))
@@ -2618,7 +2619,7 @@ namespace Kyklos.Kernel.Data.Test
                 InnerJoin<Reason>.WithAlias("R"), (JT, R) => JT.ReasonId == R.ReasonId,
                 InnerJoin<Job>.WithAlias("J"), (JT, R, J) => JT.JobId == J.JobId
             )
-            .Where<JobTime>("JT", JT => JT.MemberId == 218 && JT.DateOfWork == new DateTime(2019,6,18))
+            .Where<JobTime>("JT", JT => JT.MemberId == 218 && JT.DateOfWork == PrefixDate)
             //.And<JobTime>("JT", x => x.DateOfWork, WhereOperator.EqualTo, new DateTime())
             .OrderBy<JobTime>("JT", JT => JT.Hours, OrderByDirection.Descending);
             JobTimesOfTheDay[] result = await Dao.GetItemsArrayAsync<JobTimesOfTheDay>(query);
