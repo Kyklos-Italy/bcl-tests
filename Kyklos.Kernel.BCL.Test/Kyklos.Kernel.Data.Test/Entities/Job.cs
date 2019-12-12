@@ -15,7 +15,7 @@ namespace Kyklos.Kernel.Data.Test.Entities
         [EntityPropertyInfo(ColumnName = "ShortDesc", DbType = PropertyDbType.String, IsNullable = false, MaxLength = 50, ColumnOrder = 30)]
         public virtual string ShortDesc { get; set; }
 
-        [EntityPropertyInfo(ColumnName = "LongDesc", DbType = PropertyDbType.String, IsNullable = true, MaxLength = 8000, ColumnOrder = 40)]
+        [EntityPropertyInfo(ColumnName = "LongDesc", DbType = PropertyDbType.Clob, IsNullable = true, ColumnOrder = 40)]
         public virtual string LongDesc { get; set; }
 
         [EntityPropertyInfo(ColumnName = "IsJobActive", DbType = PropertyDbType.Boolean, IsNullable = false, ColumnOrder = 50)]
@@ -42,7 +42,7 @@ namespace Kyklos.Kernel.Data.Test.Entities
         [EntityPropertyInfo(ColumnName = "ConfirmedReleaseDate", DbType = PropertyDbType.DateTime, IsNullable = true, ColumnOrder = 120)]
         public virtual System.DateTime ConfirmedReleaseDate { get; set; }
 
-        [EntityPropertyInfo(ColumnName = "JobNote", DbType = PropertyDbType.String, IsNullable = true, MaxLength = 8000, ColumnOrder = 130)]
+        [EntityPropertyInfo(ColumnName = "JobNote", DbType = PropertyDbType.Clob, IsNullable = true, ColumnOrder = 130)]
         public virtual string JobNote { get; set; }
 
         [EntityPropertyInfo(ColumnName = "CustomerOrderRef", DbType = PropertyDbType.String, IsNullable = true, MaxLength = 100, ColumnOrder = 140)]

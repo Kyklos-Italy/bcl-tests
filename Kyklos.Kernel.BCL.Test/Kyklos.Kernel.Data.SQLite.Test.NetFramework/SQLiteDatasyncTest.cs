@@ -25,7 +25,7 @@ namespace Kyklos.Kernel.Data.SQLite.Test.NetFramework
 
         private void Setup()
         {
-            SetupCore().Wait();
+            SetupCoreAsync().Wait();
         }
 
         public SQLiteDatasyncTest() : base(XUnitTestSupport.NetPlatformType.NETFRAMEWORK)
@@ -33,18 +33,18 @@ namespace Kyklos.Kernel.Data.SQLite.Test.NetFramework
             Setup();
         }
 
-        private async Task SetupCore()
-        {
-            await PrepareDB().ConfigureAwait(false);
-            await GenerateScriptsForDropAndUpdateSequence().ConfigureAwait(false);
-            await AddTeams().ConfigureAwait(false);
-            await AddDays().ConfigureAwait(false);
-            await AddResults().ConfigureAwait(false);
-            await AddMembers().ConfigureAwait(false);
-            await AddJobs().ConfigureAwait(false);
-            await AddReasons().ConfigureAwait(false);
-            await AddJobTimes().ConfigureAwait(false);
-        }
+        //private async Task SetupCore()
+        //{
+        //    await PrepareDB().ConfigureAwait(false);
+        //    await GenerateScriptsForDropAndUpdateSequence().ConfigureAwait(false);
+        //    await AddTeams().ConfigureAwait(false);
+        //    await AddDays().ConfigureAwait(false);
+        //    await AddResults().ConfigureAwait(false);
+        //    await AddMembers().ConfigureAwait(false);
+        //    await AddJobs().ConfigureAwait(false);
+        //    await AddReasons().ConfigureAwait(false);
+        //    await AddJobTimes().ConfigureAwait(false);
+        //}
 
         private async Task ReplaceDuplicateKey(IAsyncDao tDao, Day newDay, string newKey)
         {
@@ -60,6 +60,10 @@ namespace Kyklos.Kernel.Data.SQLite.Test.NetFramework
             await PrepareSequence(updateSequenceScript, dropSequenceScript).ConfigureAwait(false);
         }
 
+        protected override Task GenerateScriptsForCreateAndDropSequence()
+        {
+            return Task.CompletedTask;
+        }
 
         [Fact]
         public void CheckIfDbSupportsValuesForFastInConditionShouldBe()

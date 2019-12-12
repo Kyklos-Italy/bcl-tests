@@ -1,7 +1,7 @@
+using System;
 using Kyklos.Kernel.Data.Attributes;
 using Kyklos.Kernel.Data.Entities;
-using System;
-using System.Collections.Generic;
+
 namespace Kyklos.Kernel.Data.Test.Entities
 {
     [EntityObjectInfo(TableName = "JOB_TIMES")]
@@ -22,7 +22,7 @@ namespace Kyklos.Kernel.Data.Test.Entities
         [EntityPropertyInfo(ColumnName = "FreeAmountTime", DbType = PropertyDbType.Decimal, IsNullable = true, ColumnOrder = 50)]
         public virtual decimal? FreeAmountTime { get; set; }
 
-        [EntityPropertyInfo(ColumnName = "TimeNote", DbType = PropertyDbType.String, IsNullable = true, MaxLength = 8000, ColumnOrder = 60)]
+        [EntityPropertyInfo(ColumnName = "TimeNote", DbType = PropertyDbType.Clob, IsNullable = true, ColumnOrder = 60)]
         public virtual string TimeNote { get; set; }
 
         [EntityPropertyInfo(ColumnName = "ReasonID", DbType = PropertyDbType.Integer, IsNullable = false, IsPrimaryKey = true, ColumnOrder = 70)]
@@ -30,6 +30,5 @@ namespace Kyklos.Kernel.Data.Test.Entities
 
         [EntityPropertyInfo(ColumnName = "Hours", DbType = PropertyDbType.Decimal, IsNullable = true, ColumnOrder = 80)]
         public virtual decimal? Hours { get; set; }
-
     }
 }

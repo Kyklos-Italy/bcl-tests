@@ -27,7 +27,7 @@ namespace Kyklos.Kernel.Data.SQLite.Test.NetCore
 
         private void Setup()
         {        
-            SetupCore().Wait();
+            SetupCoreAsync().Wait();
         }
 
         public SQLiteDatasyncTest() : base(XUnitTestSupport.NetPlatformType.NETCORE)
@@ -35,17 +35,9 @@ namespace Kyklos.Kernel.Data.SQLite.Test.NetCore
             Setup();
         }
 
-        private async Task SetupCore()
+        protected override Task GenerateScriptsForCreateAndDropSequence()
         {
-            await PrepareDB().ConfigureAwait(false);
-            await GenerateScriptsForDropAndUpdateSequence().ConfigureAwait(false);
-            await AddTeams().ConfigureAwait(false);
-            await AddDays().ConfigureAwait(false);
-            await AddResults().ConfigureAwait(false);
-            await AddMembers().ConfigureAwait(false);
-            await AddJobs().ConfigureAwait(false);
-            await AddReasons().ConfigureAwait(false);
-            await AddJobTimes().ConfigureAwait(false);
+            return Task.CompletedTask;
         }
 
         private async Task ReplaceDuplicateKey(IAsyncDao tDao, Day newDay, string newKey)

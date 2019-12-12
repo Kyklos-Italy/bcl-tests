@@ -18,7 +18,7 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetCore
 
         private void Setup()
         {
-            SetupCore().Wait();
+            SetupCoreAsync().Wait();
         }
 
         public PostgreSQLDatasyncTest() : base(XUnitTestSupport.NetPlatformType.NETCORE)
@@ -31,23 +31,23 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetCore
             //            ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             //        };
 
-            SetupCore().Wait();
+            SetupCoreAsync().Wait();
 
             //Setup();
         }
 
-        private async Task SetupCore()
-        {
-            await PrepareDB().ConfigureAwait(false);
-            await GenerateScriptsForCreateAndDropSequence().ConfigureAwait(false);
-            await AddTeams().ConfigureAwait(false);
-            await AddDays().ConfigureAwait(false);
-            await AddResults().ConfigureAwait(false);
-            await AddMembers().ConfigureAwait(false);
-            await AddJobs().ConfigureAwait(false);
-            await AddReasons().ConfigureAwait(false);
-            await AddJobTimes().ConfigureAwait(false);
-        }
+        //private async Task SetupCore()
+        //{
+        //    await PrepareDB().ConfigureAwait(false);
+        //    await GenerateScriptsForCreateAndDropSequence().ConfigureAwait(false);
+        //    await AddTeams().ConfigureAwait(false);
+        //    await AddDays().ConfigureAwait(false);
+        //    await AddResults().ConfigureAwait(false);
+        //    await AddMembers().ConfigureAwait(false);
+        //    await AddJobs().ConfigureAwait(false);
+        //    await AddReasons().ConfigureAwait(false);
+        //    await AddJobTimes().ConfigureAwait(false);
+        //}
 
         private async Task ReplaceDuplicateKey(IAsyncDao tDao, Day newDay, string newKey)
         {
@@ -56,7 +56,7 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetCore
         }
 
 
-        private async Task GenerateScriptsForCreateAndDropSequence()
+        protected override async Task GenerateScriptsForCreateAndDropSequence()
         {
             string createSequenceScript = @"CREATE SEQUENCE ""my_sequence""
                                            INCREMENT BY 1

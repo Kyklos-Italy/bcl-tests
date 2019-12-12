@@ -20,27 +20,27 @@ namespace Kyklos.Kernel.Data.MariaDB.Test.NetFramework
                 {
                     if (!isInitialized)
                     {
-                        SetupCore().Wait();
+                        SetupCoreAsync().Wait();
                         isInitialized = true;
                     }
                 }
             }
         }
 
-        private async Task SetupCore()
-        {
-            await PrepareDB();
-            await GenerateScriptsForCreateAndDropSequence().ConfigureAwait(false);
-            await AddTeams();
-            await AddDays();
-            await AddResults();
-            await AddMembers().ConfigureAwait(false);
-            await AddJobs().ConfigureAwait(false);
-            await AddReasons().ConfigureAwait(false);
-            await AddJobTimes().ConfigureAwait(false);
-        }
+        //private async Task SetupCore()
+        //{
+        //    await PrepareDB();
+        //    await GenerateScriptsForCreateAndDropSequence().ConfigureAwait(false);
+        //    await AddTeams();
+        //    await AddDays();
+        //    await AddResults();
+        //    await AddMembers().ConfigureAwait(false);
+        //    await AddJobs().ConfigureAwait(false);
+        //    await AddReasons().ConfigureAwait(false);
+        //    await AddJobTimes().ConfigureAwait(false);
+        //}
 
-        private async Task GenerateScriptsForCreateAndDropSequence()
+        protected override async Task GenerateScriptsForCreateAndDropSequence()
         {
             string createSequenceScript = @"CREATE SEQUENCE my_sequence
                                            INCREMENT BY 1

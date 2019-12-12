@@ -18,7 +18,7 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework
 
         private void Setup()
         {
-            SetupCore().Wait();
+            SetupCoreAsync().Wait();
         }
 
         public PostgreSQLDatasyncTest() : base(XUnitTestSupport.NetPlatformType.NETFRAMEWORK)
@@ -26,18 +26,18 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework
             Setup();
         }
 
-        private async Task SetupCore()
-        {
-            await PrepareDB().ConfigureAwait(false);
-            await GenerateScriptsForCreateAndDropSequence().ConfigureAwait(false);
-            await AddTeams().ConfigureAwait(false);
-            await AddDays().ConfigureAwait(false);
-            await AddResults().ConfigureAwait(false);
-            await AddMembers().ConfigureAwait(false);
-            await AddJobs().ConfigureAwait(false);
-            await AddReasons().ConfigureAwait(false);
-            await AddJobTimes().ConfigureAwait(false);
-        }
+        //private async Task SetupCore()
+        //{
+        //    await PrepareDB().ConfigureAwait(false);
+        //    await GenerateScriptsForCreateAndDropSequence().ConfigureAwait(false);
+        //    await AddTeams().ConfigureAwait(false);
+        //    await AddDays().ConfigureAwait(false);
+        //    await AddResults().ConfigureAwait(false);
+        //    await AddMembers().ConfigureAwait(false);
+        //    await AddJobs().ConfigureAwait(false);
+        //    await AddReasons().ConfigureAwait(false);
+        //    await AddJobTimes().ConfigureAwait(false);
+        //}
 
         private async Task ReplaceDuplicateKey(IAsyncDao tDao, Day newDay, string newKey)
         {
@@ -46,7 +46,7 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework
         }
 
 
-        private async Task GenerateScriptsForCreateAndDropSequence()
+        protected override async Task GenerateScriptsForCreateAndDropSequence()
         {
             string createSequenceScript = @"CREATE SEQUENCE ""my_sequence""
                                            INCREMENT BY 1
@@ -289,9 +289,9 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework
 
 
         [Fact]
-        public async Task SelectDayDatesAsStringsShouldBeyyyy_MM_dd_HH_mm_ss()
+        public Task SelectDayDatesAsStringsShouldBeyyyy_MM_dd_HH_mm_ss()
         {
-            await SelectDayDatesAsStringsShouldBeCore("yyyy-MM-dd HH:mm:ss");
+            return SelectDayDatesAsStringsShouldBeCore("yyyy-MM-dd HH:mm:ss");
         }
 
 
@@ -336,15 +336,15 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework
         }
 
         [Fact]
-        public async Task CountAllTeamsShouldBe4()
+        public Task CountAllTeamsShouldBe4()
         {
-            await CountAllTeamsShouldBe4Core().ConfigureAwait(false);
+            return CountAllTeamsShouldBe4Core();
         }
 
         [Fact]
-        public async Task CountAllDaysShouldBe3()
+        public Task CountAllDaysShouldBe3()
         {
-            await CountAllDaysShouldBe3Core().ConfigureAwait(false);
+            return CountAllDaysShouldBe3Core();
         }
 
         [Fact]
@@ -570,51 +570,51 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework
         }
 
         [Fact]
-        public async Task GetTeamTableMetadataShouldBeFour()
+        public Task GetTeamTableMetadataShouldBeFour()
         {
-            await GetTeamTableMetadataShouldBeFourCore().ConfigureAwait(false);
+            return GetTeamTableMetadataShouldBeFourCore();
         }
 
         [Fact]
-        public async Task InsertAndDeleteAResultInTransactionShouldBeIdRes7()
+        public Task InsertAndDeleteAResultInTransactionShouldBeIdRes7()
         {
-            await InsertAndDeleteAResultInTransactionShouldBeIdRes7Core().ConfigureAwait(false);
+            return InsertAndDeleteAResultInTransactionShouldBeIdRes7Core();
         }
 
         [Fact]
-        public async Task InsertDuplicateDayKeyInTransactionWithCorrectionShouldBeIdDay1()
+        public Task InsertDuplicateDayKeyInTransactionWithCorrectionShouldBeIdDay1()
         {
-            await InsertDuplicateDayKeyInTransactionWithCorrectionShouldBeIdDay1Core().ConfigureAwait(false);
+            return InsertDuplicateDayKeyInTransactionWithCorrectionShouldBeIdDay1Core();
         }
 
         [Fact]
-        public async Task InsertTwoDaysInTwoTransactionsShouldBeIdDay4IdDay1()
+        public Task InsertTwoDaysInTwoTransactionsShouldBeIdDay4IdDay1()
         {
-            await InsertTwoDaysInTwoTransactionsShouldBeIdDay4IdDay1Core().ConfigureAwait(false);
+            return InsertTwoDaysInTwoTransactionsShouldBeIdDay4IdDay1Core();
         }
 
         [Fact]
-        public async Task GetTableColumnNamesShouldBeSixStrings()
+        public Task GetTableColumnNamesShouldBeSixStrings()
         {
-            await GetTableColumnNamesShouldBeSixStringsCore().ConfigureAwait(false);
+            return GetTableColumnNamesShouldBeSixStringsCore();
         }
 
         [Fact]
-        public async Task GetEntityObjectNameShouldBeTeams()
+        public Task GetEntityObjectNameShouldBeTeams()
         {
-            await GetEntityObjectNameShouldBeTeamsCore().ConfigureAwait(false);
+            return GetEntityObjectNameShouldBeTeamsCore();
         }
 
         [Fact]
-        public async Task GetResultsTotalPaginationNumberShouldBe6()
+        public Task GetResultsTotalPaginationNumberShouldBe6()
         {
-            await GetResultsTotalPaginationNumberShouldBe6Core().ConfigureAwait(false);
+            return GetResultsTotalPaginationNumberShouldBe6Core();
         }
 
         [Fact]
-        public void CheckIfPKIndexIsAlsoUniqueShouldBeResults()
+        public Task CheckIfPKIndexIsAlsoUniqueShouldBeResults()
         {
-            CheckIfPKIndexIsAlsoUniqueShouldBeResultsCore();
+            return CheckIfPKIndexIsAlsoUniqueShouldBeResultsCore();
         }
 
         [Fact]
@@ -624,63 +624,66 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetFramework
         }
 
         [Fact]
-        public async Task SelectResultsForADayWithInvertedTuplesShouldBeDay1()
+        public Task SelectResultsForADayWithInvertedTuplesShouldBeDay1()
         {
-            await SelectResultsForADayWithInvertedTuplesShouldBeDay1Core().ConfigureAwait(false);
+            return SelectResultsForADayWithInvertedTuplesShouldBeDay1Core();
         }
 
         [Fact]
-        public async Task SelectResultsForADayWithIncompletedFieldsShouldBeDay1()
+        public Task SelectResultsForADayWithIncompletedFieldsShouldBeDay1()
         {
-            await SelectResultsForADayWithIncompletedFieldsShouldBeDay1Core().ConfigureAwait(false);
+            return SelectResultsForADayWithIncompletedFieldsShouldBeDay1Core();
         }
 
         [Fact]
-        public async Task SelectDoubleFirstDayShouldBeDay1()
+        public Task SelectDoubleFirstDayShouldBeDay1()
         {
-            await SelectDoubleFirstDayShouldBeDay1Core().ConfigureAwait(false);
+            return SelectDoubleFirstDayShouldBeDay1Core();
         }
+
         [Fact]
-        public async Task SelectMemberByIdAndPasswordShouldBe218()
+        public Task SelectMemberByIdAndPasswordShouldBe218()
         {
             string memberName = "LCasini";
             string password = "202cb962ac59075b964b07152d234b70";
-            await SelectMemberByIdAndPasswordShouldBeOneMember(memberName, password).ConfigureAwait(false);
+            return SelectMemberByIdAndPasswordShouldBeOneMember(memberName, password);
         }
 
         [Fact]
-        public async Task UpdateHoursByJobTimeInJOB_TIMESshouldBe7()
+        public Task UpdateHoursByJobTimeInJOB_TIMESshouldBe7()
         {
             JobTime jobTimeToUpdate =
-            new JobTime
-            {
-                JobId = 2,
-                MemberId = 213,
-                DateOfWork = PrefixDate,
-                AmountTimeToInvoice = null,
-                FreeAmountTime = null,
-                TimeNote = null,
-                ReasonId = 4,
-                Hours = 3,
-            };
-            await UpdateHoursByJobTimeInJOB_TIMEShouldBeInt(4, jobTimeToUpdate).ConfigureAwait(false);
-        }
-        [Fact]
-        public async Task SelectJobTimesOfTheDayByDateOfWorkAndId218ShuoldBeTwoJobTimesOfTheDay()
-        {
-            await SelectJobTimesOfTheDayByDateOfWorkAndId218ShuoldBe().ConfigureAwait(false);
-        }
-        [Fact]
-        public async Task SumHoursOfJobTimeAggregateByMemberIdAndDateOfWorkShuoldBe6()
-        {
-            await SumHoursOfJobTimeAggregateByMemberIdAndDateOfWorkShuoldBeCore().ConfigureAwait(false);
-        }
-        [Fact]
-        public async Task CheckJobTimeExistShuoldTrue()
-        {
-            await CheckJobTimeExistShuoldBeCore().ConfigureAwait(false);
+                new JobTime
+                {
+                    JobId = 2,
+                    MemberId = 213,
+                    DateOfWork = PrefixDate,
+                    AmountTimeToInvoice = null,
+                    FreeAmountTime = null,
+                    TimeNote = null,
+                    ReasonId = 4,
+                    Hours = 3,
+                };
+
+            return UpdateHoursByJobTimeInJOB_TIMEShouldBeInt(4, jobTimeToUpdate);
         }
 
+        [Fact]
+        public Task SelectJobTimesOfTheDayByDateOfWorkAndId218ShuoldBeTwoJobTimesOfTheDay()
+        {
+            return SelectJobTimesOfTheDayByDateOfWorkAndId218ShuoldBe();
+        }
 
+        [Fact]
+        public Task SumHoursOfJobTimeAggregateByMemberIdAndDateOfWorkShuoldBe6()
+        {
+            return SumHoursOfJobTimeAggregateByMemberIdAndDateOfWorkShuoldBeCore();
+        }
+
+        [Fact]
+        public Task CheckJobTimeExistShuoldTrue()
+        {
+            return CheckJobTimeExistShuoldBeCore();
+        }
     }
 }

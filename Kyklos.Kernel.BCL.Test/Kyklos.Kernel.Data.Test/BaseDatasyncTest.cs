@@ -31,88 +31,6 @@ namespace Kyklos.Kernel.Data.Test
 
         protected IAsyncDao Dao { get; }
 
-        internal class IndexConstraintDbItemComparer : System.Collections.IComparer, IComparer<IndexConstraintDbItem>, IEqualityComparer<IndexConstraintDbItem>
-        {
-            public int Compare(IndexConstraintDbItem x, IndexConstraintDbItem y)
-            {
-                if (x == null && y == null)
-                {
-                    return 0;
-                }
-
-                if (x == null)
-                {
-                    return -1;
-                }
-
-                if (y == null)
-                {
-                    return 1;
-                }
-
-                Func<IndexConstraintDbItem, string> toString =
-                    idx => $"{idx.ConstraintName}_{idx.TableName}_{idx.SchemaName}_{idx.IsUnique}_{idx.ReferencedField}_{idx.FieldOrder}_{idx.IsPrimaryKey}";
-
-                return toString(x).CompareTo(toString(y));
-            }
-
-            public int Compare(object x, object y)
-            {
-                return Compare(x as IndexConstraintDbItem, y as IndexConstraintDbItem);
-            }
-
-            public bool Equals(IndexConstraintDbItem x, IndexConstraintDbItem y)
-            {
-                return Compare(x, y) == 0;
-            }
-
-            public int GetHashCode(IndexConstraintDbItem obj)
-            {
-                return obj.BuildHashCode();
-            }
-        }
-
-        internal class FKConstraintDbItemComparer : System.Collections.IComparer, IComparer<FKConstraintDbItem>, IEqualityComparer<FKConstraintDbItem>
-        {
-            public int Compare(FKConstraintDbItem x, FKConstraintDbItem y)
-            {
-                if (x == null && y == null)
-                {
-                    return 0;
-                }
-
-                if (x == null)
-                {
-                    return -1;
-                }
-
-                if (y == null)
-                {
-                    return 1;
-                }
-
-                Func<FKConstraintDbItem, string> toString =
-                    idx => $"{idx.ConstraintName}_{idx.TableName}_{idx.SchemaName}_{idx.ColumnName}_{idx.ReferencedTable}_{idx.ReferencedField}";
-
-                return toString(x).CompareTo(toString(y));
-            }
-
-            public int Compare(object x, object y)
-            {
-                return Compare(x as FKConstraintDbItem, y as FKConstraintDbItem);
-            }
-
-            public bool Equals(FKConstraintDbItem x, FKConstraintDbItem y)
-            {
-                return Compare(x, y) == 0;
-            }
-
-            public int GetHashCode(FKConstraintDbItem obj)
-            {
-                return obj.BuildHashCode();
-            }
-        }
-
         protected BaseDatasyncTest(NetPlatformType netPlatformType)
         {
             NetPlatform = new TestNetPlatform(netPlatformType);
@@ -122,6 +40,8 @@ namespace Kyklos.Kernel.Data.Test
         protected abstract string ProviderName { get; }
 
         protected virtual string ConnectionString => ConnectionStringsProvider.GetConnectionString(ProviderName);
+
+        #region Initial data sets
 
         private Result[] InitialResults =
             new Result[]
@@ -150,7 +70,9 @@ namespace Kyklos.Kernel.Data.Test
                 new Day() { DayId = "idDay2", DayDate = new DateTime(2018, 09, 17), DayNumber = 2 },
                 new Day() { DayId = "idDay3", DayDate = new DateTime(2018, 09, 18), DayNumber = 3 }
             };
-        protected static DateTime PrefixDate = new DateTime(2019,6,18);
+
+        protected static DateTime PrefixDate = new DateTime(2019, 6, 18);
+
         private Member[] InitialMembers =
             new Member[]
             {
@@ -166,7 +88,7 @@ namespace Kyklos.Kernel.Data.Test
                     MemberNote = null,
                     CanBeOwner = false,
                     Password = "202cb962ac59075b964b07152d234b70",
-                    AnalyticCost = (decimal)19.7,
+                    AnalyticCost = 19.7m,
                     ToBeTraced = true,
                     DailyHours = 8,
                     ReconcileValuationTypeId = 11
@@ -183,7 +105,7 @@ namespace Kyklos.Kernel.Data.Test
                     MemberNote = null,
                     CanBeOwner = false,
                     Password = "5f4dcc3b5aa765d61d8327deb882cf99",
-                    AnalyticCost = (decimal)19.7,
+                    AnalyticCost = 19.7m,
                     ToBeTraced = true,
                     DailyHours = 8,
                     ReconcileValuationTypeId = 11
@@ -200,7 +122,7 @@ namespace Kyklos.Kernel.Data.Test
                     MemberNote = null,
                     CanBeOwner = false,
                     Password = "202cb962ac59075b964b07152d234b70",
-                    AnalyticCost = (decimal)19.7,
+                    AnalyticCost = 19.7m,
                     ToBeTraced = true,
                     DailyHours = 8,
                     ReconcileValuationTypeId = 9
@@ -222,8 +144,8 @@ namespace Kyklos.Kernel.Data.Test
                     DivisionId = 1,
                     CategoryId = 1,
                     OwnerId = 14,
-                    ExpectedReleaseDate = new DateTime(),
-                    ConfirmedReleaseDate = new DateTime(),
+                    ExpectedReleaseDate = PrefixDate,
+                    ConfirmedReleaseDate = PrefixDate,
                     JobNote = "",
                     CustomerOrderRef = "",
                     InternalOfferCode = "028GVO2008",
@@ -247,8 +169,8 @@ namespace Kyklos.Kernel.Data.Test
                     DivisionId = 1,
                     CategoryId = 1,
                     OwnerId = 14,
-                    ExpectedReleaseDate = new DateTime(),
-                    ConfirmedReleaseDate = new DateTime(),
+                    ExpectedReleaseDate = PrefixDate,
+                    ConfirmedReleaseDate = PrefixDate,
                     JobNote = "",
                     CustomerOrderRef = "",
                     InternalOfferCode = "03FDE2008",
@@ -272,8 +194,8 @@ namespace Kyklos.Kernel.Data.Test
                     DivisionId = 1,
                     CategoryId = 10,
                     OwnerId = 14,
-                    ExpectedReleaseDate = new DateTime(),
-                    ConfirmedReleaseDate = new DateTime(),
+                    ExpectedReleaseDate = PrefixDate,
+                    ConfirmedReleaseDate = PrefixDate,
                     JobNote = "",
                     CustomerOrderRef = "",
                     InternalOfferCode = "",
@@ -297,8 +219,8 @@ namespace Kyklos.Kernel.Data.Test
                     DivisionId = 1,
                     CategoryId = 10,
                     OwnerId = 52,
-                    ExpectedReleaseDate = new DateTime(),
-                    ConfirmedReleaseDate = new DateTime(),
+                    ExpectedReleaseDate = PrefixDate,
+                    ConfirmedReleaseDate = PrefixDate,
                     JobNote = "",
                     CustomerOrderRef = "",
                     InternalOfferCode = "01FDE07REVDEF",
@@ -411,7 +333,7 @@ namespace Kyklos.Kernel.Data.Test
                     ReasonId = 8,
                     Hours = 3,
                 },
-                                new JobTime
+                new JobTime
                 {
                     JobId = 4,
                     MemberId = 224,
@@ -423,10 +345,26 @@ namespace Kyklos.Kernel.Data.Test
                     Hours = 3,
                 },
             };
+
+        #endregion
+
+        protected virtual async Task SetupCoreAsync()
+        {
+            await PrepareDB();
+            await GenerateScriptsForCreateAndDropSequence().ConfigureAwait(false);
+            await AddTeams();
+            await AddDays();
+            await AddResults();
+            await AddMembers().ConfigureAwait(false);
+            await AddJobs().ConfigureAwait(false);
+            await AddReasons().ConfigureAwait(false);
+            await AddJobTimes().ConfigureAwait(false);
+        }
+
+        protected abstract Task GenerateScriptsForCreateAndDropSequence();
+
         protected virtual IAsyncDao CreateAsyncDao(string connectionString, string providerName, string schema, bool ignoreEscape = false)
         {
-            //return AsyncDaoFactory.CreateAsyncDaoFromConnectionStringName(connectionString, schema, ignoreEscape: ignoreEscape);
-
             return
                 AsyncDaoFactory
                 .CreateAsyncDao
@@ -999,24 +937,24 @@ namespace Kyklos.Kernel.Data.Test
 
         private async Task CreateTables()
         {
-            await
+            var ddlResults = await
                 Dao
-                    .CreateTablesAsync
-                    (
-                        new Type[]
-                        {
-                            typeof(Day),
-                            typeof(Team),
-                            typeof(Result),
-                            typeof(Member),
-                            typeof(Job),
-                            typeof(Reason),
-                            typeof(JobTime),
-                            typeof(Tbl4FastInFilter),
-                            typeof(Tbl4FastInStringFilter)
-                        }
-                    )
-                    .ConfigureAwait(false);
+                .ExecDDLScriptsForTablesAsync
+                (
+                    new Type[]
+                    {
+                        typeof(Day),
+                        typeof(Team),
+                        typeof(Result),
+                        typeof(Member),
+                        typeof(Job),
+                        typeof(Reason),
+                        typeof(JobTime),
+                        typeof(Tbl4FastInFilter),
+                        typeof(Tbl4FastInStringFilter)
+                    }
+                )
+                .ConfigureAwait(false);
         }
 
         protected async Task PrepareSequence(string createSequenceScript, string dropSequenceScript)
@@ -2000,7 +1938,7 @@ namespace Kyklos.Kernel.Data.Test
                 .From()
                 .Table<Team>("t")
                 .Where()
-                .Condition<Team>("t", x => SqlAsyncUtils.StrConcat(SqlAsyncUtils.StrConcat(x.Name, " - "), x.City) == "Juventus - Turin");
+                .Condition<Team>("t", x => SqlFunctions.StrConcat(x.Name, " - ", x.City) == "Juventus - Turin");
 
             var actualTeam = (await Dao.GetItemsAsync<Team>(queryBuilder).ConfigureAwait(false)).FirstOrDefault();
             Assert.Equal(expectedTeam, actualTeam);
@@ -2496,6 +2434,50 @@ namespace Kyklos.Kernel.Data.Test
             Assert.True(actualDays.Item1 == actualDays.Item2);
         }
 
+        protected async Task SearchByDynamicCriteriaCore()
+        {
+            try
+            {
+                var queryBuilder =
+                    Dao
+                    .NewQueryBuilder()
+                    .Select()
+                    .AllFields<Day>("D")
+                    .From()
+                    .Table<Day>("D")
+                    .Where()
+                    .True()
+                    .AndConditionsForCriteria<Day>("D", new { DayId = "2", NonExistingProp = 5, DAY_DATE = DateTime.Today }, true, "DAY_DATE");
+
+                var twp = queryBuilder.BuildSqlTextWithParameters();
+                var xx = twp.ReplaceParametersInSqlStringForImmediateExecute();
+
+                var actualDays = (await Dao.GetItemsArrayAsync<Day>(queryBuilder).ConfigureAwait(false));
+
+
+                queryBuilder =
+                    Dao
+                    .NewQueryBuilder()
+                    .Select()
+                    .AllFields<Day>("D")
+                    .From()
+                    .Table<Day>("D")
+                    .Where()
+                    .True()
+                    .AndConditionsForCriteria<Day, Day>("D", new Day { DayNumber = 1 }, true, x => x.DayDate);
+
+                twp = queryBuilder.BuildSqlTextWithParameters();
+
+
+                //Assert.True(actualDays.Item1 == actualDays.Item2);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
         protected void TestForNullShouldProduceIsNullOperatorCore()
         {
             var queryBuilder =
@@ -2505,11 +2487,21 @@ namespace Kyklos.Kernel.Data.Test
                 .Star("r")
                 .From()
                 .Table<Result>("r")
-                .Where<Result>("r", r => SqlAsyncUtils.IsNull(r.VisitorTeamId));
+                .Where<Result>("r", r => SqlFunctions.IsNull(r.VisitorTeamId) && (r.DayId == "1" || r.DayId == "2"));
 
-            var sqlActualJoin = queryBuilder.BuildSqlTextWithParameters().SqlText;
+            var swp = queryBuilder.BuildSqlTextWithParameters();
+            try
+            {
+                var ss = swp.ReplaceParametersInSqlStringForImmediateExecute();
 
-            Assert.Contains("is null", sqlActualJoin, StringComparison.InvariantCultureIgnoreCase);
+                Assert.Contains("is null", ss, StringComparison.InvariantCultureIgnoreCase);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
         }
 
         protected void TestForCoalesceCore()
@@ -2528,15 +2520,18 @@ namespace Kyklos.Kernel.Data.Test
 
             //Assert.Contains("coalesce", sqlActualJoin, StringComparison.InvariantCultureIgnoreCase);
         }
+
         protected async Task SelectMemberByIdAndPasswordShouldBeOneMember(string username, string password)
         {
             Member expectedMember =
                 InitialMembers
-                .Where<Member>(x => x.MemberName == username && x.Password == password)
+                .Where(x => x.MemberName == username && x.Password == password)
                 .First();
+
             Member actualMember = await Dao.GetItemByExampleAsync<Member>(x => (x.MemberName == username && x.Password == password));
             Assert.Equal(expectedMember.MemberId, actualMember.MemberId);
         }
+
         protected async Task UpdateHoursByJobTimeInJOB_TIMEShouldBeInt(int hours, JobTime jobTime)
         {
             decimal? expectedHours = jobTime.Hours + hours;
@@ -2552,9 +2547,10 @@ namespace Kyklos.Kernel.Data.Test
                             && x.MemberId == jobTime.MemberId
                             && x.JobId == jobTime.JobId
                             && x.DateOfWork == jobTime.DateOfWork
+                            && SqlFunctions.IsNull("")
                          );
                     int affected = await tDao.UpdateTableAsync(updateBuilder).ConfigureAwait(false);
-                    Assert.Equal(1,affected);
+                    Assert.Equal(1, affected);
                     decimal? actualHours =
                         (
                             await tDao.GetItemByExampleAsync<JobTime>
@@ -2574,7 +2570,8 @@ namespace Kyklos.Kernel.Data.Test
 
         protected async Task SelectJobTimesOfTheDayByDateOfWorkAndId218ShuoldBe()
         {
-            var dt = new DateTime();
+            var dt = PrefixDate;
+
             JobTimesOfTheDay[] expectedJobTimesOfTheDay =
 
                 new JobTimesOfTheDay[]
@@ -2598,31 +2595,34 @@ namespace Kyklos.Kernel.Data.Test
                         Job = "NausSys for La MDS Yacht Ser"
                     }
                 };
-        var query = Dao
-            .NewQueryBuilder()
-            .Select()
-            .Field<JobTime>("JT", x => x.Hours, expectedJobTimesOfTheDay[0].GetFieldName(x => x.Hours))
-            .Comma()
-            .Field<Job>("J", x => x.JobName, "job")
-            .Comma()
-            .Field<JobTime>("JT", x => x.DateOfWork, "dateOfWork")
-            .Comma()
-            .Field<Job>("J", x => x.JobId, "jobId")
-            .Comma()
-            .Field<Reason>("R", x => x.ReasonId, "reasonId")
-            .Comma()
-            .Field<JobTime>("JT", x => x.MemberId, "memberId")
-            .From()
-            .Tables
-            (
-                FlatTable<JobTime>.WithAlias("JT"),
-                InnerJoin<Reason>.WithAlias("R"), (JT, R) => JT.ReasonId == R.ReasonId,
-                InnerJoin<Job>.WithAlias("J"), (JT, R, J) => JT.JobId == J.JobId
-            )
-            .Where<JobTime>("JT", JT => JT.MemberId == 218 && JT.DateOfWork == PrefixDate)
-            //.And<JobTime>("JT", x => x.DateOfWork, WhereOperator.EqualTo, new DateTime())
-            .OrderBy<JobTime>("JT", JT => JT.Hours, OrderByDirection.Descending);
-            JobTimesOfTheDay[] result = await Dao.GetItemsArrayAsync<JobTimesOfTheDay>(query);
+            var query =
+                Dao
+                .NewQueryBuilder()
+                .Select()
+                .Field<JobTime>("JT", x => x.Hours, expectedJobTimesOfTheDay[0].GetFieldName(x => x.Hours))
+                .Comma()
+                .Field<Job>("J", x => x.JobName, "job")
+                .Comma()
+                .Field<JobTime>("JT", x => x.DateOfWork, "dateOfWork")
+                .Comma()
+                .Field<Job>("J", x => x.JobId, "jobId")
+                .Comma()
+                .Field<Reason>("R", x => x.ReasonId, "reasonId")
+                .Comma()
+                .Field<JobTime>("JT", x => x.MemberId, "memberId")
+                .From()
+                .Tables
+                (
+                    FlatTable<JobTime>.WithAlias("JT"),
+                    InnerJoin<Reason>.WithAlias("R"), (JT, R) => JT.ReasonId == R.ReasonId,
+                    InnerJoin<Job>.WithAlias("J"), (JT, R, J) => JT.JobId == J.JobId
+                )
+                .Where<JobTime>("JT", JT => JT.MemberId == 218 && JT.DateOfWork == dt)
+                //.And<JobTime>("JT", x => x.DateOfWork, WhereOperator.EqualTo, new DateTime())
+                .OrderBy<JobTime>("JT", JT => JT.Hours, OrderByDirection.Descending);
+
+            JobTimesOfTheDay[] result = await Dao.GetItemsArrayAsync<JobTimesOfTheDay>(query).ConfigureAwait(false);
+
             Assert.Equal(result, expectedJobTimesOfTheDay);
         }
 
@@ -2640,6 +2640,7 @@ namespace Kyklos.Kernel.Data.Test
             int result = await Dao.ExecuteScalarAsync<int>(query);
             Assert.Equal(expectedHours, result);
         }
+
         protected async Task CheckJobTimeExistShuoldBeCore()
         {
             bool expectedBoolean = true;
@@ -2657,6 +2658,90 @@ namespace Kyklos.Kernel.Data.Test
             bool result = await Dao.EntityExistsAsync(jobTime);
             Assert.Equal(result, expectedBoolean);
         }
+
+
+        internal class IndexConstraintDbItemComparer : System.Collections.IComparer, IComparer<IndexConstraintDbItem>, IEqualityComparer<IndexConstraintDbItem>
+        {
+            public int Compare(IndexConstraintDbItem x, IndexConstraintDbItem y)
+            {
+                if (x == null && y == null)
+                {
+                    return 0;
+                }
+
+                if (x == null)
+                {
+                    return -1;
+                }
+
+                if (y == null)
+                {
+                    return 1;
+                }
+
+                Func<IndexConstraintDbItem, string> toString =
+                    idx => $"{idx.ConstraintName}_{idx.TableName}_{idx.SchemaName}_{idx.IsUnique}_{idx.ReferencedField}_{idx.FieldOrder}_{idx.IsPrimaryKey}";
+
+                return toString(x).CompareTo(toString(y));
+            }
+
+            public int Compare(object x, object y)
+            {
+                return Compare(x as IndexConstraintDbItem, y as IndexConstraintDbItem);
+            }
+
+            public bool Equals(IndexConstraintDbItem x, IndexConstraintDbItem y)
+            {
+                return Compare(x, y) == 0;
+            }
+
+            public int GetHashCode(IndexConstraintDbItem obj)
+            {
+                return obj.BuildHashCode();
+            }
+        }
+
+        internal class FKConstraintDbItemComparer : System.Collections.IComparer, IComparer<FKConstraintDbItem>, IEqualityComparer<FKConstraintDbItem>
+        {
+            public int Compare(FKConstraintDbItem x, FKConstraintDbItem y)
+            {
+                if (x == null && y == null)
+                {
+                    return 0;
+                }
+
+                if (x == null)
+                {
+                    return -1;
+                }
+
+                if (y == null)
+                {
+                    return 1;
+                }
+
+                Func<FKConstraintDbItem, string> toString =
+                    idx => $"{idx.ConstraintName}_{idx.TableName}_{idx.SchemaName}_{idx.ColumnName}_{idx.ReferencedTable}_{idx.ReferencedField}";
+
+                return toString(x).CompareTo(toString(y));
+            }
+
+            public int Compare(object x, object y)
+            {
+                return Compare(x as FKConstraintDbItem, y as FKConstraintDbItem);
+            }
+
+            public bool Equals(FKConstraintDbItem x, FKConstraintDbItem y)
+            {
+                return Compare(x, y) == 0;
+            }
+
+            public int GetHashCode(FKConstraintDbItem obj)
+            {
+                return obj.BuildHashCode();
+            }
+        }
+
 
     }
 
