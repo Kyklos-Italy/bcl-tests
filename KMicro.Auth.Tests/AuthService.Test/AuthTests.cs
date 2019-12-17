@@ -1,5 +1,4 @@
 using KMicro.Auth.Models.Rest.User;
-using KMicro.Auth.Tests.TestAPI;
 using KMicro.Auth.Tests.TestUsers;
 using KMicro.Auth.Tests.Utils;
 using System.Collections.Generic;
@@ -20,7 +19,7 @@ namespace KMicro.Auth.Tests.Authenticate
             this.output = output;
         }
 
-        [Fact]
+        [Fact, Order(10)]
         public async Task MultipleCorrectAsyncAuthsAllSucceed()
         {
             List<Task<AuthenticationResponse>> authRequestsAttemps = new List<Task<AuthenticationResponse>>();
@@ -103,26 +102,6 @@ namespace KMicro.Auth.Tests.Authenticate
             Assert.False(authResponse.IsAuthenticated);
             Assert.Equal("KS-E101", authResponse.ResponseCode);
         }
-
-        [Fact]
-        public async Task CorrectCredentialsAfterUserLockTimeoutExpiresSucceeds()
-        {
-            await CommonUtils.LockUser(NeverExpiresUser.Username, NeverExpiresUser.Domain, NeverExpiresUser.Application);
-            await Task.Delay(100000);
-            var response = await CommonUtils.AuthenticateUser(NeverExpiresUser.Username,
-                                                              NeverExpiresUser.Password,
-                                                              NeverExpiresUser.Domain,
-                                                              NeverExpiresUser.Application);
-            Assert.True(response.IsAuthenticated, "Could not authenticate " + response.ResponseMessage);
-        }
-
-        //[Fact]
-        //public async Task ResetDb()
-        //{
-        //    string resetDbResponse = await CommonUtils.ResetDbData();
-
-        //    Assert.Equal(APIResponses.ResetDBOkResponse, resetDbResponse);
-        //}
 
         [Fact]
         public async Task MultipleAsyncAuthenticationsAreProcessedCorrectly()

@@ -4,17 +4,16 @@ using KMicro.Auth.Tests.TestAPI;
 using KMicro.Auth.Tests.TestUsers;
 using KMicro.Auth.Tests.Utils;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Extensions.Ordering;
 
 namespace KMicro.Auth.Tests
 {
     [Collection("NoParallelization")]
     public class ChangePasswordSyncTest
     {
-        [Fact]
+        [Fact, Order(40)]
         public async Task NewPasswordIsInLastNPasswordsFails()
         {
             //await Task.Delay(2000).ConfigureAwait(false);
@@ -45,6 +44,7 @@ namespace KMicro.Auth.Tests
             try
             {
                 ChangePasswordResponse lastChangePasswordResponse = await APIs.ChangePasswordUserUrl.PostJsonAsync(lastChangePasswordRequest).ReceiveJson<ChangePasswordResponse>();
+                Assert.False(true, "Password Changed But Was Expected To Fail");
             }
             catch (FlurlHttpException exc)
             {
@@ -52,10 +52,33 @@ namespace KMicro.Auth.Tests
                 Assert.Equal("KS-E112", errorDetail.CustomProblem.ErrorCode);
                 Assert.Contains("PV-E510", errorDetail.CustomProblem.CustomDataJson);
                 Assert.False(errorDetail.CustomProblem.Succeded);
-
-                string resetDbResponse = await CommonUtils.ResetDbData();
-                Assert.Equal(APIResponses.ResetDBOkResponse, resetDbResponse);
             }
+        }
+
+        [Fact, Order(50)]
+        public async Task CriteriaCompliantPasswordSucceeds()
+        {
+            string resetDbResponse = await CommonUtils.ResetDbData();
+            Assert.Equal(APIResponses.ResetDBOkResponse, resetDbResponse);
+
+            string newPassword = "POR8088li717?";
+
+            ChangePasswordResponse changePasswordResponse = await CommonUtils.ChangePassword(AllowOldPasswordsUser.Username,
+                                                                                              AllowOldPasswordsUser.Password,
+                                                                                              newPassword,
+                                                                                              AllowOldPasswordsUser.Domain,
+                                                                                              AllowOldPasswordsUser.Application);
+
+            Assert.Equal("KS-U002", changePasswordResponse.ResponseCode);
+            Assert.True(changePasswordResponse.Succeded, "Could not change password: " + changePasswordResponse.ResponseMessage + ", details: " + changePasswordResponse.CustomDataJson);
+        }
+
+        [Fact, Order(60)]
+        public async Task ResetDb()
+        {
+            string resetDbResponse = await CommonUtils.ResetDbData();
+
+            Assert.Equal(APIResponses.ResetDBOkResponse, resetDbResponse);
         }
     }
 }

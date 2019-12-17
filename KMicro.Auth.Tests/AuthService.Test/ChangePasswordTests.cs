@@ -1,35 +1,17 @@
-﻿using System;
-using System.Threading.Tasks;
-using Xunit;
-using Flurl.Http;
+﻿using Flurl.Http;
 using KMicro.Auth.Models.Rest.User;
+using KMicro.Auth.Tests.TestAPI;
 using KMicro.Auth.Tests.TestUsers;
 using KMicro.Auth.Tests.Utils;
-using KMicro.Auth.Tests.TestAPI;
+using System.Threading.Tasks;
+using Xunit;
 using Xunit.Extensions.Ordering;
 
 namespace KMicro.Auth.Tests.ChangePassword
 {
-    [Order(20)]
+    [Order(10)]
     public class ChangePasswordTests
     {
-        [Fact]
-        public async Task CriteriaCompliantPasswordSucceeds()
-        {
-            string newPassword = "POR8088li717?";
-
-            ChangePasswordResponse changePasswordResponse = await CommonUtils.ChangePassword(AllowOldPasswordsUser.Username,
-                                                                                              AllowOldPasswordsUser.Password,
-                                                                                              newPassword,
-                                                                                              AllowOldPasswordsUser.Domain,
-                                                                                              AllowOldPasswordsUser.Application);
-
-            Assert.Equal("KS-U002", changePasswordResponse.ResponseCode);
-            Assert.True(changePasswordResponse.Succeded, "Could not change password: " + changePasswordResponse.ResponseMessage + ", details: " + changePasswordResponse.CustomDataJson);
-            string resetDbResponse = await CommonUtils.ResetDbData();
-            Assert.Equal(APIResponses.ResetDBOkResponse, resetDbResponse);
-        }
-
         [Fact]
         public async Task TooShortPasswordFails()
         {

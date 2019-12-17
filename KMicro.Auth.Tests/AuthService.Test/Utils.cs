@@ -2,6 +2,8 @@
 using KMicro.Auth.Models.Rest.User;
 using KMicro.Auth.Tests.TestAPI;
 using KMicro.Auth.Tests.TestUsers;
+using Kyklos.Kernel.TimeSupport;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,17 +11,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-//[assembly: CollectionBehavior(DisableTestParallelization = true)]
-
 namespace KMicro.Auth.Tests.Utils
 {
     public class CommonUtils
     {
-        //static CommonUtils()
-        //{
-        //    FlurlHttp.Configure(s => s.Timeout = TimeSpan.FromSeconds(10D));
-        //}
-
         private static void CheckResponse(AuthenticationResponse response)
         {
             if (!response.IsAuthenticated)
@@ -90,6 +85,14 @@ namespace KMicro.Auth.Tests.Utils
                 return errorResponse;
             }
 
+        }
+
+        public static async Task WaitLockTimeout(string json)
+        {
+            JObject customData = JObject.Parse(json);
+            var lockPeriod = customData["LockPeriod"].Value<string>();
+            var period = Period.Parse(lockPeriod);
+            await Task.Delay(period.ToDuration().Add(1.Seconds()));
         }
 
         public static async Task DoWrongAuthenticationAttempt(string user, string domain, string app)

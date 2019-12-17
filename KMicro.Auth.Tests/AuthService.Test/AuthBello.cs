@@ -1,15 +1,16 @@
+using KMicro.Auth.Tests.TestUsers;
 using System.Threading.Tasks;
 using TestMultipleLogin;
 using Xunit;
 
-namespace KMicro.Auth.Tests
+namespace KMicro.Auth.Tests.MultipleLogin
 {
     public class AuthBello
     {
         [Fact]
         public async Task TestAuth()
         {
-            await AuthUsers.AuthUser("bello");
+            await AuthUsers.AuthUser(MultipleUsers.Bello);
         }
     }
 }

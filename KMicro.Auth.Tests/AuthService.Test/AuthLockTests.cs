@@ -1,5 +1,4 @@
-﻿using KMicro.Auth.Tests.TestAPI;
-using KMicro.Auth.Tests.TestUsers;
+﻿using KMicro.Auth.Tests.TestUsers;
 using KMicro.Auth.Tests.Utils;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,29 +10,13 @@ namespace KMicro.Auth.Tests.LockTests
     [CollectionDefinition("NoParallelization", DisableParallelization = true)]
     public class NoParallelizationTests { }
 
-
-    [Collection("NoParallelization"), Order(30)]
+    [Order(20)]
+    [Collection("NoParallelization")]
     public class AuthLockTests
     {
-        [Fact]
-        public async Task UserLocksAfterTooManyAuthAttempts()
-        {
-            //await Task.Delay(500).ConfigureAwait(false);
-            await CommonUtils.LockUser(NeverExpiresUser.Username, NeverExpiresUser.Domain, NeverExpiresUser.Application);
-            var response = await CommonUtils.AuthenticateUser(NeverExpiresUser.Username,
-                                                              NeverExpiresUser.Password,
-                                                              NeverExpiresUser.Domain,
-                                                              NeverExpiresUser.Application);
-            Assert.False(response.IsAuthenticated);
-            Assert.Equal("KS-E108", response.ResponseCode);
-            string resetDbResponse = await CommonUtils.ResetDbData();
-            Assert.Equal(APIResponses.ResetDBOkResponse, resetDbResponse);
-        }
-
-        [Fact]
+        [Fact, Order(10)]
         public async Task UserLocksAfterTooManyNonSequentialFailedAttempts()
         {
-            //await Task.Delay(500).ConfigureAwait(false);
             List<Task> tasksToRun = new List<Task>();
 
             tasksToRun.Add(CommonUtils.DoWrongAuthenticationAttempt(NeverExpiresUser.Username, NeverExpiresUser.Domain, NeverExpiresUser.Application));
@@ -50,5 +33,38 @@ namespace KMicro.Auth.Tests.LockTests
             Assert.False(response.IsAuthenticated, "Should be locked after many failed authentications");
             Assert.Equal("KS-E108", response.ResponseCode);
         }
+
+        [Fact, Order(20)]
+        public async Task UserLocksAfterTooManyAuthAttempts()
+        {
+            await CommonUtils.LockUser(NeverExpiresUser.Username, NeverExpiresUser.Domain, NeverExpiresUser.Application);
+            var response = await CommonUtils.AuthenticateUser(NeverExpiresUser.Username,
+                                                              NeverExpiresUser.Password,
+                                                              NeverExpiresUser.Domain,
+                                                              NeverExpiresUser.Application);
+            Assert.False(response.IsAuthenticated);
+            Assert.Equal("KS-E108", response.ResponseCode);
+            await CommonUtils.WaitLockTimeout(response.CustomDataJson);
+        }
+
+        [Fact, Order(30)]
+        public async Task CorrectCredentialsAfterUserLockTimeoutExpiresSucceeds()
+        {
+            await CommonUtils.LockUser(NeverExpiresUser.Username, NeverExpiresUser.Domain, NeverExpiresUser.Application);
+            var response = await CommonUtils.AuthenticateUser(NeverExpiresUser.Username,
+                                                              NeverExpiresUser.Password,
+                                                              NeverExpiresUser.Domain,
+                                                              NeverExpiresUser.Application);
+
+            Assert.False(response.IsAuthenticated);
+            Assert.Equal("KS-E108", response.ResponseCode);
+            await CommonUtils.WaitLockTimeout(response.CustomDataJson);
+            response = await CommonUtils.AuthenticateUser(NeverExpiresUser.Username,
+                                                          NeverExpiresUser.Password,
+                                                          NeverExpiresUser.Domain,
+                                                          NeverExpiresUser.Application);
+            Assert.True(response.IsAuthenticated, "Could not authenticate " + response.ResponseMessage);
+        }
+
     }
 }

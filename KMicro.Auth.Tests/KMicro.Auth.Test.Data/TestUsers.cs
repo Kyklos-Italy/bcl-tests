@@ -1,5 +1,4 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace KMicro.Auth.Tests.TestUsers
 {
@@ -61,19 +60,37 @@ namespace KMicro.Auth.Tests.TestUsers
 
     public class MultipleUsers
     {
-        public static Dictionary<string, User> users = new Dictionary<string, User>
+        public static Dictionary<string, User> Users { get; }
+
+        private static void AddUser(User user)
         {
-            {"aurelia", new User("aurelia", "aurelia", "Moncler", "ScmX")},
-            {"azzurra", new User("azzurra", "ITVAZ0", "Moncler", "SCMX")},
-            {"barbiero", new User("barbiero", "barbiero", "Moncler", "SCMX")},
-            {"barotti", new User("barotti", "12345678", "Moncler", "SCMX")},
-            {"bello", new User("bello", "WKOBE0", "Moncler", "SCMX")},
-            {"bianco", new User("bianco", "bianco", "Moncler", "SCMX")},
-            {"camelot", new User("camelot", "camelot", "Moncler", "SCMX")},
-            {"carta", new User("carta", "12345678", "Moncler", "SCMX")},
-            {"casagrande", new User("casagrande", "IPGCM0", "Moncler", "SCMX")},
-            {"castelli", new User("castelli", "castelli", "Moncler", "SCMX")}
-        };
+            Users.Add(user.Username, user);
+        }
+
+        public const string Aurelia = "aurelia";
+        public const string Azzurra = "azzurra";
+        public const string Barbiero = "barbiero";
+        public const string Barotti = "barotti";
+        public const string Bello = "bello";
+        public const string Bianco = "bianco";
+        public const string Camelot = "camelot";
+        public const string Carta = "carta";
+        public const string Casagrande = "casagrande";
+        public const string Castelli = "castelli";
+
+        static MultipleUsers()
+        {
+            Users = new Dictionary<string, User>();
+            AddUser(new User(Aurelia, "aurelia", "Moncler", "ScmX"));
+            AddUser(new User(Azzurra, "ITVAZ0", "Moncler", "ScmX"));
+            AddUser(new User(Barbiero, "barbiero", "Moncler", "ScmX"));
+            AddUser(new User(Barotti, "12345678", "Moncler", "ScmX"));
+            AddUser(new User(Bello, "WKOBE0", "Moncler", "ScmX"));
+            AddUser(new User(Bianco, "bianco", "Moncler", "ScmX"));
+            AddUser(new User(Camelot, "camelot", "Moncler", "ScmX"));
+            AddUser(new User(Carta, "12345678", "Moncler", "ScmX"));
+            AddUser(new User(Casagrande, "IPGCM0", "Moncler", "ScmX"));
+            AddUser(new User(Castelli, "castelli", "Moncler", "ScmX"));
+        }
     }
 }
-

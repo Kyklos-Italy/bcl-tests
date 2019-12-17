@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Kyklos.Kernel.TimeSupport" Version="1.0.12-beta02" />
     <PackageReference Include="XunitContext" Version="1.5.1" />
   </ItemGroup>
 
