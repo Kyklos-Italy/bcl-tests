@@ -1,0 +1,86 @@
+Response Codes:
+KS-OK:Ok
+
+KS-U001:User authenticated
+
+KS-U002:Password changed
+
+KS-A001:Domain created
+
+KS-A002:Application created
+
+KS-A003:User created
+
+KS-A004:User updated
+
+KS-A005:User successfully disabled
+
+KS-A006:User successfully reset
+
+KS-E100:Invalid request
+
+KS-E101:Invalid user
+
+KS-E102:Invalid password
+
+KS-E103:Invalid domain
+
+KS-E104:Invalid application
+
+KS-E105:Domain exists
+
+KS-E106:Password expired
+
+KS-E107:User disabled
+
+KS-E108:User locked
+
+KS-E109:Invalid Jwt
+
+KS-E110:Invalid application description
+
+KS-E111:Authentication validation failed
+
+KS-E112:Invalid new password
+
+KS-E113:Invalid admin
+
+KS-E114:Invalid admin password
+
+KS-E600:Timeout
+
+KS-E500:An internal error happened. Please try again or contact the help desk
+
+Password Codes:
+PV-0000:Succeded
+
+PV-E001:No password validators defined
+
+PV-E010:Password must contain at least a specific number of digits
+
+PV-E011:Password cannot contain more than a specific number of digits
+
+PV-E020:Password must contain at least a specific number of lower chars
+
+PV-E021:Password cannot contain more than a specific number of lower chars
+
+PV-E030:Password must contain at least a specific number of upper chars
+
+PV-E031:Password cannot contain more than a specific number of upper chars
+
+PV-E040:Password must contain at least a specific number of special chars
+
+PV-E041:Password cannot contain more than a specific number of special chars
+
+PV-E050:Password contains a sequence of chars greater than a specific value
+
+PV-E060:Password contains invalid patterns
+
+PV-E070:Password must have a length greater than a specif number of symbols
+
+PV-E071:Password cannot be longer than a specif number of symbols
+
+PV-E080:Password cannot be empty
+
+PV-E510:Password cannot be equal to one of a specific number of last passwords
+
