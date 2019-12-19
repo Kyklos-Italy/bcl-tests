@@ -35,11 +35,13 @@ namespace KMicro.Auth.Tests.Utils
             try
             {
                 AuthenticationResponse authResponse = await APIs.AuthenticateUserUrl.PostJsonAsync(authRequest).ReceiveJson<AuthenticationResponse>();
+                var authJson = Newtonsoft.Json.JsonConvert.SerializeObject(authResponse, Newtonsoft.Json.Formatting.Indented);
                 return authResponse;
             }
             catch (FlurlHttpException exc)
             {
                 var errorDetail = await exc.GetResponseJsonAsync<ProblemDetailResponse<AuthenticationProblem>>();
+                var authErrorJson = Newtonsoft.Json.JsonConvert.SerializeObject(errorDetail, Newtonsoft.Json.Formatting.Indented);
                 AuthenticationResponse errorResponse =
                     new AuthenticationResponse
                     (
@@ -67,11 +69,13 @@ namespace KMicro.Auth.Tests.Utils
             try
             {
                 ChangePasswordResponse changePasswordResponse = await APIs.ChangePasswordUserUrl.PostJsonAsync(changePasswordRequest).ReceiveJson<ChangePasswordResponse>();
+                var changePwdJson = Newtonsoft.Json.JsonConvert.SerializeObject(changePasswordResponse, Newtonsoft.Json.Formatting.Indented);
                 return changePasswordResponse;
             }
             catch (FlurlHttpException exc)
             {
                 var errorDetail = await exc.GetResponseJsonAsync<ProblemDetailResponse<ChangePasswordProblem>>();
+                var changePwdErrorJson = Newtonsoft.Json.JsonConvert.SerializeObject(errorDetail, Newtonsoft.Json.Formatting.Indented);
                 ChangePasswordResponse errorResponse =
                     new ChangePasswordResponse
                     (

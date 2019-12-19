@@ -21,6 +21,7 @@ namespace KMicro.Auth.Tests.ChangePassword
                                                                                              NeverExpiresUser.Domain,
                                                                                              NeverExpiresUser.Application);
             Assert.Equal("KS-E112", changePasswordResponse.ResponseCode);
+            Assert.Contains("PV-E070", changePasswordResponse.CustomDataJson);
             Assert.False(changePasswordResponse.Succeded);
         }
 
@@ -29,7 +30,7 @@ namespace KMicro.Auth.Tests.ChangePassword
         {
             ChangePasswordResponse changePasswordResponse = await CommonUtils.ChangePassword(NeverExpiresUser.Username,
                                                                                              NeverExpiresUser.Password,
-                                                                                             "83579r!" + NeverExpiresUser.Username,
+                                                                                             "83579R!" + NeverExpiresUser.Username,
                                                                                              NeverExpiresUser.Domain,
                                                                                              NeverExpiresUser.Application);
             Assert.Equal("KS-E112", changePasswordResponse.ResponseCode);
@@ -41,11 +42,11 @@ namespace KMicro.Auth.Tests.ChangePassword
         {
             ChangePasswordResponse changePasswordResponse = await CommonUtils.ChangePassword(NeverExpiresUser.Username,
                                                                                              NeverExpiresUser.Password,
-                                                                                             "KYKlos19pippo!",
+                                                                                             "KYKlos19pipo!",
                                                                                              NeverExpiresUser.Domain,
                                                                                              NeverExpiresUser.Application);
             Assert.Equal("KS-E112", changePasswordResponse.ResponseCode);
-            Assert.Contains("PV-E021", changePasswordResponse.CustomDataJson);
+            Assert.Contains("PV-E060", changePasswordResponse.CustomDataJson);
             Assert.False(changePasswordResponse.Succeded);
         }
 

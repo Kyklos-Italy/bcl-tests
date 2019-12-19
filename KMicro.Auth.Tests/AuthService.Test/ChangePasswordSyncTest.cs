@@ -16,7 +16,6 @@ namespace KMicro.Auth.Tests
         [Fact, Order(40)]
         public async Task NewPasswordIsInLastNPasswordsFails()
         {
-            //await Task.Delay(2000).ConfigureAwait(false);
             string username = NeverExpiresUser.Username;
             string password = NeverExpiresUser.Password;
             string domain = NeverExpiresUser.Domain;
@@ -49,6 +48,7 @@ namespace KMicro.Auth.Tests
             catch (FlurlHttpException exc)
             {
                 var errorDetail = await exc.GetResponseJsonAsync<ProblemDetailResponse<ChangePasswordProblem>>();
+                var changePwdErrorJson = Newtonsoft.Json.JsonConvert.SerializeObject(errorDetail, Newtonsoft.Json.Formatting.Indented);
                 Assert.Equal("KS-E112", errorDetail.CustomProblem.ErrorCode);
                 Assert.Contains("PV-E510", errorDetail.CustomProblem.CustomDataJson);
                 Assert.False(errorDetail.CustomProblem.Succeded);
