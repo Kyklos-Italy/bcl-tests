@@ -1,5 +1,6 @@
 #Ignore api-key
 api_key.txt
+admin_users.txt
 
 # User-specific files
 *.suo

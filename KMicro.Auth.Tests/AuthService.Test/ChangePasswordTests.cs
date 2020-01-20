@@ -42,7 +42,7 @@ namespace KMicro.Auth.Tests.ChangePassword
         {
             ChangePasswordResponse changePasswordResponse = await CommonUtils.ChangePassword(NeverExpiresUser.Username,
                                                                                              NeverExpiresUser.Password,
-                                                                                             "KYKlos19pipo!",
+                                                                                             "GRenDIzer19piP!",
                                                                                              NeverExpiresUser.Domain,
                                                                                              NeverExpiresUser.Application);
             Assert.Equal("KS-E112", changePasswordResponse.ResponseCode);
@@ -159,7 +159,7 @@ namespace KMicro.Auth.Tests.ChangePassword
         {
             ChangePasswordResponse changePasswordResponse = await CommonUtils.ChangePassword(NeverExpiresUser.Username,
                                                                                              NeverExpiresUser.Password,
-                                                                                             "MAIALIno?73",
+                                                                                             "MAIALISno?73",
                                                                                              NeverExpiresUser.Domain,
                                                                                              NeverExpiresUser.Application);
             Assert.Equal("KS-E112", changePasswordResponse.ResponseCode);
