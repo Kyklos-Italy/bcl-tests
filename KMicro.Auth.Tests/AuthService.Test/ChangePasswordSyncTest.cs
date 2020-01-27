@@ -11,10 +11,11 @@ using Xunit.Extensions.Ordering;
 
 namespace KMicro.Auth.Tests
 {
-    [Collection("NoParallelization")]
+    [Collection("NoParallelization"), Order(30)]
+    
     public class ChangePasswordSyncTest
     {
-        [Fact, Order(140)]
+        [Fact, Order(40)]
         public async Task NewPasswordIsInLastNPasswordsFails()
         {
             string username = NeverExpiresUser.Username;
@@ -56,11 +57,11 @@ namespace KMicro.Auth.Tests
             }
         }
 
-        [Fact, Order(150)]
+        [Fact, Order(50)]
         public async Task CriteriaCompliantPasswordSucceeds()
         {
-            string resetDbResponse = await CommonUtils.ResetDbData();
-             Assert.Equal(APIResponses.ResetDBOkResponse, resetDbResponse);
+            //string resetDbResponse = await CommonUtils.ResetDbData();
+            //Assert.Equal(APIResponses.ResetDBOkResponse, resetDbResponse);
 
             string newPassword = "POR8088li717?";
 
@@ -74,7 +75,7 @@ namespace KMicro.Auth.Tests
             Assert.True(changePasswordResponse.Succeded, "Could not change password: " + changePasswordResponse.ResponseMessage + ", details: " + changePasswordResponse.CustomDataJson);
         }
 
-        [Fact, Order(160)]
+        [Fact, Order(60)]
         public async Task ResetUser()
         {
             var resetResponse = await CommonUtils.ResetUser();
@@ -82,12 +83,12 @@ namespace KMicro.Auth.Tests
             Assert.Equal("KS-A006",resetResponse.ResponseCode);
         }
 
-        [Fact, Order(170)]
-        public async Task ResetDb()
-        {
-            string resetDbResponse = await CommonUtils.ResetDbData();
+        //[Fact, Order(70)]
+        //public async Task ResetDb()
+        //{
+        //    string resetDbResponse = await CommonUtils.ResetDbData();
 
-            Assert.Equal(APIResponses.ResetDBOkResponse, resetDbResponse);
-        }
+        //    Assert.Equal(APIResponses.ResetDBOkResponse, resetDbResponse);
+        //}
     }
 }
