@@ -10,8 +10,7 @@ namespace KMicro.Auth.Tests.LockTests
     [CollectionDefinition("NoParallelization", DisableParallelization = true)]
     public class NoParallelizationTests { }
 
-    [Order(20)]
-    [Collection("NoParallelization")]
+    [Collection("NoParallelization"), Order(20)]
     public class AuthLockTests
     {
         [Fact, Order(10)]
