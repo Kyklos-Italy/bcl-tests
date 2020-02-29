@@ -5,10 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentAssertions" Version="5.9.0" />
-    <PackageReference Include="Kyklos.Kernel.Compression" Version="1.0.11" />
-    <PackageReference Include="Kyklos.Kernel.Core" Version="1.0.11" />
-    <PackageReference Include="Kyklos.Kernel.IO.Async" Version="1.0.11" />
+    <PackageReference Include="FluentAssertions" Version="5.10.0" />
+    <PackageReference Include="Kyklos.Kernel.Compression" Version="1.0.13-beta05" />
+    <PackageReference Include="Kyklos.Kernel.Core" Version="1.0.13-beta05" />
+    <PackageReference Include="Kyklos.Kernel.IO.Async" Version="1.0.13-beta05" />
     <PackageReference Include="xunit" Version="2.4.1" />
   </ItemGroup>
 
