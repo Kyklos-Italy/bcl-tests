@@ -1,19 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Kyklos.Kernel.Core" Version="1.0.13-beta05" />
-    <PackageReference Include="Kyklos.Kernel.Data.Async" Version="1.0.13-beta06" />
-    <PackageReference Include="Kyklos.Kernel.Data.Async.SqlServer" Version="1.0.13-beta05" />
-    <PackageReference Include="Kyklos.Kernel.Data.Async.Support" Version="1.0.13-beta05" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
+    <PackageReference Include="Kyklos.Kernel.Core" Version="1.1.0-beta26" />
+    <PackageReference Include="Kyklos.Kernel.Data.Async" Version="1.1.0-beta26" />
+    <PackageReference Include="Kyklos.Kernel.Data.Async.SqlServer" Version="1.1.0-beta25" />
+    <PackageReference Include="Kyklos.Kernel.Data.Async.Support" Version="1.1.0-beta25" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
     <PackageReference Include="xunit" Version="2.4.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>

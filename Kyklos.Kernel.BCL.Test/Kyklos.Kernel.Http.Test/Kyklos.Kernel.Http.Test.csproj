@@ -5,9 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentAssertions" Version="5.10.0" />
-    <PackageReference Include="Kyklos.Kernel.Core" Version="1.0.13-beta05" />
-    <PackageReference Include="Kyklos.Kernel.Http" Version="1.0.13-beta05" />
+    <PackageReference Include="FluentAssertions" Version="5.10.3" />
+    <PackageReference Include="Kyklos.Kernel.Core" Version="1.1.0-beta26" />
+    <PackageReference Include="Kyklos.Kernel.Http" Version="1.1.0-beta23" />
     <PackageReference Include="xunit" Version="2.4.1" />
   </ItemGroup>
 

@@ -66,7 +66,7 @@ namespace KMicro.Auth.Tests.Utils
             ResetUserRequest resetRequest = new ResetUserRequest("1", adminUsers[0].Username, adminUsers[0].Password, "pan-ko", "Moncler", "scmx", "Password01", "");
             try
             {
-                ResetUserResponse resetUserResponse = await $"{APIs.AdminUrl}resetuser".WithHeader("AUTH-X-API-KEY", await _GetAPIKey()).PostJsonAsync(resetRequest).ReceiveJson<ResetUserResponse>();
+                ResetUserResponse resetUserResponse = await $"{APIs.AdminResetUserUrl}".WithHeader("AUTH-X-API-KEY", await _GetAPIKey()).PostJsonAsync(resetRequest).ReceiveJson<ResetUserResponse>();
                 var authJson = Newtonsoft.Json.JsonConvert.SerializeObject(resetUserResponse, Newtonsoft.Json.Formatting.Indented);
                 return resetUserResponse;
             }

@@ -12,7 +12,6 @@ using Xunit.Extensions.Ordering;
 namespace KMicro.Auth.Tests
 {
     [Collection("NoParallelization"), Order(30)]
-    
     public class ChangePasswordSyncTest
     {
         [Fact, Order(40)]
@@ -80,7 +79,7 @@ namespace KMicro.Auth.Tests
         {
             var resetResponse = await CommonUtils.ResetUser();
 
-            Assert.Equal("KS-A006",resetResponse.ResponseCode);
+            Assert.Equal("KS-A006", resetResponse.ResponseCode);
         }
 
         //[Fact, Order(70)]

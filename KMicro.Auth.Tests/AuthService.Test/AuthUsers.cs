@@ -6,7 +6,7 @@ using Xunit;
 
 namespace TestMultipleLogin
 {
-    public class AuthUsers
+    public static class AuthUsers
     {
         public static async Task AuthUser(string usr)
         {

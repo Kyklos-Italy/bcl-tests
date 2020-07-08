@@ -1,18 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Kyklos.Kernel.Core.Exceptions;
 using Kyklos.Kernel.Data.Async;
-using Kyklos.Kernel.Data.Async.SqlBuilders;
 using Kyklos.Kernel.Data.Async.Support;
-using Kyklos.Kernel.Data.Entities;
-using Kyklos.Kernel.Data.Query;
-using Kyklos.Kernel.Data.Support;
 using Kyklos.Kernel.Data.Test;
 using Kyklos.Kernel.Data.Test.Entities;
-using Newtonsoft.Json;
 using Xunit;
 using Xunit.Sdk;
 
@@ -656,20 +650,49 @@ namespace Kyklos.Kernel.Data.SqlServer.Test.NetCore
             };
             await UpdateHoursByJobTimeInJOB_TIMEShouldBeInt(4, jobTimeToUpdate).ConfigureAwait(false);
         }
+
         [Fact]
         public async Task SelectJobTimesOfTheDayByDateOfWorkAndId218ShuoldBeTwoJobTimesOfTheDay()
         {
             await SelectJobTimesOfTheDayByDateOfWorkAndId218ShuoldBe().ConfigureAwait(false);
         }
+
         [Fact]
         public async Task SumHoursOfJobTimeAggregateByMemberIdAndDateOfWorkShuoldBe6()
         {
             await SumHoursOfJobTimeAggregateByMemberIdAndDateOfWorkShuoldBeCore().ConfigureAwait(false);
         }
+
         [Fact]
         public async Task CheckJobTimeExistShuoldTrue()
         {
             await CheckJobTimeExistShuoldBeCore().ConfigureAwait(false);
+        }
+
+        [Fact]
+        public async Task ReadUncommittedShouldReadPhantomData()
+        {
+            
+            Team phantomTeam = new Team { TeamId = "1000", City = "Ghost", Name = "Phantom", President = "LittleCheese" };
+            var existingTeams = await Dao.GetAllItemsArrayAsync<Team>();
+            
+            var t = Dao
+                .DoInTransactionAsync
+                (
+                    async tDao => 
+                    {
+                        await tDao.InsertEntityAsync(phantomTeam).ConfigureAwait(false);
+                        await Task.Delay(TimeSpan.FromSeconds(10));
+                        throw new Exception("Do rollback");
+                    }
+                );
+
+            await Task.Delay(TimeSpan.FromSeconds(3));
+            var data2 = await Dao.GetAllItemsArrayAsync<Team>(isolationLevel: System.Data.IsolationLevel.ReadUncommitted);
+            Assert.Equal(existingTeams.Length + 1, data2.Length);
+            await t;
+            var data3 = await Dao.GetAllItemsArrayAsync<Team>(isolationLevel: System.Data.IsolationLevel.Serializable);
+            Assert.Equal(data3.Length, existingTeams.Length);
         }
     }
 }
