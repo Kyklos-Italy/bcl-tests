@@ -121,3 +121,7 @@ Fashion-Customers/PA/Dev/Wmx.PAIEWeb/Wmx.PAIEWeb/log.txt
 *.dll
 !/Kernel/\Dev/RequiredPackages/*.dll
 Kyklos.Kernel.BCL.Test/Kyklos.Kernel.Data.Test/ConnString.txt
+
+
+/Kyklos.Kernel.BCL.Test/Kyklos.Kernel.Data.SQLite.Test.NetCore/SQLite
+/Kyklos.Kernel.BCL.Test/Kyklos.Kernel.Data.SQLite.Test.NetFramework/SQLite

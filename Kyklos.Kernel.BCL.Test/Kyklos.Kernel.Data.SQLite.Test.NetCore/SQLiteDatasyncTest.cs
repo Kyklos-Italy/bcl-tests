@@ -1,14 +1,14 @@
-﻿using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Kyklos.Kernel.Core.Exceptions;
+﻿using Kyklos.Kernel.Core.Exceptions;
 using Kyklos.Kernel.Data.Async;
 using Kyklos.Kernel.Data.Async.SqlBuilders;
 using Kyklos.Kernel.Data.Async.Support;
 using Kyklos.Kernel.Data.Entities;
 using Kyklos.Kernel.Data.Test;
 using Kyklos.Kernel.Data.Test.Entities;
+using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 using Xunit.Sdk;
 

@@ -677,5 +677,161 @@ namespace Kyklos.Kernel.Data.SqlServer.Test.NetFramework
         {
             await CheckJobTimeExistShuoldBeCore().ConfigureAwait(false);
         }
+
+        [Fact]
+        public async Task ReadCommittedShouldReadPhantomData()
+        {
+
+            Team phantomTeam = new Team { TeamId = "1000", City = "Ghost", Name = "Phantom", President = "LittleCheese" };
+            var existingTeams = await Dao.GetAllItemsArrayAsync<Team>();
+
+            var t = Dao
+                .DoInTransactionAsync
+                (
+                    async tDao =>
+                    {
+                        await tDao.InsertEntityAsync(phantomTeam).ConfigureAwait(false);
+                        await Task.Delay(TimeSpan.FromSeconds(10));
+                        throw new Exception("Do rollback");
+                    }
+                );
+
+            await Task.Delay(TimeSpan.FromSeconds(3));
+            Assert.False(t.IsCompleted);
+            var data2 = await Dao.GetAllItemsArrayAsync<Team>(isolationLevel: System.Data.IsolationLevel.ReadUncommitted);
+            Assert.Equal(existingTeams.Length + 1, data2.Length);
+        }
+
+        [Fact]
+        public async Task ReadCommitedNotShouldReadPhantomData()
+        {
+
+            Team phantomTeam = new Team { TeamId = "1000", City = "Ghost", Name = "Phantom", President = "LittleCheese" };
+            var existingTeams = await Dao.GetAllItemsArrayAsync<Team>();
+
+            var t = Dao
+                .DoInTransactionAsync
+                (
+                    async tDao =>
+                    {
+                        await tDao.InsertEntityAsync(phantomTeam).ConfigureAwait(false);
+                        throw new Exception("Do rollback");
+                    }
+                );
+
+            await Task.Delay(TimeSpan.FromSeconds(3));
+            Assert.True(t.IsCompleted);
+            var data3 = await Dao.GetAllItemsArrayAsync<Team>();
+            Assert.Equal(data3.Length, existingTeams.Length);
+        }
+
+        [Fact]
+        public async Task ReadCommitedShouldReadEditedPresident()
+        {
+            var existingTeams = await Dao.GetAllItemsArrayAsync<Team>();
+            var fiorentinaTeamToUpdate = new Team { TeamId = "idFio", Name = "Fiorentina", City = "Florence", President = "Commisso" };
+
+            var t = Dao
+                .DoInTransactionAsync
+                (
+                    async tDao =>
+                    {
+                        var updateBuilder = tDao.NewUpdateTableBuilder<Team>().Set(x => x.President, x => fiorentinaTeamToUpdate.President).Where(x => x.TeamId == fiorentinaTeamToUpdate.TeamId);
+                        var affected = await tDao.UpdateTableAsync(updateBuilder).ConfigureAwait(false);
+                        Assert.Equal(1, affected);
+                        await Task.Delay(TimeSpan.FromSeconds(10));
+                        throw new Exception("Do rollback");
+                    }
+                );
+
+
+            await Task.Delay(TimeSpan.FromSeconds(3));
+            Assert.False(t.IsCompleted);
+            var data2 = await Dao.GetItemByExampleAsync<Team>(x => x.TeamId == fiorentinaTeamToUpdate.TeamId, isolationLevel: System.Data.IsolationLevel.ReadUncommitted);
+            Assert.Equal(fiorentinaTeamToUpdate.President, data2.President);
+        }
+
+        [Fact]
+        public async Task ReadCommitedNotShouldReadEditedPresident()
+        {
+            var existingTeams = await Dao.GetAllItemsArrayAsync<Team>();
+            var fiorentinaTeamToUpdate = new Team { TeamId = "idFio", Name = "Fiorentina", City = "Florence", President = "Commisso" };
+            var existingFiorentinaTeam = await Dao.GetItemByExampleAsync<Team>(x => x.TeamId == fiorentinaTeamToUpdate.TeamId).ConfigureAwait(false);
+
+            int affected = 0;
+            var t = Dao
+                .DoInTransactionAsync
+                (
+                    async tDao =>
+                    {
+                        var updateBuilder = tDao.NewUpdateTableBuilder<Team>().Set(x => x.President, x => fiorentinaTeamToUpdate.President).Where(x => x.TeamId == fiorentinaTeamToUpdate.TeamId);
+                        affected = await tDao.UpdateTableAsync(updateBuilder).ConfigureAwait(false);
+                        Assert.Equal(1, affected);
+                        throw new Exception("Do rollback");
+                    }
+                );
+
+            await Task.Delay(TimeSpan.FromSeconds(3));
+            Assert.True(t.IsCompleted);
+            var data2 = await Dao.GetItemByExampleAsync<Team>(x => x.TeamId == fiorentinaTeamToUpdate.TeamId).ConfigureAwait(false);
+            Assert.Equal(existingFiorentinaTeam.President, data2.President);
+        }
+
+        [Fact]
+        public async Task DeleteCommitedShouldDeletePhantomData()
+        {
+            Team phantomTeam = new Team { TeamId = "1000", City = "Ghost", Name = "Phantom", President = "LittleCheese" };
+
+            var affected = await Dao.InsertEntityAsync(phantomTeam).ConfigureAwait(false);
+            Assert.Equal(1, affected);
+
+            var existingTeams = await Dao.GetAllItemsArrayAsync<Team>();
+
+            var t = Dao
+                .DoInTransactionAsync
+                (
+                    async tDao =>
+                    {
+                        affected = await tDao.DeleteEntityAsync(phantomTeam).ConfigureAwait(false);
+                        await Task.Delay(TimeSpan.FromSeconds(10));
+                        Assert.Equal(1, affected);
+                        throw new Exception("Do rollback");
+                    }
+                );
+
+            await Task.Delay(TimeSpan.FromSeconds(3));
+            Assert.False(t.IsCompleted);
+            var data2 = await Dao.GetAllItemsArrayAsync<Team>(isolationLevel: System.Data.IsolationLevel.ReadUncommitted);
+
+            Assert.Equal(existingTeams.Length - 1, data2.Length);
+        }
+
+        [Fact]
+        public async Task DeleteCommitedNotShouldDeletePhantomData()
+        {
+            Team phantomTeam = new Team { TeamId = "1000", City = "Ghost", Name = "Phantom", President = "LittleCheese" };
+
+            var affected = await Dao.InsertEntityAsync(phantomTeam).ConfigureAwait(false);
+            Assert.Equal(1, affected);
+
+            var existingTeams = await Dao.GetAllItemsArrayAsync<Team>();
+
+            var t = Dao
+                .DoInTransactionAsync
+                (
+                    async tDao =>
+                    {
+                        affected = await tDao.DeleteEntityAsync(phantomTeam).ConfigureAwait(false);
+                        Assert.Equal(1, affected);
+                        throw new Exception("Do rollback");
+                    }
+                );
+
+            await Task.Delay(TimeSpan.FromSeconds(3));
+            Assert.True(t.IsCompleted);
+            var data3 = await Dao.GetAllItemsArrayAsync<Team>();
+
+            Assert.Equal(existingTeams.Length, data3.Length);
+        }
     }
 }

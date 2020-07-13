@@ -39,25 +39,25 @@
       <HintPath>..\packages\FSharp.Core.4.7.2\lib\net45\FSharp.Core.dll</HintPath>
     </Reference>
     <Reference Include="KFunctional, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\KFunctional.1.1.0-beta26\lib\netstandard2.0\KFunctional.dll</HintPath>
+      <HintPath>..\packages\KFunctional.1.1.0\lib\netstandard2.0\KFunctional.dll</HintPath>
     </Reference>
     <Reference Include="Kyklos.Kernel.Core, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Core.1.1.0-beta26\lib\netstandard2.0\Kyklos.Kernel.Core.dll</HintPath>
+      <HintPath>..\packages\Kyklos.Kernel.Core.1.1.0\lib\netstandard2.0\Kyklos.Kernel.Core.dll</HintPath>
     </Reference>
     <Reference Include="Kyklos.Kernel.Data, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Data.1.1.0-beta25\lib\netstandard2.0\Kyklos.Kernel.Data.dll</HintPath>
+      <HintPath>..\packages\Kyklos.Kernel.Data.1.1.0\lib\netstandard2.0\Kyklos.Kernel.Data.dll</HintPath>
     </Reference>
     <Reference Include="Kyklos.Kernel.Data.Async, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Data.Async.1.1.0-beta26\lib\netstandard2.0\Kyklos.Kernel.Data.Async.dll</HintPath>
+      <HintPath>..\packages\Kyklos.Kernel.Data.Async.1.1.0\lib\netstandard2.0\Kyklos.Kernel.Data.Async.dll</HintPath>
     </Reference>
     <Reference Include="Kyklos.Kernel.Data.Async.PostgreSQL, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Data.Async.PostgreSQL.1.1.0-beta25\lib\netstandard2.0\Kyklos.Kernel.Data.Async.PostgreSQL.dll</HintPath>
+      <HintPath>..\packages\Kyklos.Kernel.Data.Async.PostgreSQL.1.1.0\lib\netstandard2.0\Kyklos.Kernel.Data.Async.PostgreSQL.dll</HintPath>
     </Reference>
     <Reference Include="Kyklos.Kernel.Data.Async.Support, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Data.Async.Support.1.1.0-beta25\lib\netstandard2.0\Kyklos.Kernel.Data.Async.Support.dll</HintPath>
+      <HintPath>..\packages\Kyklos.Kernel.Data.Async.Support.1.1.0\lib\netstandard2.0\Kyklos.Kernel.Data.Async.Support.dll</HintPath>
     </Reference>
     <Reference Include="Kyklos.Kernel.FSharp, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.FSharp.1.1.0-beta26\lib\netstandard2.0\Kyklos.Kernel.FSharp.dll</HintPath>
+      <HintPath>..\packages\Kyklos.Kernel.FSharp.1.1.0\lib\netstandard2.0\Kyklos.Kernel.FSharp.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.1.1.1\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>

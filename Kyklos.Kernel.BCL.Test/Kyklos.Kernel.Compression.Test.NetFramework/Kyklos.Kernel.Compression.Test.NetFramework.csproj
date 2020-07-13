@@ -39,13 +39,13 @@
       <HintPath>..\packages\FluentAssertions.5.10.3\lib\net45\FluentAssertions.dll</HintPath>
     </Reference>
     <Reference Include="Kyklos.Kernel.Compression, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Compression.1.1.0-beta23\lib\netstandard2.0\Kyklos.Kernel.Compression.dll</HintPath>
+      <HintPath>..\packages\Kyklos.Kernel.Compression.1.1.0\lib\netstandard2.0\Kyklos.Kernel.Compression.dll</HintPath>
     </Reference>
     <Reference Include="Kyklos.Kernel.Core, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.Core.1.1.0-beta26\lib\netstandard2.0\Kyklos.Kernel.Core.dll</HintPath>
+      <HintPath>..\packages\Kyklos.Kernel.Core.1.1.0\lib\netstandard2.0\Kyklos.Kernel.Core.dll</HintPath>
     </Reference>
     <Reference Include="Kyklos.Kernel.IO.Async, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kyklos.Kernel.IO.Async.1.1.0-beta23\lib\netstandard2.0\Kyklos.Kernel.IO.Async.dll</HintPath>
+      <HintPath>..\packages\Kyklos.Kernel.IO.Async.1.1.0\lib\netstandard2.0\Kyklos.Kernel.IO.Async.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />

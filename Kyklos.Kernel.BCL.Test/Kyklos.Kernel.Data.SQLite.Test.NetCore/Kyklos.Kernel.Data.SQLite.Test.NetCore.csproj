@@ -7,10 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Kyklos.Kernel.Core" Version="1.1.0-beta26" />
-    <PackageReference Include="Kyklos.Kernel.Data.Async" Version="1.1.0-beta26" />
-    <PackageReference Include="Kyklos.Kernel.Data.Async.SQLite" Version="1.1.0-beta25" />
-    <PackageReference Include="Kyklos.Kernel.Data.Async.Support" Version="1.1.0-beta25" />
+    <PackageReference Include="Kyklos.Kernel.Core" Version="1.1.0" />
+    <PackageReference Include="Kyklos.Kernel.Data.Async" Version="1.1.0" />
+    <PackageReference Include="Kyklos.Kernel.Data.Async.SQLite" Version="1.1.0" />
+    <PackageReference Include="Kyklos.Kernel.Data.Async.Support" Version="1.1.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.2">
