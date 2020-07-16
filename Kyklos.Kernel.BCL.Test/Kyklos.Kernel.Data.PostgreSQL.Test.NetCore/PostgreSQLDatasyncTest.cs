@@ -868,8 +868,8 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetCore
             (
                 async tDao =>
                 {
-                    var dataT1 = await Dao.GetItemByExampleAsync<Team>(x => x.TeamId == fiorentinaTeamToUpdate.TeamId);
-                    var updateBuilderAsync = Dao.NewUpdateTableBuilder<Team>().Set(x => x.President, x => fiorentinaTeamToUpdate.President).Where(x => x.TeamId == fiorentinaTeamToUpdate.TeamId);
+                    var dataT1 = await tDao.GetItemByExampleAsync<Team>(x => x.TeamId == fiorentinaTeamToUpdate.TeamId);
+                    var updateBuilderAsync = tDao.NewUpdateTableBuilder<Team>().Set(x => x.President, x => fiorentinaTeamToUpdate.President).Where(x => x.TeamId == fiorentinaTeamToUpdate.TeamId);
                     await Dao.UpdateTableAsync(updateBuilderAsync).ConfigureAwait(false);
                     //Assert.Equal(data1.President, data2.President);
                     await Task.Delay(TimeSpan.FromSeconds(5));
@@ -896,8 +896,8 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetCore
             (
                 async tDao =>
                 {
-                    var dataT1 = await Dao.GetItemByExampleAsync<Team>(x => x.TeamId == fiorentinaTeamToUpdate.TeamId);
-                    var updateBuilderAsync = Dao.NewUpdateTableBuilder<Team>().Set(x => x.President, x => fiorentinaTeamToUpdate.President).Where(x => x.TeamId == fiorentinaTeamToUpdate.TeamId);
+                    var dataT1 = await tDao.GetItemByExampleAsync<Team>(x => x.TeamId == fiorentinaTeamToUpdate.TeamId);
+                    var updateBuilderAsync = tDao.NewUpdateTableBuilder<Team>().Set(x => x.President, x => fiorentinaTeamToUpdate.President).Where(x => x.TeamId == fiorentinaTeamToUpdate.TeamId);
                     await Dao.UpdateTableAsync(updateBuilderAsync).ConfigureAwait(false);
                     await Task.Delay(TimeSpan.FromSeconds(10));
                 }
@@ -938,8 +938,8 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetCore
             (
                 async tDao =>
                 {
-                    var dataT1 = await Dao.GetItemByExampleAsync<Team>(x => x.TeamId == fiorentinaTeamToUpdate.TeamId);
-                    var updateBuilderAsync = Dao.NewUpdateTableBuilder<Team>().Set(x => x.President, x => fiorentinaTeamToUpdate.President).Where(x => x.TeamId == fiorentinaTeamToUpdate.TeamId);
+                    var dataT1 = await tDao.GetItemByExampleAsync<Team>(x => x.TeamId == fiorentinaTeamToUpdate.TeamId);
+                    var updateBuilderAsync = tDao.NewUpdateTableBuilder<Team>().Set(x => x.President, x => fiorentinaTeamToUpdate.President).Where(x => x.TeamId == fiorentinaTeamToUpdate.TeamId);
                     await Dao.UpdateTableAsync(updateBuilderAsync).ConfigureAwait(false);
                     await Task.Delay(TimeSpan.FromSeconds(10));
                 }
@@ -966,8 +966,8 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetCore
             (
                 async tDao =>
                 {
-                    var dataT1 = await Dao.GetItemByExampleAsync<Team>(x => x.TeamId == fiorentinaTeamToUpdate.TeamId);
-                    var updateBuilderAsync = Dao.NewUpdateTableBuilder<Team>().Set(x => x.President, x => fiorentinaTeamToUpdate.President).Where(x => x.TeamId == fiorentinaTeamToUpdate.TeamId);
+                    var dataT1 = await tDao.GetItemByExampleAsync<Team>(x => x.TeamId == fiorentinaTeamToUpdate.TeamId);
+                    var updateBuilderAsync = tDao.NewUpdateTableBuilder<Team>().Set(x => x.President, x => fiorentinaTeamToUpdate.President).Where(x => x.TeamId == fiorentinaTeamToUpdate.TeamId);
                     await Dao.UpdateTableAsync(updateBuilderAsync).ConfigureAwait(false);
                     await Task.Delay(TimeSpan.FromSeconds(10));
                 }
@@ -984,5 +984,7 @@ namespace Kyklos.Kernel.Data.PostgreSQL.Test.NetCore
             var milanTeamAfterUpdate = await Dao.GetItemByExampleAsync<Team>(x => x.TeamId == milanTeamToUpdate.TeamId);
             Assert.Equal(milanTeamToUpdate.President, milanTeamAfterUpdate.President);
         }
+
+
     }
 }
