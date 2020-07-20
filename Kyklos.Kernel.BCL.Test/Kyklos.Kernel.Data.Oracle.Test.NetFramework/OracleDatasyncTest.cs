@@ -11,6 +11,7 @@ using Kyklos.Kernel.Data.Test.Entities;
 using Oracle.ManagedDataAccess.Client;
 using Xunit;
 using FluentAssertions;
+using System.Data;
 
 namespace Kyklos.Kernel.Data.Oracle.Test.NetFramework
 {
@@ -704,75 +705,115 @@ namespace Kyklos.Kernel.Data.Oracle.Test.NetFramework
         [Fact]
         public async Task ReaderCommittedNotReadDirtyData()
         {
-            Team phantomTeam = new Team { TeamId = "1000", City = "Ghost", Name = "Phantom", President = "LittleCheese" };
-
-            var existingTeams = await Dao.GetAllItemsArrayAsync<Team>();
-            var affectedRow = 0;
-
-            var t = Dao
-                .DoInTransactionAsync
-                (
-                    async tDao =>
-                    {
-                        await tDao.InsertEntityAsync(phantomTeam).ConfigureAwait(false);
-                        Assert.Equal(1, affectedRow);
-                        await Task.Delay(TimeSpan.FromSeconds(10));
-                        throw new Exception("Do rollback");
-                    }
-                );
-
-            await Task.Delay(TimeSpan.FromSeconds(3));
-            Assert.True(t.IsCompleted);
-            var data3 = await Dao.GetAllItemsArrayAsync<Team>();
-            Assert.Equal(existingTeams.Length, data3.Length);
+            await DirtyRead(IsolationLevel.ReadCommitted);
         }
 
         [Fact]
-        public async Task ReaderCommittedNotLockTable()
+        public async Task SerializableNotReadDirtyData()
         {
-            var fiorentinaTeamToUpdate = new Team { TeamId = "idFio", Name = "Fiorentina", City = "Florence", President = "Commisso" };
-            var milanTeamToUpdate = new Team { TeamId = "idMil", Name = "Milan", City = "Milano", President = "Scaroni" };
+            await DirtyRead(IsolationLevel.Serializable);
+        }
 
-            var t = Dao
-            .DoInTransactionAsync
-            (
-                async tDao =>
-                {
-                    var dataT1 = await tDao.GetItemByExampleAsync<Team>(x => x.TeamId == fiorentinaTeamToUpdate.TeamId);
-                    var updateBuilderAsync = tDao.NewUpdateTableBuilder<Team>().Set(x => x.President, x => fiorentinaTeamToUpdate.President).Where(x => x.TeamId == fiorentinaTeamToUpdate.TeamId);
-                    await tDao.UpdateTableAsync(updateBuilderAsync).ConfigureAwait(false);
-                    await Task.Delay(TimeSpan.FromSeconds(10));
-                }
-            );
+        [Fact]
+        public async Task ReadCommittedShouldReadUpdatedRecord()
+        {
+            await RepeatableRead(IsolationLevel.ReadCommitted);
+        }
 
-            var updateBuilder = Dao.NewUpdateTableBuilder<Team>().Set(x => x.President, x => milanTeamToUpdate.President).Where(x => x.TeamId == milanTeamToUpdate.TeamId);
-            await Dao.UpdateTableAsync(updateBuilder).ConfigureAwait(false);
-
-            await t;
-
-            var fiorentinaTeamAfterUpdate = await Dao.GetItemByExampleAsync<Team>(x => x.TeamId == fiorentinaTeamToUpdate.TeamId);
-            Assert.Equal(fiorentinaTeamToUpdate.President, fiorentinaTeamAfterUpdate.President);
-
-            var milanTeamAfterUpdate = await Dao.GetItemByExampleAsync<Team>(x => x.TeamId == milanTeamToUpdate.TeamId);
-            Assert.Equal(milanTeamToUpdate.President, milanTeamAfterUpdate.President);
+        [Fact]
+        public async Task SerializableShouldReturnSameResultAfeterUpdateRecord()
+        {
+            await RepeatableRead(IsolationLevel.Serializable);
         }
 
         [Fact]
         public async Task ReaderCommittedWaitCommittedT1BeforeUpdateSameRow()
         {
-            var fiorentinaTeamToUpdateInT1 = new Team { TeamId = "idFio", Name = "Fiorentina", City = "Florence", President = "Commisso" };
-            var fiorentinaTeamToUpdateInT2 = new Team { TeamId = "idFio", Name = "Fiorentina", City = "Florence", President = "Barone" };
-            var fiorentinaTeamAfterT2 = new Team();
-            var fiorentinaTeamInT1 = new Team();
+            await UpdateOnSameRow(IsolationLevel.ReadCommitted);
+        }
+
+        [Fact]
+        public void SerializableShouldNotLostUpdatesOnSameRow()
+        {
+            var function = this.Awaiting(x => x.UpdateOnSameRow(IsolationLevel.Serializable));
+            Func<Task> action = function;
+            action.Should().Throw<OracleException>().Where(x => x.Number == 8177);
+        }
+
+        #region Private method
+
+        private async Task DirtyRead(IsolationLevel isolationLevel)
+        {
+            Team phantomTeam = new Team { TeamId = "1000", City = "Ghost", Name = "Phantom", President = "LittleCheese" };
+
+            Team[] existingTeams = await Dao.GetAllItemsArrayAsync<Team>();
+            int affectedRow = 0;
+
+            var t1 = Dao
+              .DoInTransactionAsync
+              (
+                  async tDao =>
+                  {
+                      affectedRow = await tDao.InsertEntityAsync(phantomTeam).ConfigureAwait(false);
+                      affectedRow.Should().Be(1);
+                      await Task.Delay(TimeSpan.FromSeconds(5));
+                      throw new Exception("Do rollback");
+                  }
+              );
+
+            t1.IsCompleted.Should().BeFalse();
+            Team[] allTeamsInT2 = await Dao.GetAllItemsArrayAsync<Team>(isolationLevel: isolationLevel);
+            allTeamsInT2.Length.Should().Be(existingTeams.Length);
+        }
+
+        private async Task RepeatableRead(IsolationLevel isolationLevel)
+        {
+            Team fiorentinaTeamToUpdateInT2 = new Team { TeamId = "idFio", Name = "Fiorentina", City = "Florence", President = "Commisso" };
+            Team fiorentinaTeamAfterT2 = new Team();
+            Team fiorentinaTeamInT1 = new Team();
+
+            Team existingFiorentinaTeam = await Dao.GetItemByExampleAsync<Team>(x => x.TeamId == fiorentinaTeamToUpdateInT2.TeamId);
+
+            var t1 = Dao
+                .DoInTransactionAsync
+                (
+                    async tDao =>
+                    {
+                        fiorentinaTeamInT1 = await tDao.GetItemByExampleAsync<Team>(x => x.TeamId == fiorentinaTeamToUpdateInT2.TeamId).ConfigureAwait(false);
+                        fiorentinaTeamInT1.President.Should().Be(existingFiorentinaTeam.President);
+                        await Task.Delay(TimeSpan.FromSeconds(5));
+                        fiorentinaTeamAfterT2 = await tDao.GetItemByExampleAsync<Team>(x => x.TeamId == fiorentinaTeamToUpdateInT2.TeamId).ConfigureAwait(false);
+                    },
+                    isolationLevel: isolationLevel
+                );
+
+            var updateBuilder = Dao.NewUpdateTableBuilder<Team>().Set(x => x.President, x => fiorentinaTeamToUpdateInT2.President).Where(x => x.TeamId == fiorentinaTeamToUpdateInT2.TeamId);
+            var affected = await Dao.UpdateTableAsync(updateBuilder).ConfigureAwait(false);
+            var fiorentinaTeamAfterAllTCompleted = await Dao.GetItemByExampleAsync<Team>(x => x.TeamId == fiorentinaTeamToUpdateInT2.TeamId);
+            await t1;
+
+            if (isolationLevel == IsolationLevel.ReadCommitted)
+            {
+                fiorentinaTeamAfterT2.President.Should().Be(fiorentinaTeamToUpdateInT2.President);
+                return;
+            }
+
+            fiorentinaTeamAfterT2.President.Should().Be(fiorentinaTeamInT1.President);
+        }
+
+        private async Task UpdateOnSameRow(IsolationLevel isolationLevel)
+        {
+            Team fiorentinaTeamToUpdateInT1 = new Team { TeamId = "idFio", Name = "Fiorentina", City = "Florence", President = "Commisso" };
+            Team fiorentinaTeamToUpdateInT2 = new Team { TeamId = "idFio", Name = "Fiorentina", City = "Florence", President = "Barone" };
 
             var existingFiorentinaTeam = await Dao.GetItemByExampleAsync<Team>(x => x.TeamId == fiorentinaTeamToUpdateInT1.TeamId);
 
-            var t = Dao
+            var t1 = Dao
             .DoInTransactionAsync
             (
                 async tDao =>
                 {
-                    var dataT1 = await tDao.GetItemByExampleAsync<Team>(x => x.TeamId == fiorentinaTeamToUpdateInT1.TeamId);
+                    await tDao.GetItemByExampleAsync<Team>(x => x.TeamId == fiorentinaTeamToUpdateInT1.TeamId);
                     var updateBuilderAsync = tDao.NewUpdateTableBuilder<Team>().Set(x => x.President, x => fiorentinaTeamToUpdateInT1.President).Where(x => x.TeamId == fiorentinaTeamToUpdateInT1.TeamId);
                     await tDao.UpdateTableAsync(updateBuilderAsync).ConfigureAwait(false);
                     await Task.Delay(TimeSpan.FromSeconds(5));
@@ -780,110 +821,20 @@ namespace Kyklos.Kernel.Data.Oracle.Test.NetFramework
             );
 
             var fiorentinaTeamAfterUpdateT1 = await Dao.GetItemByExampleAsync<Team>(x => x.TeamId == fiorentinaTeamToUpdateInT2.TeamId);
-            Assert.Equal(existingFiorentinaTeam.President, fiorentinaTeamAfterUpdateT1.President);
-            Assert.False(t.IsCompleted);
+            fiorentinaTeamAfterUpdateT1.President.Should().Be(existingFiorentinaTeam.President);
+
+            t1.IsCompleted.Should().BeFalse();
+
             var updateBuilder = Dao.NewUpdateTableBuilder<Team>().Set(x => x.President, x => fiorentinaTeamToUpdateInT2.President).Where(x => x.TeamId == fiorentinaTeamToUpdateInT2.TeamId);
-            await Dao.UpdateTableAsync(updateBuilder).ConfigureAwait(false);
-            Assert.True(t.IsCompleted);
-            var fiorentinaTeamAfterUpdate = await Dao.GetItemByExampleAsync<Team>(x => x.TeamId == fiorentinaTeamToUpdateInT2.TeamId);
-            Assert.Equal(fiorentinaTeamToUpdateInT2.President, fiorentinaTeamAfterUpdate.President);
+            await Dao.UpdateTableAsync(updateBuilder, isolationLevel: isolationLevel).ConfigureAwait(false);
+
+            t1.IsCompleted.Should().BeTrue();
+
+            Team fiorentinaTeamAfterUpdate = await Dao.GetItemByExampleAsync<Team>(x => x.TeamId == fiorentinaTeamToUpdateInT2.TeamId);
+
+            fiorentinaTeamAfterUpdate.President.Should().Be(fiorentinaTeamToUpdateInT2.President);
         }
 
-        [Fact]
-        public async Task SerializableNotReadDirtyData()
-        {
-            Team phantomTeam = new Team { TeamId = "1000", City = "Ghost", Name = "Phantom", President = "LittleCheese" };
-
-            var existingTeams = await Dao.GetAllItemsArrayAsync<Team>();
-            var affectedRow = 0;
-
-            var t = Dao
-                .DoInTransactionAsync
-                (
-                    async tDao =>
-                    {
-                        await tDao.InsertEntityAsync(phantomTeam, isolationLevel: System.Data.IsolationLevel.Serializable).ConfigureAwait(false);
-                        Assert.Equal(1, affectedRow);
-                        await Task.Delay(TimeSpan.FromSeconds(15));
-                        throw new Exception("Do rollback");
-                    },
-                    isolationLevel: System.Data.IsolationLevel.Serializable
-                );
-
-            await Task.Delay(TimeSpan.FromSeconds(3));
-            Assert.True(t.IsCompleted);
-            var allteams = await Dao.GetAllItemsArrayAsync<Team>();
-            Assert.Equal(existingTeams.Length, allteams.Length);
-        }
-
-        [Fact]
-        public async Task SerializableNotLockTable()
-        {
-            var fiorentinaTeamToUpdate = new Team { TeamId = "idFio", Name = "Fiorentina", City = "Florence", President = "Commisso" };
-            var milanTeamToUpdate = new Team { TeamId = "idMil", Name = "Milan", City = "Milano", President = "Scaroni" };
-
-            var t = Dao
-            .DoInTransactionAsync
-            (
-                async tDao =>
-                {
-                    var dataT1 = await tDao.GetItemByExampleAsync<Team>(x => x.TeamId == fiorentinaTeamToUpdate.TeamId);
-                    var updateBuilderAsync = tDao.NewUpdateTableBuilder<Team>().Set(x => x.President, x => fiorentinaTeamToUpdate.President).Where(x => x.TeamId == fiorentinaTeamToUpdate.TeamId);
-                    await tDao.UpdateTableAsync(updateBuilderAsync).ConfigureAwait(false);
-                    await Task.Delay(TimeSpan.FromSeconds(10));
-                },
-                isolationLevel: System.Data.IsolationLevel.Serializable
-            );
-
-            var updateBuilder = Dao.NewUpdateTableBuilder<Team>().Set(x => x.President, x => milanTeamToUpdate.President).Where(x => x.TeamId == milanTeamToUpdate.TeamId);
-            await Dao.UpdateTableAsync(updateBuilder).ConfigureAwait(false);
-
-            await t;
-
-            var fiorentinaTeamAfterUpdate = await Dao.GetItemByExampleAsync<Team>(x => x.TeamId == fiorentinaTeamToUpdate.TeamId);
-            Assert.Equal(fiorentinaTeamToUpdate.President, fiorentinaTeamAfterUpdate.President);
-
-            var milanTeamAfterUpdate = await Dao.GetItemByExampleAsync<Team>(x => x.TeamId == milanTeamToUpdate.TeamId);
-            Assert.Equal(milanTeamToUpdate.President, milanTeamAfterUpdate.President);
-        }
-
-        [Fact]
-        public void SerializableShouldNotLostUpdatesOnSameRow()
-        {
-            var function = this.Awaiting(x => x.SerializableShouldNotAllowDueConcurrentUpdateOnSameRow());
-            Func<Task> action = function;
-            action.Should().Throw<OracleException>().Where(x => x.Number == 8177);
-        }
-
-        private async Task SerializableShouldNotAllowDueConcurrentUpdateOnSameRow()
-        {
-            var fiorentinaTeamToUpdateInT1 = new Team { TeamId = "idFio", Name = "Fiorentina", City = "Florence", President = "Commisso" };
-            var fiorentinaTeamToUpdateInT2 = new Team { TeamId = "idFio", Name = "Fiorentina", City = "Florence", President = "Barone" };
-            var fiorentinaTeamAfterT2 = new Team();
-            var fiorentinaTeamInT1 = new Team();
-
-            var existingFiorentinaTeam = await Dao.GetItemByExampleAsync<Team>(x => x.TeamId == fiorentinaTeamToUpdateInT1.TeamId);
-
-            var t = Dao
-            .DoInTransactionAsync
-            (
-                async tDao =>
-                {
-                    var dataT1 = await tDao.GetItemByExampleAsync<Team>(x => x.TeamId == fiorentinaTeamToUpdateInT1.TeamId);
-                    var updateBuilderAsync = tDao.NewUpdateTableBuilder<Team>().Set(x => x.President, x => fiorentinaTeamToUpdateInT1.President).Where(x => x.TeamId == fiorentinaTeamToUpdateInT1.TeamId);
-                    await tDao.UpdateTableAsync(updateBuilderAsync).ConfigureAwait(false);
-                    await Task.Delay(TimeSpan.FromSeconds(15));
-                }                
-            );
-
-            var fiorentinaTeamAfterUpdateT1 = await Dao.GetItemByExampleAsync<Team>(x => x.TeamId == fiorentinaTeamToUpdateInT2.TeamId);
-            Assert.Equal(existingFiorentinaTeam.President, fiorentinaTeamAfterUpdateT1.President);
-            Assert.False(t.IsCompleted);
-            var updateBuilder = Dao.NewUpdateTableBuilder<Team>().Set(x => x.President, x => fiorentinaTeamToUpdateInT2.President).Where(x => x.TeamId == fiorentinaTeamToUpdateInT2.TeamId);
-            await Dao.UpdateTableAsync(updateBuilder, isolationLevel: System.Data.IsolationLevel.Serializable).ConfigureAwait(false);
-            Assert.True(t.IsCompleted);
-            var fiorentinaTeamAfterUpdate = await Dao.GetItemByExampleAsync<Team>(x => x.TeamId == fiorentinaTeamToUpdateInT2.TeamId);
-            Assert.Equal(fiorentinaTeamToUpdateInT2.President, fiorentinaTeamAfterUpdate.President);
-        }
+        #endregion
     }
 }
