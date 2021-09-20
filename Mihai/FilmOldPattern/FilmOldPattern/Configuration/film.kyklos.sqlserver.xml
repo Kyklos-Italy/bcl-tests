@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<objects xmlns="http://www.springframework.net">
+
+  <object name="SpGetNextval_SEQFORALL" type="Kyklos.Kernel.DAL.SqlServer.Support.SpGetNextval_SEQFORALL, Kyklos.Kernel.DAL.SqlServer">
+    <constructor-arg index="0" ref="KyklosKernelDbProvider"/>
+    <constructor-arg index="1" value="${KyklosKernelDefaultSchema}"/>
+  </object>
+
+  <object name="SqlServerDbSequenceManager" type="Kyklos.Kernel.DAL.SqlServer.Support.SqlServerDbSequenceManager, Kyklos.Kernel.DAL.SqlServer">
+    <constructor-arg index="0" ref="KyklosKernelDbProvider"/>
+    <constructor-arg index="1" value="${KyklosKernelDefaultSchema}"/>
+    <property name="Dao" ref="GenericDal"/>
+  </object>
+
+  <object name="KyklosKernelDaoHelper" type="Kyklos.Kernel.DAL.SqlServer.Support.SqlServerDaoHelper, Kyklos.Kernel.DAL.SqlServer">
+    <property name="AdoTemplate" ref="KyklosKernelAdoTemplate"/>
+    <property name="DbSchema" value="${KyklosKernelDefaultSchema}"/>
+    <property name="SqlTextProvider" ref="KyklosKernelSqlTextProvider"/>
+    <property name="MaxTableNameLength" value="30"/>
+    <property name="MaxElementsForInClause" value="900"/>
+    <property name="LikeChar" value="%"/>
+    <property name="StringConcatenationOperator" value="+"/>
+    <property name="SchemaQuoteChar" value=""/>
+    <property name="FieldEscapeOpenChar" value="["/>
+    <property name="FieldEscapeCloseChar" value="]"/>
+    <property name="SpGetNextval_SEQFORALL" ref="SpGetNextval_SEQFORALL"/>
+    <property name="DbSequenceManager" ref="SqlServerDbSequenceManager"/>
+  </object>
+
+  <object id="KyklosClassicAdoTemplate" type="Kyklos.Kernel.DAL.SqlServer.Support.SqlServerKyklosAdoTemplate, Kyklos.Kernel.DAL.SqlServer">
+    <constructor-arg index="0" ref="KyklosKernelDbProvider"/>
+    <constructor-arg index="1" ref="KyklosCommandBuilder"/>
+  </object>
+
+  <object name="KyklosCommandBuilder" type="Kyklos.Kernel.DAL.SqlServer.Support.KyklosSqlServerCommandBuilder, Kyklos.Kernel.DAL.SqlServer">
+  </object>
+
+  <object name="KyklosKernelSqlTextProvider" type="Kyklos.Kernel.DAL.SqlServer.Support.SqlServerSqlTextProvider, Kyklos.Kernel.DAL.SqlServer">
+  </object>
+
+</objects>
