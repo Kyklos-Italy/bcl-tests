@@ -5,10 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="KMicro.Auth.Codes" Version="1.0.1-beta04" />
-    <PackageReference Include="Kyklos.Kernel.IO.Async" Version="1.0.13" />
-    <PackageReference Include="Kyklos.Kernel.TimeSupport" Version="1.0.13" />
-    <PackageReference Include="XunitContext" Version="1.8.0" />
+    <PackageReference Include="KMicro.Auth.Codes" Version="1.1.0" />
+    <PackageReference Include="Kyklos.Kernel.IO.Async" Version="2.0.0" />
+    <PackageReference Include="Kyklos.Kernel.TimeSupport" Version="2.0.0" />
+    <PackageReference Include="XunitContext" Version="3.0.0" />
   </ItemGroup>
 
 </Project>
