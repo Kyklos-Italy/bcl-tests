@@ -1,2 +1,2 @@
-#Ignore directory bin
-C:\development\dotnet\Test\Mihai\FilmOldPattern\FilmOldPattern\bin
+#Not Ingore DLL
+!*.dll
