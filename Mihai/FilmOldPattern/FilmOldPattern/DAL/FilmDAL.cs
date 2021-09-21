@@ -1,5 +1,7 @@
 ﻿using FilmOldPattern.Model;
 using Kyklos.Kernel.DAL;
+using Kyklos.Kernel.SpringSupport.Data;
+using Kyklos.Kernel.SpringSupport.Data.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,24 +12,61 @@ namespace FilmOldPattern.DAL
 {
     public class FilmDAL : NewBaseDal, IFilmDAL
     {
-        public void DeleteFilm()
+        private const string aliasFilm = "film";
+
+
+        public void InsertFilm(Film film)
         {
-            throw new NotImplementedException();
+            this.InsertEntity(film);
+        }
+
+        public void UpdateFilm(Film film)
+        {
+            this.UpdateEntity(film);
+        }
+
+        public void DeleteFilm(Film film)
+        {
+            this.DeleteEntity(film);
+        }
+
+        public IList<Film> GetFilmByKind(string kindFilm)
+        {
+            Film film = null;
+
+            var builder =
+                NewSqlQueryBuilder()
+                .CustomSql(film.BuildSelectForEntity("FILMS", Schema, false, DaoHelper.EscapeFieldName, true))
+                .Where()
+                .True()
+                .AndCondition(aliasFilm, film.GetFieldName(x => x.FilmKind), WhereOperator.EqualTo, kindFilm);
+
+            try
+            {
+                return GetItemList<Film>(builder);
+            }
+            catch (Exception ex)
+            {
+                throw BuildKyklosDALException(ex);
+            }
         }
 
         public IList<Film> GetFilms()
         {
-            throw new NotImplementedException();
-        }
+            Film film = null;
+            var builder =
+                NewSqlQueryBuilder()
+                .CustomSql(film.BuildSelectForEntity(aliasFilm, Schema, false, DaoHelper.EscapeFieldName));
 
-        public void InsertFilm()
-        {
-            throw new NotImplementedException();
+            try
+            {
+                return this.GetItemList<Film>(builder);
+            }
+            catch (Exception ex)
+            {
+                throw BuildKyklosDALException(ex);
+            }
         }
-
-        public void UpdateFilm()
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

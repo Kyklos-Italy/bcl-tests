@@ -152,6 +152,16 @@
     <Content Include="Configuration\film.kernel.objects.xml" />
     <Content Include="Configuration\film.kyklos.oracle.xml" />
     <Content Include="Configuration\film.kyklos.sqlserver.xml" />
+    <Content Include="RequiredLibs\Kyklos.Kernel.BE.dll" />
+    <Content Include="RequiredLibs\Kyklos.Kernel.BLL.dll" />
+    <Content Include="RequiredLibs\Kyklos.Kernel.Config.dll" />
+    <Content Include="RequiredLibs\Kyklos.Kernel.DAL.dll" />
+    <Content Include="RequiredLibs\Kyklos.Kernel.DAL.Oracle.dll" />
+    <Content Include="RequiredLibs\Kyklos.Kernel.DAL.SqlServer.dll" />
+    <Content Include="RequiredLibs\Kyklos.Kernel.Data.dll" />
+    <Content Include="RequiredLibs\Kyklos.Kernel.dll" />
+    <Content Include="RequiredLibs\Kyklos.Kernel.QuartzSupport.dll" />
+    <Content Include="RequiredLibs\Kyklos.Kernel.SpringSupport.dll" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="TestingDbFixture\" />

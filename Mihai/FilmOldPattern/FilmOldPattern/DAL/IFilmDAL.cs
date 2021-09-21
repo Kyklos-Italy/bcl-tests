@@ -9,10 +9,11 @@ namespace FilmOldPattern.DAL
 {
     public interface IFilmDAL
     {
-        IList<Film> GetFilms();
         void InsertFilm();
         void DeleteFilm();
         void UpdateFilm();
 
+        IList<Film> GetFilms();
+        IList<Film> GetFilmByKind(string kindFilm);
     }
 }

@@ -1,4 +1,6 @@
-﻿using Kyklos.Kernel.SpringSupport.Core;
+﻿using FilmOldPattern.DAL;
+using FilmOldPattern.Model;
+using Kyklos.Kernel.SpringSupport.Core;
 using Kyklos.Kernel.SpringSupport.Data;
 using System;
 using System.Collections.Generic;
@@ -13,7 +15,6 @@ namespace FilmOldPattern
         private static IDaoHelper DaoHelper => Instantiator.GetObject<IDaoHelper>("KyklosKernelDaoHelper");
         static void Main(string[] args)
         {
-            
         }
     }
 }
