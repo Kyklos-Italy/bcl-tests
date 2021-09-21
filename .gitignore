@@ -118,6 +118,7 @@ Products/Dev/WmX/Mobile/.idea/
 .idea/
 *.*.iml
 Fashion-Customers/PA/Dev/Wmx.PAIEWeb/Wmx.PAIEWeb/log.txt
+*.dll
 !/Kernel/\Dev/RequiredPackages/*.dll
 Kyklos.Kernel.BCL.Test/Kyklos.Kernel.Data.Test/ConnString.txt
 
