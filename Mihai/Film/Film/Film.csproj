@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Kyklos.Kernel.Data.Async" Version="2.1.1" />
+    <PackageReference Include="Kyklos.Kernel.Data.Async.SQLite" Version="2.1.1" />
+    <PackageReference Include="Kyklos.Kernel.Data.Async.SqlServer" Version="2.1.1" />
+    <PackageReference Include="Kyklos.Kernel.Data.Async.Support" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="1.7.4" />
+    <PackageReference Include="Spring.Core" Version="3.0.0" />
+    <PackageReference Include="Spring.Data" Version="3.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="NLog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
