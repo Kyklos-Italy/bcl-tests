@@ -37,7 +37,7 @@ namespace FilmOldPattern.DAL
 
             var builder =
                 NewSqlQueryBuilder()
-                .CustomSql(film.BuildSelectForEntity("FILMS", Schema, false, DaoHelper.EscapeFieldName, true))
+                .CustomSql(film.BuildSelectForEntity(aliasFilm, Schema, false, DaoHelper.EscapeFieldName, true))
                 .Where()
                 .Condition<Film>(aliasFilm, f => f.FilmKind, WhereOperator.EqualTo, kindFilm);
 
@@ -87,7 +87,7 @@ namespace FilmOldPattern.DAL
 
             var builder =
                 NewSqlQueryBuilder()
-                .CustomSql(film.BuildSelectForEntity("FILMS", Schema, false, DaoHelper.EscapeFieldName, true))
+                .CustomSql(film.BuildSelectForEntity(aliasFilm, Schema, false, DaoHelper.EscapeFieldName, true))
                 .InnerJoin(new TableDef { Alias = aliasCast, Schema = Schema, TableName = cast.GetTableNameForEntity() })
                 .On()
                 .JoinCondition("FILMS", idFilm, WhereOperator.EqualTo, "CAST", filmId)

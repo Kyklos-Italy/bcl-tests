@@ -16,6 +16,8 @@ namespace FilmOldPattern.DAL
         IList<Film> GetFilms();
         IList<Film> GetFilmByKind(string kindFilm);
 
-        string[] GetTitleFilms(string kindFilm);
+        IList<string> GetTitleFilms(string kindFilm);
+
+        IList<Film> GetFilmsByActorName(string actorName);
     }
 }
