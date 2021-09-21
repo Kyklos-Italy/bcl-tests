@@ -39,8 +39,7 @@ namespace FilmOldPattern.DAL
                 .CustomSql(film.BuildSelectForEntity("FILMS", Schema, false, DaoHelper.EscapeFieldName, true))
                 .From(aliasFilm)
                 .Where()
-                .True()
-                .AndCondition(aliasFilm, film.GetFieldName(x => x.FilmKind), WhereOperator.EqualTo, kindFilm);
+                .Condition<Film>(aliasFilm, f => f.FilmKind, WhereOperator.EqualTo, kindFilm);
 
             try
             {
