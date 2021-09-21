@@ -12,8 +12,9 @@ namespace FilmOldPattern.DAL
 {
     public class FilmDAL : NewBaseDal, IFilmDAL
     {
-        private const string aliasFilm = "film";
-
+        private const string aliasActor = "actors";
+        private const string aliasCast = "casts";
+        private const string aliasFilm = "films";
 
         public void InsertFilm(Film film)
         {
@@ -69,6 +70,43 @@ namespace FilmOldPattern.DAL
             }
         }
 
-        
-}
+        public string[] GetTitleFilms(string kindFilm)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IList<Film> GetFilmsByActorName(string actorName)
+        {
+            Actor actor = null;
+            Cast cast = null;
+            Film film = null;
+
+            string idFilm = film.GetFieldName(f => f.Id);
+            string filmId = cast.GetFieldName(c => c.FilmId);
+            string actorId = cast.GetFieldName(c => c.ActorId);
+            string idActor = actor.GetFieldName(a => a.Id);
+
+
+            var builder =
+                NewSqlQueryBuilder()
+                .CustomSql(film.BuildSelectForEntity("FILMS", Schema, false, DaoHelper.EscapeFieldName, true))
+                .InnerJoin(new TableDef { Alias = aliasCast, Schema = Schema, TableName = cast.GetTableNameForEntity() })
+                .On()
+                .JoinCondition("FILMS", idFilm, WhereOperator.EqualTo, "CAST", filmId)
+                .InnerJoin(new TableDef { Alias = aliasActor, Schema = Schema, TableName = actor.GetTableNameForEntity() })
+                .On()
+                .JoinCondition("CAST", actorId, WhereOperator.EqualTo, "ACTORS", idActor)
+                .Where()
+                .Condition(aliasActor, actor.GetFieldName(a => a.ActorName), WhereOperator.EqualTo, actorName);
+
+            try
+            {
+                return GetItemList<Film>(builder);
+            }
+            catch (Exception ex)
+            {
+                throw BuildKyklosDALException(ex);
+            }
+        }
+    }
 }

@@ -1,4 +1,5 @@
-﻿using Kyklos.Kernel.SpringSupport.Data.Attributes;
+﻿using Kyklos.Kernel.BE.Support.Entities;
+using Kyklos.Kernel.SpringSupport.Data.Attributes;
 using Kyklos.Kernel.SpringSupport.Data.Entities;
 using System;
 using System.Collections.Generic;
@@ -10,8 +11,12 @@ namespace FilmOldPattern.Model
 {
     [EntityObjectInfo(TableName = "CAST")]
     [EntityUniqueConstraint(ConstraintName = "UNIQUE_ACTORFILMROLE", Properties = new string[] { nameof(FilmId), nameof(ActorId), nameof(Role) })]
-    public class Cast : IBaseEntity
+    public class Cast : BaseEntityWithLongKey<Cast>
     {
+        public Cast()
+            : base(x => x.Id)
+        {
+        }
         [EntityPropertyInfo(ColumnName = "ID", DbType = PropertyDbType.Integer, IsNullable = false, IsPrimaryKey = true)]
         public int Id { get; set; }
 
