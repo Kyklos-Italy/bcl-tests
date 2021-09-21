@@ -17,8 +17,8 @@ namespace FilmOldPattern.Model
         {
         }
 
-        [EntityPropertyInfo(ColumnName = "ID", DbType = PropertyDbType.Integer, IsNullable = false, IsPrimaryKey = true)]
-        public int Id { get; set; }
+        [EntityPropertyInfo(ColumnName = "ID", DbType = PropertyDbType.Long, IsNullable = false, IsPrimaryKey = true)]
+        public long Id { get; set; }
 
         [EntityPropertyInfo(ColumnName = "FILMTITLE", DbType = PropertyDbType.String, MaxLength = 50, IsNullable = false)]
         public string FilmTitle { get; set; }

@@ -1,9 +1,5 @@
 ﻿using FilmOldPattern.Model;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FilmOldPattern.DAL
 {
@@ -16,7 +12,7 @@ namespace FilmOldPattern.DAL
         IList<Film> GetFilms();
         IList<Film> GetFilmByKind(string kindFilm);
 
-        IList<string> GetTitleFilms(string kindFilm);
+        // IList<string> GetTitleFilms(string kindFilm);
 
         IList<Film> GetFilmsByActorName(string actorName);
     }

@@ -1,23 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <objects xmlns="http://www.springframework.net">
 
-  <object type="Kyklos.Kernel.SpringSupport.Core.Factory.VariableWithDefaultPlaceholderConfigurer, Kyklos.Kernel.SpringSupport">
-    <property name="IgnoreUnresolvablePlaceholders" value="true"/>
-    <property name="VariableSources">
-      <list element-type="Spring.Objects.Factory.Config.IVariableSource, Spring.Core">
-        <object type="Spring.Objects.Factory.Config.ConnectionStringsVariableSource, Spring.Core"/>
-        <object type="Spring.Objects.Factory.Config.ConfigSectionVariableSource, Spring.Core">
-          <property name="SectionNames" value="appSettings"/>
-        </object>
-      </list>
-    </property>
-  </object>
+	<object type="Kyklos.Kernel.SpringSupport.Core.Factory.Attributes.RequiredSpringInjectedPropertyAttributeObjectPostProcessor, Kyklos.Kernel.SpringSupport">
+	</object>
 
-  <object name="DefaultQueryTransformer" type="Kyklos.Kernel.SpringSupport.Data.DoNothingQueryTransformer, Kyklos.Kernel.SpringSupport">
-  </object>
+	<object type="Kyklos.Kernel.SpringSupport.Core.Factory.VariableWithDefaultPlaceholderConfigurer, Kyklos.Kernel.SpringSupport">
+		<property name="IgnoreUnresolvablePlaceholders" value="true"/>
+		<property name="VariableSources">
+			<list element-type="Spring.Objects.Factory.Config.IVariableSource, Spring.Core">
+				<object type="Spring.Objects.Factory.Config.ConnectionStringsVariableSource, Spring.Core"/>
+				<object type="Spring.Objects.Factory.Config.ConfigSectionVariableSource, Spring.Core">
+					<property name="SectionNames" value="appSettings"/>
+				</object>
+			</list>
+		</property>
+	</object>
 
-  <object name="TableRowsDeleter" type="Kyklos.Kernel.DAL.Support.Helpers.TableRowsDeleter, Kyklos.Kernel.DAL">
-    <property name="GenericDao" ref="GenericDal"/>
-  </object>
+	<object name="DefaultQueryTransformer" type="Kyklos.Kernel.SpringSupport.Data.DoNothingQueryTransformer, Kyklos.Kernel.SpringSupport">
+	</object>
 
 </objects>

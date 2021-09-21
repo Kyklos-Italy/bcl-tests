@@ -1,20 +1,27 @@
-﻿using FilmOldPattern.DAL;
-using FilmOldPattern.Model;
+﻿using Common.Logging;
+using FilmOldPattern.DAL;
 using Kyklos.Kernel.SpringSupport.Core;
-using Kyklos.Kernel.SpringSupport.Data;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FilmOldPattern
 {
     class Program
     {
-        private static IDaoHelper DaoHelper => Instantiator.GetObject<IDaoHelper>("KyklosKernelDaoHelper");
         static void Main(string[] args)
         {
+            log4net.Config.XmlConfigurator.Configure();
+
+            try
+            {
+                CustomAdditionalDbProvider.SetDefaultAdditionalResourceForCustomDbProvidersSqlServer();
+                IFilmDAL filmDal = Instantiator.GetObject<IFilmDAL>("FilmDAL");
+                var films = filmDal.GetFilms();
+            }
+            catch (Exception ex)
+            {
+                var logger = LogManager.GetLogger("DEBUG");
+                logger.Error("Error", ex);
+            }            
         }
     }
 }

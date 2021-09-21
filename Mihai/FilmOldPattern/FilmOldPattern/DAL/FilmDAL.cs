@@ -4,9 +4,6 @@ using Kyklos.Kernel.SpringSupport.Data;
 using Kyklos.Kernel.SpringSupport.Data.Query;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FilmOldPattern.DAL
 {
@@ -56,11 +53,12 @@ namespace FilmOldPattern.DAL
             Film film = null;
             var builder =
                 NewSqlQueryBuilder()
-                .CustomSql(film.BuildSelectForEntity(aliasFilm, Schema, false, DaoHelper.EscapeFieldName));
+                .SelectStar()
+                .From(new TableDef { Alias = "F", TableName = film.GetTableNameForEntity() });
 
             try
             {
-                return this.GetItemList<Film>(builder);
+                return GetItemList<Film>(builder);
             }
             catch (Exception ex)
             {

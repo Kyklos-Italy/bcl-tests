@@ -1,41 +1,69 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<objects xmlns="http://www.springframework.net">
+<objects xmlns="http://www.springframework.net" xmlns:db="http://www.springframework.net/database">
 
-  <object name="SpGetNextval_SEQFORALL" type="Kyklos.Kernel.DAL.SqlServer.Support.SpGetNextval_SEQFORALL, Kyklos.Kernel.DAL.SqlServer">
-    <constructor-arg index="0" ref="KyklosKernelDbProvider"/>
-    <constructor-arg index="1" value="${KyklosKernelDefaultSchema}"/>
-  </object>
+	<db:provider
+    id="KyklosKernelDbProvider"
+    provider="${KyklosKernelDataSource.providerName}"
+    connectionString="${KyklosKernelDataSource.connectionString}" />
 
-  <object name="SqlServerDbSequenceManager" type="Kyklos.Kernel.DAL.SqlServer.Support.SqlServerDbSequenceManager, Kyklos.Kernel.DAL.SqlServer">
-    <constructor-arg index="0" ref="KyklosKernelDbProvider"/>
-    <constructor-arg index="1" value="${KyklosKernelDefaultSchema}"/>
-    <property name="Dao" ref="GenericDal"/>
-  </object>
+	<object id="KyklosKernelAdoTemplate" type="Kyklos.Kernel.SpringSupport.Data.KyklosAdoTemplate, Kyklos.Kernel.SpringSupport">
+		<property name="DbProvider" ref="KyklosKernelDbProvider"/>
+		<property name="DataReaderWrapperType" value="Spring.Data.Support.NullMappingDataReader, Spring.Data"/>
+		<property name="KyklosCommandBuilder" ref="KyklosCommandBuilder"/>
+		<property name="KyklosClassicAdoTemplate" ref="KyklosClassicAdoTemplate"/>
+	</object>
 
-  <object name="KyklosKernelDaoHelper" type="Kyklos.Kernel.DAL.SqlServer.Support.SqlServerDaoHelper, Kyklos.Kernel.DAL.SqlServer">
-    <property name="AdoTemplate" ref="KyklosKernelAdoTemplate"/>
-    <property name="DbSchema" value="${KyklosKernelDefaultSchema}"/>
-    <property name="SqlTextProvider" ref="KyklosKernelSqlTextProvider"/>
-    <property name="MaxTableNameLength" value="30"/>
-    <property name="MaxElementsForInClause" value="900"/>
-    <property name="LikeChar" value="%"/>
-    <property name="StringConcatenationOperator" value="+"/>
-    <property name="SchemaQuoteChar" value=""/>
-    <property name="FieldEscapeOpenChar" value="["/>
-    <property name="FieldEscapeCloseChar" value="]"/>
-    <property name="SpGetNextval_SEQFORALL" ref="SpGetNextval_SEQFORALL"/>
-    <property name="DbSequenceManager" ref="SqlServerDbSequenceManager"/>
-  </object>
+	<object name="KyklosKernelBaseDAL" abstract="true">
+		<property name="DbProvider" ref="KyklosKernelDbProvider"/>
+		<property name="DaoHelper" ref="KyklosKernelDaoHelper"/>
+		<property name="QueryTransformer" ref="DefaultQueryTransformer"/>
+		<property name="PopulateTbl4FastInFilterThreshold" value="${PopulateTbl4FastInFilterThreshold},90" />
+	</object>
 
-  <object id="KyklosClassicAdoTemplate" type="Kyklos.Kernel.DAL.SqlServer.Support.SqlServerKyklosAdoTemplate, Kyklos.Kernel.DAL.SqlServer">
-    <constructor-arg index="0" ref="KyklosKernelDbProvider"/>
-    <constructor-arg index="1" ref="KyklosCommandBuilder"/>
-  </object>
+	<object name="GenericDal" type="Kyklos.Kernel.DAL.NewBaseDal, Kyklos.Kernel.DAL" parent="KyklosKernelBaseDAL">
+	</object>
 
-  <object name="KyklosCommandBuilder" type="Kyklos.Kernel.DAL.SqlServer.Support.KyklosSqlServerCommandBuilder, Kyklos.Kernel.DAL.SqlServer">
-  </object>
+	<alias alias="GenericDAO" name="GenericDal"/>
 
-  <object name="KyklosKernelSqlTextProvider" type="Kyklos.Kernel.DAL.SqlServer.Support.SqlServerSqlTextProvider, Kyklos.Kernel.DAL.SqlServer">
-  </object>
+	
+	<object name="SpGetNextval_SEQFORALL" type="Kyklos.Kernel.DAL.SqlServer.Support.SpGetNextval_SEQFORALL, Kyklos.Kernel.DAL.SqlServer">
+		<constructor-arg index="0" ref="KyklosKernelDbProvider"/>
+		<constructor-arg index="1" value="${KyklosKernelDefaultSchema}"/>
+	</object>
+
+	<object name="SqlServerDbSequenceManager" type="Kyklos.Kernel.DAL.SqlServer.Support.SqlServerDbSequenceManager, Kyklos.Kernel.DAL.SqlServer">
+		<constructor-arg index="0" ref="KyklosKernelDbProvider"/>
+		<constructor-arg index="1" value="${KyklosKernelDefaultSchema}"/>
+		<property name="Dao" ref="GenericDal"/>
+	</object>
+
+	<object name="KyklosKernelDaoHelper" type="Kyklos.Kernel.DAL.SqlServer.Support.SqlServerDaoHelper, Kyklos.Kernel.DAL.SqlServer">
+		<property name="AdoTemplate" ref="KyklosKernelAdoTemplate"/>
+		<property name="DbSchema" value="${KyklosKernelDefaultSchema}"/>
+		<property name="SqlTextProvider" ref="KyklosKernelSqlTextProvider"/>
+		<property name="MaxTableNameLength" value="30"/>
+		<property name="MaxElementsForInClause" value="900"/>
+		<property name="LikeChar" value="%"/>
+		<property name="StringConcatenationOperator" value="+"/>
+		<property name="SchemaQuoteChar" value=""/>
+		<property name="FieldEscapeOpenChar" value="["/>
+		<property name="FieldEscapeCloseChar" value="]"/>
+		<property name="SpGetNextval_SEQFORALL" ref="SpGetNextval_SEQFORALL"/>
+		<property name="DbSequenceManager" ref="SqlServerDbSequenceManager"/>
+	</object>
+
+	<object id="KyklosClassicAdoTemplate" type="Kyklos.Kernel.DAL.SqlServer.Support.SqlServerKyklosAdoTemplate, Kyklos.Kernel.DAL.SqlServer">
+		<constructor-arg index="0" ref="KyklosKernelDbProvider"/>
+		<constructor-arg index="1" ref="KyklosCommandBuilder"/>
+	</object>
+
+	<object name="KyklosCommandBuilder" type="Kyklos.Kernel.DAL.SqlServer.Support.KyklosSqlServerCommandBuilder, Kyklos.Kernel.DAL.SqlServer">
+	</object>
+
+	<object name="KyklosKernelSqlTextProvider" type="Kyklos.Kernel.DAL.SqlServer.Support.SqlServerSqlTextProvider, Kyklos.Kernel.DAL.SqlServer">
+	</object>
+
+	<object name="FilmDAL" type="FilmOldPattern.DAL.FilmDAL, FilmOldPattern" parent="KyklosKernelBaseDAL">
+	</object>
 
 </objects>
