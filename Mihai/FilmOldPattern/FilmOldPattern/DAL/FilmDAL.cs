@@ -38,7 +38,6 @@ namespace FilmOldPattern.DAL
             var builder =
                 NewSqlQueryBuilder()
                 .CustomSql(film.BuildSelectForEntity("FILMS", Schema, false, DaoHelper.EscapeFieldName, true))
-                .From(aliasFilm)
                 .Where()
                 .Condition<Film>(aliasFilm, f => f.FilmKind, WhereOperator.EqualTo, kindFilm);
 
@@ -57,8 +56,7 @@ namespace FilmOldPattern.DAL
             Film film = null;
             var builder =
                 NewSqlQueryBuilder()
-                .CustomSql(film.BuildSelectForEntity(aliasFilm, Schema, false, DaoHelper.EscapeFieldName))
-                .From(aliasFilm);
+                .CustomSql(film.BuildSelectForEntity(aliasFilm, Schema, false, DaoHelper.EscapeFieldName));
 
             try
             {
