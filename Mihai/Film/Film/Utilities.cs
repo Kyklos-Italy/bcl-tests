@@ -273,21 +273,21 @@ namespace Film
             try
             {
                 var query = await _dao.NewQueryBuilder()
-                            .Select()
-                            .AllFields<Actor>(aliasactor).Comma()
-                            .Field<Actor>(aliasactor, a => a.ActorName, "ACTORNAME").Comma()
-                            .AllFields<Cast>(aliascast).Comma()
-                            .Field<Cast>(aliascast, c => c.Role, "ACTORROLE")
-                            .From()
-                            .Tables
-                            (
-                                FlatTable<Actor>.WithAlias(aliasactor),
-                                InnerJoin<Cast>.WithAlias(aliascast),
-                                (a, c) => a.Id == c.ActorId
-                            )
-                            .OrderBy<Actor>(aliasactor, a => a.Id)
-                            .GetItemsArrayAsync<(Actor Actor, string Actorname, Cast Cast, string Role)>()
-                            .ConfigureAwait(false);
+                             .Select()
+                             .AllFields<Actor>(aliasactor).Comma()
+                             .Field<Actor>(aliasactor, a => a.ActorName, "ACTORNAME_2").Comma()
+                             .AllFields<Cast>(aliascast).Comma()
+                             .Field<Cast>(aliascast, c => c.Role, "ACTORROLE_2")
+                             .From()
+                             .Tables
+                             (
+                                 FlatTable<Actor>.WithAlias(aliasactor),
+                                 InnerJoin<Cast>.WithAlias(aliascast),
+                                 (a, c) => a.Id == c.ActorId
+                             )
+                             .OrderBy<Actor>(aliasactor, a => a.Id)
+                             .GetItemsArrayAsync<(Actor Actor, string Actorname, Cast Cast, string Role)>()
+                             .ConfigureAwait(false);
 
                 return query;
             }

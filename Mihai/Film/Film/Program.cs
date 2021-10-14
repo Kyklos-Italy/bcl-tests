@@ -189,10 +189,10 @@ namespace Film
                         break;
 
                     case "12":
-                        //  (Actor, string, Cast, string)[] arraytuple = await ut.GetTuple();
-                        Console.WriteLine("Inserire età");
-                        int age = int.Parse(Console.ReadLine());
-                        var resultActor = ut.GetInfoActors(age).Result;
+                        (Actor, string,Cast, string)[] arraytuple = await ut.GetTuple();
+                        //Console.WriteLine("Inserire età");
+                        //int age = int.Parse(Console.ReadLine());
+                        //var resultActor = ut.GetInfoActors(age).Result;
                         break;
 
 

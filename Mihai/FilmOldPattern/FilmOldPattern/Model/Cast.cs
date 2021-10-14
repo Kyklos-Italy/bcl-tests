@@ -13,7 +13,7 @@ namespace FilmOldPattern.Model
     [EntityUniqueConstraint(ConstraintName = "UNIQUE_ACTORFILMROLE", Properties = new string[] { nameof(FilmId), nameof(ActorId), nameof(Role) })]
     public class Cast : IBaseEntity
     {
-        [EntityPropertyInfo(ColumnName = "ID", DbType = PropertyDbType.Integer, IsNullable = false, IsPrimaryKey = true)]
+        [EntityPropertyInfo(ColumnName = "IDCAST", DbType = PropertyDbType.Integer, IsNullable = false, IsPrimaryKey = true)]
         public int Id { get; set; }
 
         [EntityPropertyInfo(ColumnName = "FILMID", DbType = PropertyDbType.Integer, IsNullable = false)]
