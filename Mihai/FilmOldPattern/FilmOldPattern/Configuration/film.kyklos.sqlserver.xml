@@ -66,4 +66,10 @@
 	<object name="FilmDAL" type="FilmOldPattern.DAL.FilmDAL, FilmOldPattern" parent="KyklosKernelBaseDAL">
 	</object>
 
+  <object name="ActorDAL" type="FilmOldPattern.DAL.ActorDAL, FilmOldPattern" parent ="KyklosKernelBaseDAL">
+  </object>
+
+  <object name="CastDAL" type="FilmOldPattern.DAL.CastDAL, FilmOldPattern" parent ="KyklosKernelBaseDAL">
+  </object>
+
 </objects>

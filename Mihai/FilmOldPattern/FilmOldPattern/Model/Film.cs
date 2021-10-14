@@ -10,13 +10,8 @@ using System.Threading.Tasks;
 namespace FilmOldPattern.Model
 {
     [EntityObjectInfo(TableName = "FILMS")]
-    public class Film : BaseEntityWithLongKey<Film>
+    public class Film : IBaseEntity
     {
-        public Film()
-            : base(x => x.Id)
-        {
-        }
-
         [EntityPropertyInfo(ColumnName = "ID", DbType = PropertyDbType.Long, IsNullable = false, IsPrimaryKey = true)]
         public long Id { get; set; }
 

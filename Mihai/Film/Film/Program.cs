@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using NLog.Extensions.Logging;
 using Microsoft.Extensions.Logging;
+using Kyklos.Kernel.SpringSupport.Core;
 
 namespace Film
 {
@@ -14,7 +15,7 @@ namespace Film
             var loggerFactory = new NLogLoggerFactory();
             var logger = loggerFactory.CreateLogger(typeof(Program).FullName);
 
-            Utilities ut = new Utilities(logger);
+            IUtilities ut = Instantiator.GetObject<IUtilities>("Utilities");
 
             logger.LogDebug("Application started");
 
@@ -25,7 +26,7 @@ namespace Film
             while (true)
             {
                 Console.WriteLine("");
-                Console.WriteLine("Digita:\n1)per creare le tabelle\n2)per eliminare le tabelle\n3)Per Visualizzare i dati della tabella Actor\n4)Per inserire un nuovo actor\n5)Per modificare un actor\n6)Per cancellare un actor\n7)Filtro\n8)Per chiudere raggruppare gli attori\n9)Per visualizzare lista dei attori raggruppati in base alla chiave\n10)Per visualizzare i giovani attori\n11)Get List in in collection\n12)Get Tuple\n13)Scrivere su SqlLite file\n14)Scrivere su SqlServer db\n15)Per chiudere il programma");
+                Console.WriteLine("Digita:\n1)per creare le tabelle\n2)per eliminare le tabelle\n3)Per Visualizzare i dati della tabella Actor\n4)Per inserire un nuovo actor\n5)Per modificare un actor\n6)Per cancellare un actor\n7)Filtro\n8)Per chiudere raggruppare gli attori\n9)Per visualizzare lista dei attori raggruppati in base alla chiave\n10)Per visualizzare i giovani attori\n11)Get List in in collection\n12)Get Tuple\n13)Scrivere su SqlLite file\n14)Scrivere su SqlServer db\n15)Visualizzare gli attori che hanno uno stipedio maggiore del salario medio\n16)Visualizzare la data di un film in base al titolo\n17)Get name actors who most partecipate at film\n18)Per chiudere il programma");
                 Console.WriteLine("");
                 string command = Console.ReadLine();
 
@@ -205,6 +206,23 @@ namespace Film
                         break;
 
                     case "15":
+                        ActorList = ut.getActorsWhoAreTheSalaryGreaterThenMediumSalary().Result;
+
+                        ActorList.ToList().ForEach(actor => Console.WriteLine($"(Name:{actor.ActorName}, LastName:{actor.ActorLastName}, DateBirth:{actor.ActorYear}, Bibliography: {actor.ActorBibliography})"));
+
+                        break;
+
+                    case "16":
+                        Console.WriteLine("Inserire titolo di un film");
+                        string title = Console.ReadLine();
+                        DateTime dateFilm = ut.getDateFilmByTitleFilm(title).Result;
+                        break;
+
+                    case "17":
+                        List<string> actors = ut.GetActorsNameWhoMostPartecipateAtFilm().Result.ToList();
+                        break;
+
+                    case "18":
                         return;
 
                     default:

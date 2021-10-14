@@ -1,29 +1,31 @@
-﻿using Kyklos.Kernel.Data.Support;
+﻿using KFunctional.Optional;
+using Kyklos.Kernel.Core.KLinq;
+using Kyklos.Kernel.Data.Async;
+using Kyklos.Kernel.Data.Async.SqlBuilders;
+using Kyklos.Kernel.Data.Async.Support;
+using Kyklos.Kernel.Data.Query;
+using Kyklos.Kernel.Data.Support;
+using Microsoft.Extensions.Logging;
+using NLog.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
-using Kyklos.Kernel.Data.Async;
-using Kyklos.Kernel.Data.Async.Support;
-using Kyklos.Kernel.Data.Async.SqlBuilders;
-using Kyklos.Kernel.Data.Query;
-using Kyklos.Kernel.Core.KLinq;
-using Microsoft.Extensions.Logging;
-using System.Data.SqlClient;
-using System.Data;
 
 namespace Film
 {
-    public class Utilities
+    public class Utilities : IUtilities
     {
         private readonly IAsyncDao _dao;
         private readonly IAsyncDao _daosqllite;
 
-        private ILogger Logger { get; }
+        private ILogger Logger;
 
-        public Utilities(ILogger logger)
+        public Utilities()
         {
+            var loggerFactory = new NLogLoggerFactory();
+            var logger = loggerFactory.CreateLogger(typeof(Program).FullName);
             Logger = logger;
             _dao =
                 AsyncDaoFactory
@@ -334,5 +336,98 @@ namespace Film
             return resultTuple.ToEmptyArrayIfNull();
         }
 
+
+        public async Task<IList<Actor>> getActorsWhoAreTheSalaryGreaterThenMediumSalary() 
+        {
+            var builder =
+                 _dao
+                   .NewQueryBuilder()
+                   .CustomSql
+                   (
+                      "WITH temp_table (averageSalary) AS (SELECT AVG (ACTORSALARY) FROM ACTORS) SELECT ACTORS.* FROM ACTORS, temp_table WHERE ACTORSALARY >= averageSalary"
+                   );
+
+            try
+            {
+                Actor[] actors = await _dao.GetItemsArrayAsync<Actor>(builder);
+                return actors.ToEmptyListIfNull();
+            }
+            catch (Exception ex) 
+            {
+                throw new Exception(ex.ToString());
+            }
+        }
+
+
+        public async Task<IList<Film>> GetFilmWherelanguageISIn(List<string> langaguages) 
+        {
+            try
+            {
+                Film[] films = await
+                       _dao.GetItemsArrayByExampleAsync<Film>
+                              (
+                                  f => f.Language.IsIn(langaguages)
+                              )
+                              .ConfigureAwait(false);
+
+                return films.ToEmptyListIfNull();
+            }
+            catch (Exception ex) 
+            {
+                Logger.LogError(ex.ToString());
+                throw new Exception(ex.ToString());
+            }
+        }
+
+
+        public async  Task<DateTime> getDateFilmByTitleFilm(string filmTitle) 
+        {
+            string aliasFilm = "films";
+
+            var builder =
+                 _dao
+                  .NewQueryBuilder()
+                  .Select()
+                  .Field<Film>(aliasFilm, f => f.Date)
+                  .From<Film>(aliasFilm)
+                  .Where<Film>(aliasFilm, f => f.FilmTitle, WhereOperator.EqualTo, filmTitle);
+
+            try
+            {
+                Option<DateTime> result = await _dao.ExecuteScalarAsync<DateTime>(builder).ConfigureAwait(false);
+
+                DateTime dateFilm = result.ValueOr(DateTime.Now);
+
+                return dateFilm;
+            }
+            catch (Exception ex) 
+            {
+                Logger.LogError(ex.ToString());
+                throw new Exception(ex.ToString()); 
+            }
+        }
+
+
+        public async Task<IList<string>> GetActorsNameWhoMostPartecipateAtFilm() 
+        {
+            var builder =
+                  _dao
+                    .NewQueryBuilder()
+                    .CustomSql
+                    (
+                      "WITH temp_table (IDACTOR, FILMID, Apperrence) AS (SELECT ACTORID,FILMID ,COUNT(*) FROM CAST GROUP BY ACTORID,FILMID), Temp_MAXApperenceFilmID (IDFILM, MaxApperence) AS (SELECT FILMID, MAX(Apperrence) FROM temp_table GROUP BY  FILMID), Table_IDActors (IDActor) AS  (SELECT IDACTOR FROM temp_table, Temp_MAXApperenceFilmID WHERE FILMID = IDFILM AND Apperrence = MaxApperence) SELECT ACTORNAME FROm ACTORS INNER JOIN  Table_IDActors ON ID = IDActor"
+                     );
+
+            string[] nameActors = await _dao.GetItemsArrayAsync<string>(builder).ConfigureAwait(false);
+
+            return nameActors.ToNullIfEmptyList();
+        }
+
+        public Task<IList<string>> GetFilmTitleWhereWasPartecipateSpecificActor(long? idActor)
+        {
+            throw new NotImplementedException();
+        }
+
+      
     }
 }

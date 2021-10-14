@@ -11,12 +11,8 @@ namespace FilmOldPattern.Model
 {
     [EntityObjectInfo(TableName = "ACTORS")]
     [EntityUniqueConstraint(ConstraintName = "UNIQUE_TAXIDCODE", Properties = new string[] { nameof(ActorTaxIdCode) })]
-    public class Actor : BaseEntityWithLongKey<Actor>
+    public class Actor : IBaseEntity
     {
-        public Actor()
-            : base(x => x.Id)
-        {
-        }
         [EntityPropertyInfo(ColumnName = "ID", DbType = PropertyDbType.Integer, IsNullable = false, IsPrimaryKey = true)]
         public int Id { get; set; }
 
@@ -31,9 +27,6 @@ namespace FilmOldPattern.Model
 
         [EntityPropertyInfo(ColumnName = "ACTORTAXIDCODE", DbType = PropertyDbType.String, MaxLength = 50, IsNullable = false)]
         public string ActorTaxIdCode { get; set; }
-
-        //[EntityPropertyInfo(ColumnName = "ACTORDATEBIRTH", DbType = PropertyDbType.DateTime, IsNullable = false)]
-        //public DateTime ActorDateBirth { get; set; }
 
         [EntityPropertyInfo(ColumnName = "ACTORYEAR", DbType = PropertyDbType.Integer, IsNullable = false)]
         public int ActorYear { get; set; }

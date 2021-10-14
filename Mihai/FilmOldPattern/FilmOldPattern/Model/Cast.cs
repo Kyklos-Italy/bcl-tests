@@ -11,12 +11,8 @@ namespace FilmOldPattern.Model
 {
     [EntityObjectInfo(TableName = "CAST")]
     [EntityUniqueConstraint(ConstraintName = "UNIQUE_ACTORFILMROLE", Properties = new string[] { nameof(FilmId), nameof(ActorId), nameof(Role) })]
-    public class Cast : BaseEntityWithLongKey<Cast>
+    public class Cast : IBaseEntity
     {
-        public Cast()
-            : base(x => x.Id)
-        {
-        }
         [EntityPropertyInfo(ColumnName = "ID", DbType = PropertyDbType.Integer, IsNullable = false, IsPrimaryKey = true)]
         public int Id { get; set; }
 
