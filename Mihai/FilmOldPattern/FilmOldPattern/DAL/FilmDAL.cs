@@ -283,7 +283,7 @@ namespace FilmOldPattern.DAL
             //Actor actor = null;
             //Cast cast = null;
 
-            string selectStr = @"SELECT DISTINCT FILMTITLE FROM {0} INNER JOIN CAST ON FILMS.ID = FILMID INNER JOIN ACTORS ON ACTORID = ACTORS.ID WHERE ACTORS.ID = {1}".FormatWith(film.GetTableNameForEntity(), parameters[0].Value);
+            string selectStr = @"SELECT DISTINCT FILMTITLE FROM {0} INNER JOIN CAST ON FILMS.ID = FILMID INNER JOIN ACTORS ON ACTORID = ACTORS.IDACTOR WHERE ACTORS.IDACTOR = {1}".FormatWith(film.GetTableNameForEntity(), parameters[0].Value);
 
             var builder =
                   NewSqlQueryBuilder()

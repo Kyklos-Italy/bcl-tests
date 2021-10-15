@@ -13,7 +13,7 @@ namespace FilmOldPattern.Model
     [EntityUniqueConstraint(ConstraintName = "UNIQUE_TAXIDCODE", Properties = new string[] { nameof(ActorTaxIdCode) })]
     public class Actor : IBaseEntity
     {
-        [EntityPropertyInfo(ColumnName = "ID", DbType = PropertyDbType.Integer, IsNullable = false, IsPrimaryKey = true)]
+        [EntityPropertyInfo(ColumnName = "IDACTOR", DbType = PropertyDbType.Integer, IsNullable = false, IsPrimaryKey = true)]
         public int Id { get; set; }
 
         [EntityPropertyInfo(ColumnName = "ACTORNAME", DbType = PropertyDbType.String, MaxLength = 20, IsNullable = false)]
@@ -30,6 +30,9 @@ namespace FilmOldPattern.Model
 
         [EntityPropertyInfo(ColumnName = "ACTORYEAR", DbType = PropertyDbType.Integer, IsNullable = false)]
         public int ActorYear { get; set; }
+
+        [EntityPropertyInfo(ColumnName = "ACTORSALARY", DbType = PropertyDbType.Integer, IsNullable = false)]
+        public int ActorSalary { get; set; }
 
 
         public string GetInfo()
